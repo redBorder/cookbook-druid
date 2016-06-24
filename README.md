@@ -1,4 +1,4 @@
-druid Cookbook
+Druid Cookbook
 ==============
 
 Cookbook to configure all druid services in redborder (broker,coordinator,historical,middlemanager,overlord and realtime)
