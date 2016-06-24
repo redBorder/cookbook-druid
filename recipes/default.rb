@@ -4,7 +4,7 @@
 #
 # Copyright 2016, redborder
 #
-# AFFERO GENERAL PUBLIC LICENSE
+# AFFERO GENERAL PUBLIC LICENSE V3
 #
 
 
