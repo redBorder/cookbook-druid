@@ -1,0 +1,20 @@
+# General
+druid.service=overlord
+druid.host=<%= @name %>.<%= @cdomain %>
+druid.port=<%= @port %>
+
+# Indexing
+druid.indexer.runner.type=remote
+druid.indexer.storage.type=metadata
+druid.indexer.runner.startPort=7081
+
+# Logging
+<% if @s3_bucket %>
+druid.indexer.logs.s3Bucket=<%= @s3_bucket %>
+druid.indexer.logs.s3Prefix=<%= @s3_prefix %>
+druid.indexer.logs.type=s3
+<% else %>
+druid.indexer.logs.type=file
+druid.indexer.logs.directory=<%= "#{@task_log_dir}" %>
+<% end %>
+
