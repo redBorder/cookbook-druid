@@ -104,13 +104,9 @@ action :remove do
     end
 
     # Remove parent log directory if it doesn't have childs
-    if Dir["#{parent_log_dir}/*"].empty? 
-       directory parent_log_dir do
-         action :delete
-       end
-    end
+    delete_if_empty(parent_log_dir)
 
-     Chef::Log.info("Druid Overlord has been deleted correctly.")
+    Chef::Log.info("Druid Overlord has been deleted correctly.")
   rescue => e
     Chef::Log.error(e.message)
   end
