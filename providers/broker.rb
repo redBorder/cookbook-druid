@@ -17,7 +17,7 @@ action :add do
     port = new_resource.port
     memcached_hosts = new_resource.memcached_hosts
     processing_threads = new_resource.processing_threads
-    processing_memory_buffer = new_resource.processing_memory_buffer
+    processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
 
@@ -54,7 +54,7 @@ action :add do
       mode 0644
       retries 2
       variables(:name => name, :cdomain => cdomain, :port => port, :memcached_hosts => memcached_hosts, 
-                :processing_threads => processing_threads, :processing_memory_buffer => processing_memory_buffer,
+                :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
                 :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results)
       notifies :restart, 'service[druid-broker]', :delayed
     end
