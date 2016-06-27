@@ -13,7 +13,8 @@ druid_historical "Configure Druid Historical" do
 end
 
 druid_broker "Configure Druid Broker" do
-  memory "512"
+  name "localhost"
+  action :add
 end
 
 druid_coordinator "Configure Druid coordinator" do
