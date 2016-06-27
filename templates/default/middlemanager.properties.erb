@@ -1,0 +1,33 @@
+# General
+druid.service=middlemanager
+druid.host=<%= @name %>.<%= @cdomain %>
+druid.worker.ip=<%= @name %>.<%= @cdomain %>
+druid.port=<%= @port %>
+
+# Indexing
+druid.worker.capacity=<%= (@worker_capacity * @capacity_multiplier) %>
+druid.indexer.runner.startPort=7081
+
+# Processing
+druid.indexer.fork.property.druid.server.http.numThreads=10
+druid.indexer.fork.property.druid.processing.buffer.sizeBytes=<%= @processing_memory_buffer_b %>
+druid.indexer.fork.property.druid.processing.numThreads=<%= @processing_threads %>
+
+# Logging
+<% if @s3_log_bucket %>
+druid.indexer.logs.type=s3
+druid.indexer.logs.s3Bucket=<%= @s3_log_bucket %>
+druid.indexer.logs.s3Prefix=<%= @s3_log_prefix %>
+<% else %>
+druid.indexer.logs.type=file
+druid.indexer.logs.directory=<%= @task_log_dir %>
+<% end %>
+druid.monitoring.monitors=["com.metamx.metrics.JvmMonitor", "io.druid.server.metrics.EventReceiverFirehoseMonitor", "io.druid.segment.realtime.RealtimeMetricsMonitor", "com.metamx.metrics.SysMonitor"]
+
+# Peon
+druid.indexer.task.baseDir=<%= @base_dir %>
+druid.indexer.task.baseTaskDir=<%= "{@indexing_dir}/tasks" %>
+druid.indexer.task.hadoopWorkingPath=<%= "#{@indexing_dir}/hadoop" %>
+druid.indexer.task.defaultHadoopCoordinates=["org.apache.hadoop:hadoop-client:<%= @hadoop_version %>"]
+druid.indexer.task.restoreTasksOnRestart=true
+druid.indexer.runner.javaOpts=-XX:MaxPermSize=256m -Dhadoop.fs.s3n.impl=org.apache.hadoop.fs.s3native.NativeS3FileSystem -Dhadoop.fs.s3n.awsAccessKeyId=<%= @s3_access_key %> -Dhadoop.fs.s3n.awsSecretAccessKey=<%= @s3_secret_key %> -server -XX:+UseG1GC -Xmx<%= @heap_memory_peon_kb %>k -Xms<%= @heap_memory_peon_kb %>k -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Djava.rmi.server.hostname=<%= @rmi_address %> -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=0 -Dcom.sun.management.jmxremote.local.only=false -Djava.net.preferIPv4Stack=true -XX:MaxDirectMemorySize=<%= @max_direct_memory_peon_kb %>k -Djava.io.tmpdir=<%= "#{@indexing_dir}/tasks" %> -Dhadoop.tmp.dir=<%= "#{@indexing_dir}/hadoop" %> 
