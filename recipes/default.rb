@@ -18,7 +18,8 @@ druid_broker "Configure Druid Broker" do
 end
 
 druid_coordinator "Configure Druid coordinator" do
-  memory "512"
+  name "localhost"
+    action :add
 end
 
 druid_overlord "Configure Druid overlord" do
