@@ -5,8 +5,10 @@
 
 action :add do
   begin
-    config_dir_parent = "/etc/druid"
-    config_dir = "#{config_dir_parent}/broker"
+    parent_config_dir = "/etc/druid"
+    config_dir = "#{parent_config_dir}/broker"
+    parent_log_dir = new_resource.parent_log_dir
+    log_dir = new_resource.log_dir
     user = new_resource.user
     group = new_resource.group
     name = new_resource.name
@@ -23,12 +25,11 @@ action :add do
       action :nothing
     end
 
-
     user user do
       action :create
     end
 
-    [ config_dir_parent, config_dir].each do |path|
+    [ parent_config_dir, config_dir].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -36,7 +37,7 @@ action :add do
         end
     end
 
-    [ log_dir ].each do |path|
+    [ parent_log_dir, "#{parent_log_dir}/#{log_dir}" ].each do |path|
         directory path do
           owner user
           group group
@@ -44,7 +45,7 @@ action :add do
         end
     end
 
-    template "#{config_dir}/broker.properties" do
+    template "#{config_dir}/runtime.properties" do
       source "broker.properties.erb"
       owner "root"
       group "root"
@@ -57,6 +58,11 @@ action :add do
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
+    service "druid-broker" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :start, :delayed
+    end
+
     Chef::Log.info("Druid Broker has been configurated correctly.")
   rescue => e
     Chef::Log.error(e.message)
@@ -65,8 +71,10 @@ end
 
 action :remove do
   begin
-    config_dir_parent = "/etc/druid"
-    config_dir = "#{config_dir_parent}/broker"
+    parent_config_dir = "/etc/druid"
+    config_dir = "#{parent_config_dir}/broker"
+    parent_log_dir = new_resource.parent_log_dir
+    log_dir = new_resource.log_dir
 
     service "druid-broker" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -75,15 +83,15 @@ action :remove do
 
     dir_list = [
       config_dir,
-      log_dir
+      "#{parent_log_dir}/#{log_dir}"
     ]  
 
     template_list = [
-      "#{config_dir}/broker.properties"
+      "#{config_dir}/runtime.properties"
     ]
 
     template_list.each do |temp|
-       template temp do
+       file temp do
          action :delete
        end
     end
