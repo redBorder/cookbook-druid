@@ -1,4 +1,4 @@
-# Cookbook Name:: kafka
+# Cookbook Name:: druid
 #
 # Provider:: middlemanager
 #
@@ -68,7 +68,7 @@ action :add do
       # 1gb per peon heap or 60% of total RAM
       heap_memory_peon_kb = memory_kb > (2*1024*1024).to_i ? (1*1024*1024).to_i : (memory_kb * 0.60).to_i if heap_memory_peon_kb.nil?
 
-      # Number of cpu - 1 or 1
+      # Number of min[(cpu - 1),2] or 1
       processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1 if processing_threads.nil?
     
       # 256mb per threads or [40% of total RAM / (threads + 1)]
