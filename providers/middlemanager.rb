@@ -2,7 +2,6 @@
 #
 # Provider:: middlemanager
 #
-
 action :add do
   begin
     parent_config_dir = "/etc/druid"
@@ -31,6 +30,8 @@ action :add do
     heap_memory_peon_kb = new_resource.heap_memory_peon_kb
     max_direct_memory_peon_kb = new_resource.max_direct_memory_peon_kb
     rmi_address = new_resource.rmi_address
+    cpu_num = new_resource.cpu_num
+    memory_kb = new_resource.memory_kb
 
     service "druid-middlemanager" do
        supports :status => true, :start => true, :restart => true, :reload => true
@@ -57,6 +58,38 @@ action :add do
         end
     end
 
+    ########################################
+    # Middlemanager resource configuration #
+    ########################################
+
+      # 256mb to middlemanager heap
+      memory_kb = memory_kb - (256*1024) 
+
+      # 1gb per peon heap or 60% of total RAM
+      heap_memory_peon_kb = memory_kb > (2*1024*1024).to_i ? (1*1024*1024).to_i : (memory_kb * 0.60).to_i if heap_memory_peon_kb.nil?
+
+      # Number of cpu - 1 or 1
+      processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1 if processing_threads.nil?
+    
+      # 256mb per threads or [40% of total RAM / (threads + 1)]
+      processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512*1024) * (processing_threads + 1) ? (512*1024*1024) :  ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i if processing_memory_buffer_b.nil?
+    
+      # (Threads + 1) * processing_memory to calculate peon MaxDirectMemory (off-heap)
+      max_direct_memory_peon_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i if max_direct_memory_peon_kb.nil?
+
+      # Total memory per tasks
+      total_memory_per_task_kb = heap_memory_peon_kb + max_direct_memory_peon_kb
+
+      # Worker capacity based on min(MemoryPerTasks, CPUs)
+      worker_capacity = [[(memory_kb / total_memory_per_task_kb), cpu_num * 2].min, 1].max.to_i if worker_capacity.nil?
+
+      # Recalculate heap memory if the limit is the CPUs
+      total_memory_per_task_kb = (memory_kb / worker_capacity).to_i
+      heap_memory_peon_kb = total_memory_per_task_kb - max_direct_memory_peon_kb
+      Chef::Log.info("PeonHeapMemory: #{heap_memory_peon_kb}kb PeonOffHeapMemory: #{max_direct_memory_peon_kb}kb TotalCapcity: #{worker_capacity}")
+    ########################################
+    ########################################
+
     template "#{config_dir}/runtime.properties" do
       source "middlemanager.properties.erb"
       owner "root"
@@ -81,7 +114,7 @@ action :add do
 
     Chef::Log.info("Druid Middlemanager has been configurated correctly.")
   rescue => e
-    Chef::Log.error(e.message)
+    Chef::Log.error(e)
   end
 end
 
@@ -132,7 +165,7 @@ action :remove do
 
     Chef::Log.info("Druid Middlemanager has been deleted correctly.")
   rescue => e
-    Chef::Log.error(e.message)
+    Chef::Log.error(e)
   end
 end
 
