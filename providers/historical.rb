@@ -24,6 +24,7 @@ action :add do
     groupby_max_results = new_resource.groupby_max_results
     disk_size_kb = new_resource.disk_size_kb
     tier = new_resource.tier
+    tier_memory_mode = new_resource.tier_memory_mode
     cpu_num = new_resource.cpu_num
     memory_kb = new_resource.memory_kb
 
@@ -73,10 +74,10 @@ action :add do
 
     max_size_b = 0
 
-    if tier == "hot"
+    if tier_memory_mode
       max_size_b = segments_memory_b
     else
-      max_size_b = segments_memory_b + disk_size_kb * 1024
+      max_size_b = disk_size_kb * 1024
     end
 
     Chef::Log.info(
