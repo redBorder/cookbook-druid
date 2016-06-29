@@ -1,0 +1,33 @@
+# General
+druid.service=historical
+druid.host=<%= @name %>.<%= @cdomain %>
+druid.port=<%= @port %>
+druid.server.http.numThreads=10
+druid.server.tier=<%= @tier %>
+
+druid.server.maxSize=<%= @max_size_b  %>
+druid.segmentCache.locations=[{"path": "<%= @segment_cache_dir %>", "maxSize": <%= @max_size_b %>}]
+
+# Caching
+<% if @memcached_hosts.nil? %>
+druid.cache.type=local
+<% else %>
+druid.cache.type=memcached
+druid.cache.hosts=<%= @memcached_hosts %>
+druid.cache.expiration=86400
+druid.cache.memcachedPrefix=druid
+<% end %>
+druid.historical.cache.useCache=true
+druid.historical.cache.populateCache=true
+druid.historical.cache.unCacheable=["select"]
+
+# Logging
+druid.monitoring.monitors=["io.druid.client.cache.CacheMonitor", "com.metamx.metrics.JvmMonitor", "com.metamx.metrics.SysMonitor", "io.druid.server.metrics.HistoricalMetricsMonitor"]
+druid.emitter=logging
+
+# Processing
+druid.processing.numThreads=<%= @processing_threads %>
+druid.processing.buffer.sizeBytes=<%= @processing_memory_buffer_b %>
+druid.query.groupBy.maxIntermediateRows=<%= @groupby_max_intermediate_rows %>
+druid.query.groupBy.maxResults=<%= @groupby_max_results %>
+druid.query.topN.minTopNThreshold=100
