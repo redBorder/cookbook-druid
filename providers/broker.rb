@@ -61,7 +61,14 @@ action :add do
     heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_broker_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
 
-    Chef::Log.info("Broker memory [Memory: #{memory_kb}kb, Heap: #{heap_broker_memory_kb}kb, ProcessingBuffer: #{processing_memory_buffer_b / 1024}kb, OffHeap: #{offheap_broker_memory_kb}kb]")
+    Chef::Log.info(
+      "\nBroker Memory:
+        * Memory: #{memory_kb}k 
+        * Heap: #{heap_broker_memory_kb}kb 
+        * ProcessingBuffer: #{processing_memory_buffer_b / 1024}kb
+        * OffHeap: #{offheap_broker_memory_kb}kb"
+    )
+
     #################################
     #################################
 
