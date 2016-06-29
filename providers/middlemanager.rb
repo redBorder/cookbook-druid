@@ -2,6 +2,9 @@
 #
 # Provider:: middlemanager
 #
+include Druid::Helper
+
+
 action :add do
   begin
     parent_config_dir = "/etc/druid"

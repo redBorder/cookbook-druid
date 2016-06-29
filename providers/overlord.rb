@@ -2,6 +2,7 @@
 #
 # Provider:: overlord
 #
+include Druid::Helper
 
 action :add do
   begin

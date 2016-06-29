@@ -2,6 +2,7 @@
 #
 # Provider:: coordinator
 #
+include Druid::Helper
 
 action :add do
   begin
