@@ -63,7 +63,8 @@ action :add do
     ########################################
 
       # 256mb to middlemanager heap
-      memory_kb = memory_kb - (256*1024) 
+      heap_middlemanager_memory_kb = 256 * 1024
+      memory_kb = memory_kb - heap_middlemanager_memory_kb 
 
       # 1gb per peon heap or 60% of total RAM
       heap_memory_peon_kb = memory_kb > (2*1024*1024).to_i ? (1*1024*1024).to_i : (memory_kb * 0.60).to_i if heap_memory_peon_kb.nil?
