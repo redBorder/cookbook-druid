@@ -20,11 +20,13 @@ action :add do
     processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
+    cpu_num = new_resource.cpu_num
+    memory_kb = new_resource.memory_kb
 
-     service "druid-broker" do
-       supports :status => true, :start => true, :restart => true, :reload => true
-       action :nothing
-     end
+    service "druid-broker" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :nothing
+    end
 
     user user do
       action :create
@@ -45,6 +47,22 @@ action :add do
           mode 0700
         end
     end
+
+    #################################
+    # Broker resource configuration #
+    #################################
+    heap_broker_memory_kb = 0
+
+    # Compute the number of processing threads based on CPUs
+    processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
+
+    # Compute the heap memory, the processing buffer memory and the offheap memory
+    heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
+    offheap_broker_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
+
+    Chef::Log.info("Broker memory [Memory: #{memory_kb}kb, Heap: #{heap_broker_memory_kb}kb, ProcessingBuffer: #{processing_memory_buffer_b / 1024}kb, OffHeap: #{offheap_broker_memory_kb}kb]")
+    #################################
+    #################################
 
     template "#{config_dir}/runtime.properties" do
       source "broker.properties.erb"
