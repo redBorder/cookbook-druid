@@ -35,6 +35,7 @@ action :add do
     rmi_address = new_resource.rmi_address
     cpu_num = new_resource.cpu_num
     memory_kb = new_resource.memory_kb
+    heap_middlemanager_memory_kb = new_resource.heap_middlemanager_memory_kb
 
     service "druid-middlemanager" do
        supports :status => true, :start => true, :restart => true, :reload => true
@@ -65,8 +66,7 @@ action :add do
     # Middlemanager resource configuration #
     ########################################
 
-      # 256mb to middlemanager heap
-      heap_middlemanager_memory_kb = 256 * 1024
+      # reserve middlemanager heap
       memory_kb = memory_kb - heap_middlemanager_memory_kb 
 
       # 1gb per peon heap or 60% of total RAM
@@ -90,7 +90,14 @@ action :add do
       # Recalculate heap memory if the limit is the CPUs
       total_memory_per_task_kb = (memory_kb / worker_capacity).to_i
       heap_memory_peon_kb = total_memory_per_task_kb - max_direct_memory_peon_kb
-      Chef::Log.info("PeonHeapMemory: #{heap_memory_peon_kb}kb PeonOffHeapMemory: #{max_direct_memory_peon_kb}kb TotalCapcity: #{worker_capacity}")
+      Chef::Log.info(
+      "\nMiddlemanager Memory:
+        * Memory: #{memory_kb}k 
+        * Heap Middlemanager: #{heap_middlemanager_memory_kb}kb 
+        * Capacity: #{worker_capacity}
+        * Heap Peon: #{total_memory_per_task_kb / 1024}kb
+        * OffHeap Peon: #{max_direct_memory_peon_kb}kb"
+      )
     ########################################
     ########################################
 

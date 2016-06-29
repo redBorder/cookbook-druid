@@ -30,3 +30,4 @@ attribute :processing_memory_buffer_b, :kind_of => Integer
 attribute :processing_threads, :kind_of => Integer
 attribute :heap_memory_peon_kb, :kind_of => Integer
 attribute :max_direct_memory_peon_kb, :kind_of => Integer
+attribute :heap_middlemanager_memory_kb, :kind_of => Integer, :default => 262144
