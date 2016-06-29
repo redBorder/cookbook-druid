@@ -2,6 +2,8 @@
 #
 # Provider:: broker
 #
+include Druid::Broker
+include Druid::Helper
 
 action :add do
   begin
@@ -17,7 +19,6 @@ action :add do
     port = new_resource.port
     memcached_hosts = new_resource.memcached_hosts
     processing_threads = new_resource.processing_threads
-    processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
     cpu_num = new_resource.cpu_num

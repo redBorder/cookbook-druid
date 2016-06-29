@@ -15,7 +15,6 @@ attribute :parent_log_dir, :kind_of => String, :default => "/var/log/druid"
 attribute :suffix_log_dir, :kind_of => String, :default => "broker"
 attribute :memcached_hosts, :kind_of => String
 attribute :processing_threads, :kind_of => Integer
-attribute :processing_memory_buffer_b, :kind_of => Integer
 attribute :groupby_max_intermediate_rows, :kind_of => Integer, :default => 50000
 attribute :groupby_max_results, :kind_of => Integer, :default => 500000
 attribute :cpu_num, :kind_of => Integer, :default => 4
