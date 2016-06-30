@@ -19,6 +19,9 @@ action :add do
     port = new_resource.port
     s3_bucket = new_resource.s3_bucket
     s3_prefix = new_resource.s3_prefix
+    memory_kb = new_resource.memory_kb
+    rmi_address = new_resource.rmi_address
+    rmi_port = new_resource.rmi_port
 
     service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -29,7 +32,7 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir].each do |path|
+    [ parent_config_dir, config_dir, "/etc/sysconfig"].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -55,6 +58,17 @@ action :add do
       variables(:name => name, :cdomain => cdomain, :port => port,
                 :s3_bucket => s3_bucket, :s3_prefix => s3_prefix,
                 :task_log_dir => task_log_dir)
+      notifies :restart, 'service[druid-overlord]', :delayed
+    end
+
+    template "/etc/sysconfig/druid_overlord" do
+      source "overlord_sysconfig.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:heap_overlord_memory_kb => memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port)
       notifies :restart, 'service[druid-overlord]', :delayed
     end
 
@@ -106,6 +120,7 @@ action :remove do
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
+    delete_if_empty("/etc/sysconfig")
 
     Chef::Log.info("Druid Overlord has been deleted correctly.")
   rescue => e

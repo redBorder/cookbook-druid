@@ -27,6 +27,8 @@ action :add do
     tier_memory_mode = new_resource.tier_memory_mode
     cpu_num = new_resource.cpu_num
     memory_kb = new_resource.memory_kb
+    rmi_address = new_resource.rmi_address
+    rmi_port = new_resource.rmi_port
 
     service "druid-historical" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -37,7 +39,7 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir].each do |path|
+    [ parent_config_dir, config_dir, "/etc/sysconfig"].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -105,6 +107,18 @@ action :add do
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
+    template "/etc/sysconfig/druid_historical" do
+      source "historical_sysconfig.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:heap_historical_memory_kb => heap_historical_memory_kb, :offheap_historical_memory_kb => offheap_historical_memory_kb, 
+                :rmi_address => rmi_address, :rmi_port => rmi_port)
+      notifies :restart, 'service[druid-historical]', :delayed
+    end
+
     # service "druid-historical" do
     #   supports :status => true, :start => true, :restart => true, :reload => true
     #   action :start
@@ -155,6 +169,7 @@ action :remove do
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
+    delete_if_empty("/etc/sysconfig")
 
      Chef::Log.info("Druid Historical has been deleted correctly.")
   rescue => e

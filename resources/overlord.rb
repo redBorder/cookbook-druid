@@ -15,3 +15,6 @@ attribute :suffix_log_dir, :kind_of => String, :default => "overlord"
 attribute :port, :kind_of => Integer, :default => 8084
 attribute :s3_bucket, :kind_of => String
 attribute :s3_prefix, :kind_of => String, :default => "druid-indexer-logs"
+attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
+attribute :rmi_port, :kind_of => String, :default => "9084"
+attribute :memory_kb, :kind_of => Integer, :default => 1048576

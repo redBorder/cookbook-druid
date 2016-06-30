@@ -10,32 +10,32 @@
 
 druid_historical "Configure Druid Historical" do
   name "localhost"
-  action :remove
+  action :add
 end
 
 druid_broker "Configure Druid Broker" do
   name "localhost"
-  action :remove
+  action :add
 end
 
 druid_coordinator "Configure Druid coordinator" do
   name "localhost"
-  action :remove
+  action :add
 end
 
 druid_overlord "Configure Druid overlord" do
   name "localhost"
-  action :remove
+  action :add
 end
 
 druid_middlemanager "Configure Druid middlemanager" do
   name "localhost"
-  action :remove
+  action :add
 end
 
 druid_realtime "Configure Druid realtime" do
   memory "512"
-  action :remove
+  action :add
 end
 
 

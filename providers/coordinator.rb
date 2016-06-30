@@ -16,6 +16,9 @@ action :add do
     name = new_resource.name
     cdomain = new_resource.cdomain
     port = new_resource.port
+    rmi_address = new_resource.rmi_address
+    rmi_port = new_resource.rmi_port
+    memory_kb = new_resource.memory_kb
 
     service "druid-coordinator" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -26,7 +29,7 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir].each do |path|
+    [ parent_config_dir, config_dir, "/etc/sysconfig"].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -51,6 +54,18 @@ action :add do
       retries 2
       variables(:name => name, :cdomain => cdomain, :port => port)
       notifies :restart, 'service[druid-coordinator]', :delayed
+    end
+
+    template "/etc/sysconfig/druid_coordinator" do
+      source "coordinator_sysconfig.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:heap_coordinator_memory_kb => (memory_kb * 0.8).to_i, :offheap_coordinator_memory_kb => (memory_kb * 0.2).to_i, 
+                :rmi_address => rmi_address, :rmi_port => rmi_port)
+      notifies :restart, 'service[druid-broker]', :delayed
     end
 
     # service "druid-coordinator" do
@@ -101,6 +116,7 @@ action :remove do
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
+    delete_if_empty("/etc/sysconfig")
 
     Chef::Log.info("Druid Coordinator has been deleted correctly.")
   rescue => e
