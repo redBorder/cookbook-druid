@@ -38,6 +38,15 @@ action :add do
     heap_middlemanager_memory_kb = new_resource.heap_middlemanager_memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    zookeeper_hosts = new_resource.zookeeper_hosts
+    psql_uri = new_resource.psql_uri
+    psql_user = new_resource.psql_user
+    psql_password = new_resource.psql_password
+    s3_bucket = new_resource.s3_bucket
+    s3_acess_key = new_resource.s3_acess_key
+    s3_secret_key = new_resource.s3_secret_key
+    s3_prefix = new_resource.s3_prefix
+    druid_local_storage_dir = new_resource.druid_local_storage_dir
 
     service "druid-middlemanager" do
        supports :status => true, :start => true, :restart => true, :reload => true
@@ -48,7 +57,7 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir, "/etc/sysconfig"].each do |path|
+    [ parent_config_dir, config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -64,6 +73,15 @@ action :add do
         end
     end
 
+    if s3_bucket.nil?
+        directory druid_local_storage_dir do
+          owner user
+          group group
+          mode 0700
+          recursive true
+        end
+    end
+    
     ########################################
     # Middlemanager resource configuration #
     ########################################
@@ -117,6 +135,19 @@ action :add do
                 :indexing_dir => indexing_dir, :hadoop_version => hadoop_version, :s3_access_key => s3_access_key,
                 :s3_secret_key => s3_secret_key, :heap_memory_peon_kb => heap_memory_peon_kb, :max_direct_memory_peon_kb => max_direct_memory_peon_kb,
                 :rmi_address => rmi_address)
+      notifies :restart, 'service[druid-middlemanager]', :delayed
+    end
+
+    template "#{parent_config_dir}/_common/common.runtime.properties" do
+      source "common.properties.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user,
+                :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_acess_key => s3_acess_key,
+                :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir)
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 

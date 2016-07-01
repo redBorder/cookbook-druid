@@ -22,6 +22,15 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    zookeeper_hosts = new_resource.zookeeper_hosts
+    psql_uri = new_resource.psql_uri
+    psql_user = new_resource.psql_user
+    psql_password = new_resource.psql_password
+    s3_bucket = new_resource.s3_bucket
+    s3_acess_key = new_resource.s3_acess_key
+    s3_secret_key = new_resource.s3_secret_key
+    s3_prefix = new_resource.s3_prefix
+    druid_local_storage_dir = new_resource.druid_local_storage_dir
 
     service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -32,7 +41,7 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir, "/etc/sysconfig"].each do |path|
+    [ parent_config_dir, config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
         directory path do
          owner "root"
          group "root"
@@ -48,6 +57,15 @@ action :add do
         end
     end
 
+    if s3_bucket.nil?
+        directory druid_local_storage_dir do
+          owner user
+          group group
+          mode 0700
+          recursive true
+        end
+    end
+    
     template "#{config_dir}/runtime.properties" do
       source "overlord.properties.erb"
       owner "root"
@@ -58,6 +76,19 @@ action :add do
       variables(:name => name, :cdomain => cdomain, :port => port,
                 :s3_bucket => s3_bucket, :s3_prefix => s3_prefix,
                 :task_log_dir => task_log_dir)
+      notifies :restart, 'service[druid-overlord]', :delayed
+    end
+
+    template "#{parent_config_dir}/_common/common.runtime.properties" do
+      source "common.properties.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user,
+                :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_acess_key => s3_acess_key,
+                :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir)
       notifies :restart, 'service[druid-overlord]', :delayed
     end
 

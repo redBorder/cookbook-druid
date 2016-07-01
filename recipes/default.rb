@@ -33,9 +33,4 @@ druid_middlemanager "Configure Druid middlemanager" do
   action :add
 end
 
-druid_realtime "Configure Druid realtime" do
-  memory "512"
-  action :add
-end
-
 

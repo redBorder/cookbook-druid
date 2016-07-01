@@ -33,3 +33,12 @@ attribute :max_direct_memory_peon_kb, :kind_of => Integer
 attribute :heap_middlemanager_memory_kb, :kind_of => Integer, :default => 262144
 attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :rmi_port, :kind_of => String, :default => "9085"
+attribute :zookeeper_hosts, :kind_of => String, :default => "localhost:2181"
+attribute :psql_uri, :kind_of => String
+attribute :psql_user, :kind_of => String
+attribute :psql_password, :kind_of => String
+attribute :s3_bucket, :kind_of => String
+attribute :s3_acess_key, :kind_of => String
+attribute :s3_secret_key, :kind_of => String
+attribute :s3_prefix, :kind_of => String, :default => "druid"
+attribute :druid_local_storage_dir, :kind_of => String, :default => "/tmp/druid/localStorage"

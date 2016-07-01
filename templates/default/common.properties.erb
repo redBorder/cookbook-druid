@@ -1,5 +1,39 @@
-druid.extensions.directory
-druid.extensions.hadoopDependenciesDir
-druid.extensions.hadoopContainerDruidClasspath
-druid.extensions.loadList
-druid.extensions.searchCurrentClassloader
+
+# Extensions
+druid.extensions.directory=/usr/lib/druid/extensions
+druid.extensions.hadoopDependenciesDir=/usr/lib/druid/hadoop-dependencies/
+
+# Zookeeper
+druid.zk.paths.base=/druid
+druid.zk.service.host=<%= @zookeeper_hosts %>
+
+# Logging
+druid.emitter=logging
+druid.emitter.logging.logLevel=info
+
+# Metadata Storage
+<% if @psql_uri %>
+druid.metadata.storage.type=postgresql
+druid.metadata.storage.connector.connectURI=<%= @psql_uri %>
+druid.metadata.storage.connector.user=<%= @psql_user %>
+druid.metadata.storage.connector.password=<%= @psql_password %>
+<% else %>
+druid.metadata.storage.type=derby
+<% end %>
+
+# Deep Storage
+<% if @s3_bucket %>
+druid.storage.type=s3
+druid.s3.accessKey=<%= @s3_acess_key %>
+druid.s3.secretKey=<%= @s3_secret_key %>
+druid.storage.bucket=<%= @s3_bucket %>
+druid.storage.baseKey=<%= @s3_prefix %>
+druid.storage.archiveBucket=<%= @s3_bucket %>
+druid.storage.archiveBaseKey=indexing-tasks
+<% else %>
+druid.storage.storageDirectory=<%= @druid_local_storage_dir %>
+<% end %>
+
+# Discovery
+druid.selectors.indexing.serviceName=overlord
+druid.selectors.coordinator.serviceName=coordinator
