@@ -138,6 +138,17 @@ action :add do
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
+    template "#{config_dir}/log4j2.xml" do
+      source "log4j2.xml.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:log_dir => log_dir, :service_name => suffix_log_dir)
+      notifies :restart, 'service[druid-middlemanager]', :delayed
+    end    
+
     template "#{parent_config_dir}/_common/common.runtime.properties" do
       source "common.properties.erb"
       owner "root"
@@ -167,6 +178,8 @@ action :add do
     #   action :start
     # end
 
+    node.set["druid"]["services"]["middlemanager"] = true
+
     Chef::Log.info("Druid Middlemanager has been configurated correctly.")
   rescue => e
     Chef::Log.error(e)
@@ -190,6 +203,8 @@ action :remove do
       action :stop
     end
 
+    node.set["druid"]["services"]["middlemanager"] = false
+
     dir_list = [
       config_dir,
       task_log_dir,
@@ -198,7 +213,8 @@ action :remove do
     ]  
 
     template_list = [
-      "#{config_dir}/runtime.properties"
+      "#{config_dir}/runtime.properties",
+      "#{config_dir}/log4j2.xml"
     ]
 
     template_list.each do |temp|
@@ -212,6 +228,14 @@ action :remove do
          recursive true
          action :delete
        end
+    end
+
+    # Remove _common directory and file only if all druid services are disabled on this node.
+    if all_services_disable?
+      directory "#{parent_config_dir}/_common" do
+        recursive true
+        action :delete
+      end 
     end
 
     # Remove parent log directory if it doesn't have childs
