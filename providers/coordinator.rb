@@ -29,6 +29,11 @@ action :add do
     s3_prefix = new_resource.s3_prefix
     druid_local_storage_dir = new_resource.druid_local_storage_dir
 
+    yum_package "druid" do
+      action :upgrade
+      flush_cache [:before]
+    end
+
     service "druid-coordinator" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :nothing
@@ -42,7 +47,7 @@ action :add do
         directory path do
          owner "root"
          group "root"
-         mode 0700
+         mode 0755
         end
     end
 
@@ -50,7 +55,7 @@ action :add do
         directory path do
           owner user
           group group
-          mode 0700
+          mode 0755
         end
     end
 
@@ -58,7 +63,7 @@ action :add do
         directory druid_local_storage_dir do
           owner user
           group group
-          mode 0700
+          mode 0755
           recursive true
         end
     end    
@@ -71,7 +76,7 @@ action :add do
       mode 0644
       retries 2
       variables(:name => name, :cdomain => cdomain, :port => port)
-      notifies :restart, 'service[druid-coordinator]', :delayed
+#      notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
     template "#{config_dir}/log4j2.xml" do
@@ -82,7 +87,7 @@ action :add do
       mode 0644
       retries 2
       variables(:log_dir => log_dir, :service_name => suffix_log_dir)
-      notifies :restart, 'service[druid-coordinator]', :delayed
+#     notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
     template "#{parent_config_dir}/_common/common.runtime.properties" do
@@ -95,7 +100,7 @@ action :add do
       variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user,
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_acess_key => s3_acess_key,
                 :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir)
-      notifies :restart, 'service[druid-coordinator]', :delayed
+#      notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
     template "/etc/sysconfig/druid_coordinator" do
@@ -107,7 +112,7 @@ action :add do
       retries 2
       variables(:heap_coordinator_memory_kb => (memory_kb * 0.8).to_i, :offheap_coordinator_memory_kb => (memory_kb * 0.2).to_i, 
                 :rmi_address => rmi_address, :rmi_port => rmi_port)
-      notifies :restart, 'service[druid-broker]', :delayed
+#      notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
     # service "druid-coordinator" do
