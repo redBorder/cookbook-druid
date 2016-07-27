@@ -1,6 +1,13 @@
 druid CHANGELOG
 ===============
 
+0.0.3
+-----
+[ejimenez] 
+- Change druid package from druid to redborder-druid
+- Quotes typo on sysconfig templates
+- Fix wrong call to action in coordinator provider
+
 0.0.2
 -----
 [ejimenez] 
