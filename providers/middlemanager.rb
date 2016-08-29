@@ -122,7 +122,7 @@ action :add do
     ########################################
 
     template "#{config_dir}/runtime.properties" do
-      source "middlemanager.properties.erb"
+      source "middleManager.properties.erb"
       owner "root"
       group "root"
       cookbook "druid"
@@ -162,8 +162,8 @@ action :add do
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
-    template "/etc/sysconfig/druid_middlemanager" do
-      source "middlemanager_sysconfig.erb"
+    template "/etc/sysconfig/druid_middleManager" do
+      source "middleManager_sysconfig.erb"
       owner "root"
       group "root"
       cookbook "druid"
