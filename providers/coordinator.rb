@@ -85,6 +85,10 @@ action :add do
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
+    extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
+    extensions << "druid-s3-extensions" if !s3_bucket.nil?
+    extensions << "postgresql-metadata-storage" if !psql_uri.nil?    
+
     template "#{parent_config_dir}/_common/common.runtime.properties" do
       source "common.properties.erb"
       owner "root"
@@ -94,7 +98,8 @@ action :add do
       retries 2
       variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user,
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_acess_key => s3_acess_key,
-                :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir)
+                :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir,
+                :extensions => extensions)
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
