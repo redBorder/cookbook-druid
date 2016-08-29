@@ -1,6 +1,11 @@
 druid CHANGELOG
 ===============
 
+0.0.4
+-----
+[agomez]
+- Fix problem when load all extensions.
+
 0.0.3
 -----
 [ejimenez] 
