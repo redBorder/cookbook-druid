@@ -48,7 +48,7 @@ action :add do
         directory path do
          owner "root"
          group "root"
-         mode 0700
+         mode 0755
         end
     end
 
@@ -56,7 +56,7 @@ action :add do
         directory path do
           owner user
           group group
-          mode 0700
+          mode 0755
         end
     end
 
@@ -64,7 +64,7 @@ action :add do
         directory druid_local_storage_dir do
           owner user
           group group
-          mode 0700
+          mode 0755
           recursive true
         end
     end
