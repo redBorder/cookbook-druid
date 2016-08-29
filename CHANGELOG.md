@@ -1,6 +1,12 @@
 druid CHANGELOG
 ===============
 
+0.0.5
+-----
+[cjmateos]
+- Rename middlemanager files to middleManager.
+- Change historical port to 8083. Conflicts with middleManager port.
+
 0.0.4
 -----
 [agomez]
