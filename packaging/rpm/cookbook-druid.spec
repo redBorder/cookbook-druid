@@ -20,7 +20,7 @@ Source0: %{name}-%{version}.tar.gz
 mkdir -p %{buildroot}/var/chef/cookbooks/druid
 cp -f -r  resources/* %{buildroot}/var/chef/cookbooks/druid
 chmod -R 0755 %{buildroot}/var/chef/cookbooks/druid
-install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/druidd/README.md
+install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/druid/README.md
 
 %pre
 
