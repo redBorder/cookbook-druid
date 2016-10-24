@@ -7,8 +7,8 @@ default["druid"]["services"]["middlemanager"]   = false
 default["druid"]["services"]["overlord"]        = false
 
 #Flags
-node["druid-broker"]["registered"] = false
-node["druid-coordinator"]["registered"] = false
-node["druid-historical"]["registered"] = false
-node["druid-middlemanager"]["registered"] = false
-node["druid-overlord"]["registered"] = false
+default["druid-broker"]["registered"] = false
+default["druid-coordinator"]["registered"] = false
+default["druid-historical"]["registered"] = false
+default["druid-middlemanager"]["registered"] = false
+default["druid-overlord"]["registered"] = false
