@@ -1,6 +1,6 @@
 name             'druid'
 maintainer       'redborder'
-maintainer_email 'ejimenez@redborder.com, agomez@redborder.com'
+maintainer_email 'agomez@redborder.com, cjmateos@redborder.com'
 license          'All rights reserved'
 description      'Installs/Configures druid'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
