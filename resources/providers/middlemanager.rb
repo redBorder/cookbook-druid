@@ -185,7 +185,7 @@ action :add do
 
     node.set["druid"]["services"]["middlemanager"] = true
 
-    Chef::Log.info("Druid MiddleManager cookbook has been processed")
+    Chef::Log.info("Druid middlemanager cookbook has been processed")
   rescue => e
     Chef::Log.error(e)
   end
@@ -248,7 +248,7 @@ action :remove do
     delete_if_empty(base_dir)
     delete_if_empty("/etc/sysconfig")
 
-    Chef::Log.info("Druid MiddleManager cookbook has been processed")
+    Chef::Log.info("Druid middlemanager cookbook has been processed")
   rescue => e
     Chef::Log.error(e)
   end
@@ -272,7 +272,7 @@ action :register do
       node.set["druid-middlemanager"]["registered"] = true
     end
 
-    Chef::Log.info("Druid MiddleManager service has been registered to consul")
+    Chef::Log.info("Druid middlemanager service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -289,7 +289,7 @@ action :deregister do
       node.set["druid-middlemanager"]["registered"] = false
     end
 
-    Chef::Log.info("Druid MiddleManager service has been deregistered to consul")
+    Chef::Log.info("Druid middlemanager service has been deregistered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
