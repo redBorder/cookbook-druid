@@ -83,8 +83,8 @@ action :add do
 
     Chef::Log.info(
       "\nBroker Memory:
-        * Memory: #{memory_kb}k 
-        * Heap: #{heap_broker_memory_kb}kb 
+        * Memory: #{memory_kb}k
+        * Heap: #{heap_broker_memory_kb}kb
         * ProcessingBuffer: #{processing_memory_buffer_b / 1024}kb
         * OffHeap: #{offheap_broker_memory_kb}kb"
     )
@@ -99,7 +99,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:name => name, :cdomain => cdomain, :port => port, :memcached_hosts => memcached_hosts, 
+      variables(:name => name, :cdomain => cdomain, :port => port, :memcached_hosts => memcached_hosts,
                 :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
                 :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results)
       notifies :restart, 'service[druid-broker]', :delayed
@@ -114,7 +114,7 @@ action :add do
       retries 2
       variables(:log_dir => log_dir, :service_name => suffix_log_dir)
       notifies :restart, 'service[druid-broker]', :delayed
-    end    
+    end
 
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
@@ -141,7 +141,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:heap_broker_memory_kb => heap_broker_memory_kb, :offheap_broker_memory_kb => offheap_broker_memory_kb, 
+      variables(:heap_broker_memory_kb => heap_broker_memory_kb, :offheap_broker_memory_kb => offheap_broker_memory_kb,
                 :rmi_address => rmi_address, :rmi_port => rmi_port)
       notifies :restart, 'service[druid-broker]', :delayed
     end
@@ -153,7 +153,7 @@ action :add do
 
     node.set["druid"]["services"]["broker"] = true
 
-    Chef::Log.info("Druid Broker has been configurated correctly.")
+    Chef::Log.info("Druid Broker cookbook has been processed")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -177,7 +177,7 @@ action :remove do
     dir_list = [
       config_dir,
       log_dir
-    ]  
+    ]
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -195,23 +195,63 @@ action :remove do
          recursive true
          action :delete
        end
-    end 
+    end
 
     # Remove _common directory and file only if all druid services are disabled on this node.
     if all_services_disable?
       directory "#{parent_config_dir}/_common" do
         recursive true
         action :delete
-      end 
+      end
     end
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
     delete_if_empty("/etc/sysconfig")
 
-    Chef::Log.info("Druid Broker has been deleted correctly.")
+    Chef::Log.info("Druid Broker cookbook has been processed")
   rescue => e
     Chef::Log.error(e.message)
   end
 end
 
+action :register do
+  begin
+    if !node["druid-broker"]["registered"]
+      query = {}
+      query["ID"] = "druid-broker-#{node["hostname"]}"
+      query["Name"] = "druid-broker"
+      query["Address"] = "#{node["ipaddress"]}"
+      query["Port"] = 8080
+      json_query = Chef::JSONCompat.to_json(query)
+
+      execute 'Register service in consul' do
+         command "curl http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+         action :nothing
+      end.run_action(:run)
+
+      node.set["druid-broker"]["registered"] = true
+    end
+
+    Chef::Log.info("Druid Broker service has been registered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
+
+action :deregister do
+  begin
+    if node["druid-broker"]["registered"]
+      execute 'Deregister service in consul' do
+        command "curl http://localhost:8500/v1/agent/service/deregister/druid-broker-#{node["hostname"]} &>/dev/null"
+        action :nothing
+      end.run_action(:run)
+
+      node.set["druid-broker"]["registered"] = false
+    end
+
+    Chef::Log.info("Druid Broker service has been deregistered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end

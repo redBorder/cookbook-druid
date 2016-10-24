@@ -3,7 +3,7 @@
 # Resource:: broker
 #
 
-actions :add, :remove
+actions :add, :remove, :register, :deregister
 default_action :add
 
 attribute :user, :kind_of => String, :default => "druid"
@@ -30,4 +30,3 @@ attribute :s3_acess_key, :kind_of => String
 attribute :s3_secret_key, :kind_of => String
 attribute :s3_prefix, :kind_of => String, :default => "druid"
 attribute :druid_local_storage_dir, :kind_of => String, :default => "/tmp/druid/localStorage"
-

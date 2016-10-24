@@ -61,7 +61,7 @@ action :add do
           mode 0755
           recursive true
         end
-    end    
+    end
 
     template "#{config_dir}/runtime.properties" do
       source "coordinator.properties.erb"
@@ -87,7 +87,7 @@ action :add do
 
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
-    extensions << "postgresql-metadata-storage" if !psql_uri.nil?    
+    extensions << "postgresql-metadata-storage" if !psql_uri.nil?
 
     template "#{parent_config_dir}/_common/common.runtime.properties" do
       source "common.properties.erb"
@@ -110,7 +110,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:heap_coordinator_memory_kb => (memory_kb * 0.8).to_i, :offheap_coordinator_memory_kb => (memory_kb * 0.2).to_i, 
+      variables(:heap_coordinator_memory_kb => (memory_kb * 0.8).to_i, :offheap_coordinator_memory_kb => (memory_kb * 0.2).to_i,
                 :rmi_address => rmi_address, :rmi_port => rmi_port)
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
@@ -122,7 +122,7 @@ action :add do
 
     node.set["druid"]["services"]["coordinator"] = true
 
-    Chef::Log.info("Druid Coordinator has been configurated correctly.")
+    Chef::Log.info("Druid Coordinator cookbook has been processed")
   rescue => e
     Chef::Log.error(e)
   end
@@ -146,7 +146,7 @@ action :remove do
     dir_list = [
       config_dir,
       log_dir
-    ]  
+    ]
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -171,16 +171,56 @@ action :remove do
       directory "#{parent_config_dir}/_common" do
         recursive true
         action :delete
-      end 
+      end
     end
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
     delete_if_empty("/etc/sysconfig")
 
-    Chef::Log.info("Druid Coordinator has been deleted correctly.")
+    Chef::Log.info("Druid Coordinator cookbook has been processed")
   rescue => e
     Chef::Log.error(e.message)
   end
 end
 
+action :register do
+  begin
+    if !node["druid-coordinator"]["registered"]
+      query = {}
+      query["ID"] = "druid-coordinator-#{node["hostname"]}"
+      query["Name"] = "druid-coordinator"
+      query["Address"] = "#{node["ipaddress"]}"
+      query["Port"] = 8081
+      json_query = Chef::JSONCompat.to_json(query)
+
+      execute 'Register service in consul' do
+         command "curl http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+         action :nothing
+      end.run_action(:run)
+
+      node.set["druid-coordinator"]["registered"] = true
+    end
+
+    Chef::Log.info("Druid Coordinator service has been registered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
+
+action :deregister do
+  begin
+    if node["druid-coordinator"]["registered"]
+      execute 'Deregister service in consul' do
+        command "curl http://localhost:8500/v1/agent/service/deregister/druid-coordinator-#{node["hostname"]} &>/dev/null"
+        action :nothing
+      end.run_action(:run)
+
+      node.set["druid-coordinator"]["registered"] = false
+    end
+
+    Chef::Log.info("Druid Coordinator service has been deregistered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end

@@ -65,7 +65,7 @@ action :add do
           recursive true
         end
     end
-    
+
     template "#{config_dir}/runtime.properties" do
       source "overlord.properties.erb"
       owner "root"
@@ -88,7 +88,7 @@ action :add do
       retries 2
       variables(:log_dir => log_dir, :service_name => suffix_log_dir)
       notifies :restart, 'service[druid-overlord]', :delayed
-    end    
+    end
 
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
@@ -126,7 +126,7 @@ action :add do
 
     node.set["druid"]["services"]["overlord"] = true
 
-    Chef::Log.info("Druid Overlord has been configurated correctly.")
+    Chef::Log.info("Druid Overlord cookbook has been processed")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -150,7 +150,7 @@ action :remove do
     dir_list = [
       config_dir,
       log_dir
-    ]  
+    ]
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -175,16 +175,56 @@ action :remove do
       directory "#{parent_config_dir}/_common" do
         recursive true
         action :delete
-      end 
+      end
     end
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
     delete_if_empty("/etc/sysconfig")
 
-    Chef::Log.info("Druid Overlord has been deleted correctly.")
+    Chef::Log.info("Druid Overlord cookbook has been processed")
   rescue => e
     Chef::Log.error(e.message)
   end
 end
 
+action :register do
+  begin
+    if !node["druid-overlord"]["registered"]
+      query = {}
+      query["ID"] = "druid-overlord-#{node["hostname"]}"
+      query["Name"] = "druid-overlord"
+      query["Address"] = "#{node["ipaddress"]}"
+      query["Port"] = 8084
+      json_query = Chef::JSONCompat.to_json(query)
+
+      execute 'Register service in consul' do
+         command "curl http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+         action :nothing
+      end.run_action(:run)
+
+      node.set["druid-overlord"]["registered"] = true
+    end
+
+    Chef::Log.info("Druid Overlord service has been registered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
+
+action :deregister do
+  begin
+    if node["druid-overlord"]["registered"]
+      execute 'Deregister service in consul' do
+        command "curl http://localhost:8500/v1/agent/service/deregister/druid-overlord-#{node["hostname"]} &>/dev/null"
+        action :nothing
+      end.run_action(:run)
+
+      node.set["druid-overlord"]["registered"] = false
+    end
+
+    Chef::Log.info("Druid Overlord service has been deregistered to consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
