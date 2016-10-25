@@ -89,6 +89,14 @@ action :add do
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
     extensions << "postgresql-metadata-storage" if !psql_uri.nil?
 
+    #Obtaining druid database configuration from databag
+    db_druid = Chef::DataBagItem.load("passwords", "db_druid") rescue db_druid = {}
+    if !db_druid.empty?
+      psql_uri = "#{db_druid["hostname"]}:#{db_druid["port"]}"
+      psql_user = db_druid["username"]
+      psql_password = db_druid["pass"]
+    end
+
     template "#{parent_config_dir}/_common/common.runtime.properties" do
       source "common.properties.erb"
       owner "root"
