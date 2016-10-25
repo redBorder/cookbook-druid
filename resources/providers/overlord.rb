@@ -119,12 +119,12 @@ action :add do
       notifies :restart, 'service[druid-overlord]', :delayed
     end
 
-    # service "druid-overlord" do
-    #   supports :status => true, :start => true, :restart => true, :reload => true
-    #   action :start, :delayed
-    # end
+    service "druid-overlord" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :start, :delayed
+    end
 
-    node.set["druid"]["services"]["overlord"] = true
+    node.default["druid"]["services"]["overlord"] = true
 
     Chef::Log.info("Druid Overlord cookbook has been processed")
   rescue => e
