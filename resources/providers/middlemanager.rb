@@ -149,6 +149,14 @@ action :add do
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
+    #Obtaining druid database configuration from databag
+    db_druid = Chef::DataBagItem.load("passwords", "db_druid") rescue db_druid = {}
+    if !db_druid.empty?
+      psql_uri = "#{db_druid["hostname"]}:#{db_druid["port"]}"
+      psql_user = db_druid["username"]
+      psql_password = db_druid["pass"]
+    end
+
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
     extensions << "postgresql-metadata-storage" if !psql_uri.nil?
