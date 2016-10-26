@@ -9,11 +9,5 @@ module Druid
             end
          end
       end
-
-      # Check if all druid services are disabled.
-      def all_services_disable?
-      	node["druid"]["services"].map{|service,status| status}.all? {|status| !status }
-      end
-
     end
 end
