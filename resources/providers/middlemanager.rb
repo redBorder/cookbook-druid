@@ -145,7 +145,10 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/middlemanager"    
+    config_dir = "#{parent_config_dir}/middlemanager"
+    parent_log_dir = new_resource.parent_log_dir
+    suffix_log_dir = new_resource.suffix_log_dir
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     suffix_task_log_dir = new_resource.suffix_task_log_dir
     task_log_dir = "#{log_dir}/#{suffix_task_log_dir}"
     base_dir = new_resource.base_dir
