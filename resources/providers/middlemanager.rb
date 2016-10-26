@@ -43,7 +43,7 @@ action :add do
     psql_user = new_resource.psql_user
     psql_password = new_resource.psql_password
     s3_bucket = new_resource.s3_bucket
-    s3_acess_key = new_resource.s3_acess_key
+    s3_access_key = new_resource.s3_access_key
     s3_secret_key = new_resource.s3_secret_key
     s3_prefix = new_resource.s3_prefix
     druid_local_storage_dir = new_resource.druid_local_storage_dir
@@ -155,6 +155,14 @@ action :add do
       psql_uri = "#{db_druid["hostname"]}:#{db_druid["port"]}"
       psql_user = db_druid["username"]
       psql_password = db_druid["pass"]
+    end
+
+    #Obtaining s3 data
+    s3 = Chef::DataBagItem.load("passwords", "s3") rescue s3 = {}
+    if !s3.empty?
+      s3_bucket = s3["s3_bucket"]
+      s3_access_key = s3["s3_access_key_id"]
+      s3_secret_key = s3["s3_secret_key_id"]
     end
 
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
