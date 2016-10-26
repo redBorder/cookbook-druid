@@ -15,7 +15,7 @@ druid.emitter.logging.logLevel=info
 # Metadata Storage
 <% if @psql_uri %>
 druid.metadata.storage.type=postgresql
-druid.metadata.storage.connector.connectURI=<%= @psql_uri %>
+druid.metadata.storage.connector.connectURI=jdbc:postgresql://<%= @psql_uri %>/druid
 druid.metadata.storage.connector.user=<%= @psql_user %>
 druid.metadata.storage.connector.password=<%= @psql_password %>
 <% else %>
