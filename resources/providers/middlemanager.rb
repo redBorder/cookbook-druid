@@ -154,7 +154,7 @@ action :remove do
     base_dir = new_resource.base_dir
     indexing_dir = new_resource.indexing_dir
 
-    service "druid-broker" do
+    service "druid-middlemanager" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end

@@ -82,7 +82,7 @@ action :remove do
     parent_config_dir = "/etc/druid"
     config_dir = "#{parent_config_dir}/overlord"  
 
-    service "druid-coordinator" do
+    service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end
