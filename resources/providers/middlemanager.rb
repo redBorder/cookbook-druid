@@ -40,7 +40,19 @@ action :add do
     service "druid-middlemanager" do
        supports :status => true, :start => true, :restart => true, :reload => true
        action :nothing
-     end    
+     end
+
+    directory config_dir do
+      owner "root"
+      group "root"
+      mode 0755
+    end
+
+    directory log_dir do
+      owner user
+      group group
+      mode 0755
+    end
 
     [ task_log_dir, base_dir, indexing_dir, "#{indexing_dir}/tasks", "#{indexing_dir}/hadoop" ].each do |path|
         directory path do

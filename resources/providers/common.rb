@@ -9,7 +9,6 @@ action :add do
   begin
     parent_config_dir = "/etc/druid"
     parent_log_dir = new_resource.parent_log_dir
-    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     user = new_resource.user
     group = new_resource.group
     zookeeper_hosts = new_resource.zookeeper_hosts
@@ -58,20 +57,18 @@ action :add do
       action :create
     end
 
-    [ parent_config_dir, config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
+    [ parent_config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
         directory path do
          owner "root"
          group "root"
          mode 0755
         end
     end
-
-    [ parent_log_dir, log_dir ].each do |path|
-        directory path do
-          owner user
-          group group
-          mode 0755
-        end
+    
+    directory parent_log_dir do
+      owner user
+      group group
+      mode 0755
     end
 
     if s3_bucket.nil?
@@ -110,24 +107,8 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/broker"
-    parent_log_dir = new_resource.parent_log_dir
-    suffix_log_dir = new_resource.suffix_log_dir
-    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"    
-
+    parent_log_dir = new_resource.parent_log_dir    
     node.set["druid"]["services"]["broker"] = false
-
-    dir_list = [
-      config_dir,
-      log_dir
-    ]    
-
-    dir_list.each do |dir|
-       directory dir do
-         recursive true
-         action :delete
-       end
-    end
     
     directory "#{parent_config_dir}/_common" do
       recursive true

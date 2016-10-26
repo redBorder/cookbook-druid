@@ -27,6 +27,18 @@ action :add do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :nothing
     end
+
+    directory config_dir do
+      owner "root"
+      group "root"
+      mode 0755
+    end
+
+    directory log_dir do
+      owner user
+      group group
+      mode 0755
+    end
     
     directory task_log_dir do
       owner user

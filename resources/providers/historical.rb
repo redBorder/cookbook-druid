@@ -35,6 +35,18 @@ action :add do
       action :nothing
      end
 
+     directory config_dir do
+      owner "root"
+      group "root"
+      mode 0755
+    end
+
+    directory log_dir do
+      owner user
+      group group
+      mode 0755
+    end
+
     directory segment_cache_dir do
       owner user
       group group

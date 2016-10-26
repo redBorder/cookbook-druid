@@ -10,7 +10,9 @@ action :add do
     config_dir = "#{parent_config_dir}/broker"
     parent_log_dir = new_resource.parent_log_dir
     suffix_log_dir = new_resource.suffix_log_dir
-    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"    
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
+    user = new_resource.user
+    group = new_resource.group
     name = new_resource.name
     cdomain = new_resource.cdomain
     port = new_resource.port
@@ -26,6 +28,18 @@ action :add do
     service "druid-broker" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :nothing
+    end
+
+    directory config_dir do
+      owner "root"
+      group "root"
+      mode 0755
+    end
+
+    directory log_dir do
+      owner user
+      group group
+      mode 0755
     end
 
     #################################
