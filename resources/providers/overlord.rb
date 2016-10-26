@@ -113,7 +113,7 @@ end
 
 action :register do
   begin
-    if !node["druid-overlord"]["registered"]
+    if !node["druid"]["overlord"]["registered"]
       query = {}
       query["ID"] = "druid-overlord-#{node["hostname"]}"
       query["Name"] = "druid-overlord"
@@ -126,7 +126,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid-overlord"]["registered"] = true
+      node.set["druid"]["overlord"]["registered"] = true
     end
 
     Chef::Log.info("Druid Overlord service has been registered to consul")
@@ -137,13 +137,13 @@ end
 
 action :deregister do
   begin
-    if node["druid-overlord"]["registered"]
+    if node["druid"]["overlord"]["registered"]
       execute 'Deregister service in consul' do
         command "curl http://localhost:8500/v1/agent/service/deregister/druid-overlord-#{node["hostname"]} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.set["druid-overlord"]["registered"] = false
+      node.set["druid"]["overlord"]["registered"] = false
     end
 
     Chef::Log.info("Druid Overlord service has been deregistered to consul")

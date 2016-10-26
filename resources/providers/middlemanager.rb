@@ -189,7 +189,7 @@ end
 
 action :register do
   begin
-    if !node["druid-middlemanager"]["registered"]
+    if !node["druid"]["middlemanager"]["registered"]
       query = {}
       query["ID"] = "druid-middlemanager-#{node["hostname"]}"
       query["Name"] = "druid-middlemanager"
@@ -202,7 +202,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid-middlemanager"]["registered"] = true
+      node.set["druid"]["middlemanager"]["registered"] = true
     end
 
     Chef::Log.info("Druid middlemanager service has been registered to consul")
@@ -213,13 +213,13 @@ end
 
 action :deregister do
   begin
-    if node["druid-middlemanager"]["registered"]
+    if node["druid"]["middlemanager"]["registered"]
       execute 'Deregister service in consul' do
         command "curl http://localhost:8500/v1/agent/service/deregister/druid-middlemanager-#{node["hostname"]} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.set["druid-middlemanager"]["registered"] = false
+      node.set["druid"]["middlemanager"]["registered"] = false
     end
 
     Chef::Log.info("Druid middlemanager service has been deregistered to consul")

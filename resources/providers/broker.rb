@@ -126,7 +126,7 @@ end
 
 action :register do
   begin
-    if !node["druid-broker"]["registered"]
+    if !node["druid"]["broker"]["registered"]
       query = {}
       query["ID"] = "druid-broker-#{node["hostname"]}"
       query["Name"] = "druid-broker"
@@ -139,7 +139,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid-broker"]["registered"] = true
+      node.set["druid"]["broker"]["registered"] = true
     end
 
     Chef::Log.info("Druid Broker service has been registered to consul")
@@ -150,13 +150,13 @@ end
 
 action :deregister do
   begin
-    if node["druid-broker"]["registered"]
+    if node["druid"]["broker"]["registered"]
       execute 'Deregister service in consul' do
         command "curl http://localhost:8500/v1/agent/service/deregister/druid-broker-#{node["hostname"]} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.set["druid-broker"]["registered"] = false
+      node.set["druid"]["broker"]["registered"] = false
     end
 
     Chef::Log.info("Druid Broker service has been deregistered from consul")
