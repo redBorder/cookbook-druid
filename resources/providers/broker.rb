@@ -96,7 +96,7 @@ action :add do
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
-    node.set["druid"]["services"]["broker"] = true
+    node.default["druid"]["services"]["broker"] = true
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e
@@ -108,13 +108,13 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     config_dir = "#{parent_config_dir}/broker"
+    suffix_log_dir = new_resource.suffix_log_dir
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
 
     service "druid-broker" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end
-
-    node.set["druid"]["services"]["broker"] = false
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -126,6 +126,21 @@ action :remove do
          action :delete
        end
     end
+
+    dir_list = [
+                 config_dir,
+                 log_dir
+               ]
+
+    # removing directories
+    dir_list.each do |dirs|
+      directory dirs do
+        action :delete
+        recursive true
+      end
+    end
+
+    node.default["druid"]["services"]["broker"] = false
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e
@@ -149,9 +164,8 @@ action :register do
       end.run_action(:run)
 
       node.set["druid"]["broker"]["registered"] = true
+      Chef::Log.info("Druid Broker service has been registered to consul")
     end
-
-    Chef::Log.info("Druid Broker service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -166,9 +180,8 @@ action :deregister do
       end.run_action(:run)
 
       node.set["druid"]["broker"]["registered"] = false
+      Chef::Log.info("Druid Broker service has been deregistered from consul")
     end
-
-    Chef::Log.info("Druid Broker service has been deregistered from consul")
   rescue => e
     Chef::Log.error(e.message)
   end

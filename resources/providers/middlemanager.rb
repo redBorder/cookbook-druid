@@ -136,12 +136,7 @@ action :add do
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
-    # service "druid-middlemanager" do
-    #   supports :status => true, :start => true, :restart => true, :reload => true
-    #   action :start
-    # end
-
-    node.set["druid"]["services"]["middlemanager"] = true
+    node.default["druid"]["services"]["middlemanager"] = true
 
     Chef::Log.info("Druid cookbook (middlemanager) has been processed")
   rescue => e
@@ -166,13 +161,6 @@ action :remove do
       action :stop
     end
 
-    node.set["druid"]["services"]["middlemanager"] = false
-
-    dir_list = [
-      task_log_dir,
-      indexing_dir
-    ]
-
     template_list = [
       "#{config_dir}/runtime.properties",
       "#{config_dir}/log4j2.xml"
@@ -184,12 +172,22 @@ action :remove do
        end
     end
 
+    dir_list = [
+      config_dir,
+      task_log_dir,
+      log_dir,
+      indexing_dir,
+      base_dir
+    ]
+
     dir_list.each do |dir|
        directory dir do
          recursive true
          action :delete
        end
     end
+
+    node.default["druid"]["services"]["middlemanager"] = false
 
     Chef::Log.info("Druid middlemanager cookbook has been processed")
   rescue => e
@@ -213,9 +211,8 @@ action :register do
       end.run_action(:run)
 
       node.set["druid"]["middlemanager"]["registered"] = true
+      Chef::Log.info("Druid middlemanager service has been deregistered to consul")
     end
-
-    Chef::Log.info("Druid middlemanager service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -230,9 +227,8 @@ action :deregister do
       end.run_action(:run)
 
       node.set["druid"]["middlemanager"]["registered"] = false
+      Chef::Log.info("Druid middlemanager service has been deregistered to consul")
     end
-
-    Chef::Log.info("Druid middlemanager service has been deregistered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end

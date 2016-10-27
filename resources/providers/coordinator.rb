@@ -65,7 +65,7 @@ action :add do
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
-    node.set["druid"]["services"]["coordinator"] = true
+    node.default["druid"]["services"]["coordinator"] = true
 
     Chef::Log.info("Druid cookbook (coordinator) has been processed")
   rescue => e
@@ -77,13 +77,13 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     config_dir = "#{parent_config_dir}/coordinator"
+    suffix_log_dir = new_resource.suffix_log_dir
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
 
     service "druid-coordinator" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end
-
-    node.set["druid"]["services"]["coordinator"] = false
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -95,6 +95,21 @@ action :remove do
          action :delete
        end
     end
+
+    dir_list = [
+                 config_dir,
+                 log_dir
+               ]
+
+    # removing directories
+    dir_list.each do |dirs|
+      directory dirs do
+        action :delete
+        recursive true
+      end
+    end
+
+    node.default["druid"]["services"]["coordinator"] = false
 
     Chef::Log.info("Druid cookbook (coordinator) has been processed")
   rescue => e
@@ -118,9 +133,8 @@ action :register do
       end.run_action(:run)
 
       node.set["druid"]["coordinator"]["registered"] = true
+      Chef::Log.info("Druid Coordinator service has been registered to consul")
     end
-
-    Chef::Log.info("Druid Coordinator service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -135,9 +149,8 @@ action :deregister do
       end.run_action(:run)
 
       node.set["druid"]["coordinator"]["registered"] = false
+      Chef::Log.info("Druid Coordinator service has been deregistered to consul")
     end
-
-    Chef::Log.info("Druid Coordinator service has been deregistered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
