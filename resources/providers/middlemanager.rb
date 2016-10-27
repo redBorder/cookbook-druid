@@ -136,6 +136,11 @@ action :add do
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
+    service "druid-middlemanager" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action [:enable,:start]
+    end
+
     node.default["druid"]["services"]["middlemanager"] = true
 
     Chef::Log.info("Druid cookbook (middlemanager) has been processed")
@@ -158,7 +163,7 @@ action :remove do
 
     service "druid-middlemanager" do
       supports :status => true, :start => true, :restart => true, :reload => true
-      action :stop
+      action [:disable,:stop]
     end
 
     template_list = [

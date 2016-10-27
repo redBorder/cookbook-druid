@@ -96,6 +96,11 @@ action :add do
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
+    service "druid-broker" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action [:enable,:start]
+    end
+
     node.default["druid"]["services"]["broker"] = true
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
@@ -114,7 +119,7 @@ action :remove do
 
     service "druid-broker" do
       supports :status => true, :start => true, :restart => true, :reload => true
-      action :stop
+      action [:disable,:stop]
     end
 
     template_list = [
