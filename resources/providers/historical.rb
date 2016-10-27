@@ -115,7 +115,7 @@ action :add do
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
-    node.set["druid"]["services"]["historical"] = true
+    node.default["druid"]["services"]["historical"] = true
 
     Chef::Log.info("Druid cookbook (historical) has been processed")
   rescue => e
@@ -127,14 +127,14 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     config_dir = "#{parent_config_dir}/historical"
+    suffix_log_dir = new_resource.suffix_log_dir
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     segment_cache_dir = new_resource.segment_cache_dir
 
     service "druid-historical" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end
-
-    node.set["druid"]["services"]["historical"] = false
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -147,10 +147,21 @@ action :remove do
        end
     end
 
-    directory segment_cache_dir do
-      recursive true
-      action :delete
+    dir_list = [
+                 config_dir,
+                 log_dir,
+                 segment_cache_dir
+               ]
+
+    # removing directories
+    dir_list.each do |dirs|
+      directory dirs do
+        action :delete
+        recursive true
+      end
     end
+
+    node.default["druid"]["services"]["historical"] = false
 
     Chef::Log.info("Druid cookbook (historical) has been processed")
   rescue => e
@@ -174,9 +185,8 @@ action :register do
       end.run_action(:run)
 
       node.set["druid"]["historical"]["registered"] = true
+      Chef::Log.info("Druid Historical service has been registered to consul")
     end
-
-    Chef::Log.info("Druid Historical service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -191,9 +201,8 @@ action :deregister do
       end.run_action(:run)
 
       node.set["druid"]["historical"]["registered"] = false
+      Chef::Log.info("Druid Historical service has been deregistered to consul")
     end
-
-    Chef::Log.info("Druid Historical service has been deregistered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end

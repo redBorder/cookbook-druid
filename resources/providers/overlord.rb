@@ -88,13 +88,15 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     config_dir = "#{parent_config_dir}/overlord"
+    parent_log_dir = new_resource.parent_log_dir
+    suffix_log_dir = new_resource.suffix_log_dir
+    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
+    task_log_dir = "#{log_dir}/indexing"
 
     service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
       action :stop
     end
-
-    node.set["druid"]["services"]["overlord"] = false
 
     template_list = [
       "#{config_dir}/runtime.properties",
@@ -107,10 +109,20 @@ action :remove do
        end
     end
 
-    directory task_log_dir do
-      recursive true
-      action :delete
+    dir_list = [
+      config_dir,
+      task_log_dir,
+      log_dir
+    ]
+
+    dir_list.each do |dir|
+       directory dir do
+         recursive true
+         action :delete
+       end
     end
+
+    node.default["druid"]["services"]["overlord"] = false
 
     Chef::Log.info("Druid cookbook (overlord) has been processed")
   rescue => e
@@ -134,9 +146,8 @@ action :register do
       end.run_action(:run)
 
       node.set["druid"]["overlord"]["registered"] = true
+      Chef::Log.info("Druid Overlord service has been registered to consul")
     end
-
-    Chef::Log.info("Druid Overlord service has been registered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -151,9 +162,8 @@ action :deregister do
       end.run_action(:run)
 
       node.set["druid"]["overlord"]["registered"] = false
+      Chef::Log.info("Druid Overlord service has been deregistered to consul")
     end
-
-    Chef::Log.info("Druid Overlord service has been deregistered to consul")
   rescue => e
     Chef::Log.error(e.message)
   end
