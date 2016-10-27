@@ -36,11 +36,6 @@ action :add do
     heap_middlemanager_memory_kb = new_resource.heap_middlemanager_memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    
-    service "druid-middlemanager" do
-       supports :status => true, :start => true, :restart => true, :reload => true
-       action :nothing
-     end
 
     directory config_dir do
       owner "root"
@@ -61,7 +56,7 @@ action :add do
           mode 0755
         end
     end
-   
+
 
     ########################################
     # Middlemanager resource configuration #

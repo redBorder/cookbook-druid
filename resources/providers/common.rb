@@ -21,6 +21,35 @@ action :add do
     s3_prefix = new_resource.s3_prefix
     druid_local_storage_dir = new_resource.druid_local_storage_dir
 
+    ################
+    # DRUID SERVICES
+    ################ 
+
+    service "druid-broker" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :nothing
+    end
+
+    service "druid-coordinator" do
+       supports :status => true, :start => true, :restart => true, :reload => true
+       action :nothing
+    end
+
+    service "druid-historical" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :nothing
+    end
+
+    service "druid-middlemanager" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :nothing
+    end
+
+    service "druid-overlord" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action :nothing
+    end
+
     ####################
     # READ DATABAGS
     ####################
@@ -40,7 +69,7 @@ action :add do
       psql_user = db_druid["username"]
       psql_password = db_druid["pass"]
     end
-    
+
     #######################
     # Druid installation
     #######################
@@ -64,7 +93,7 @@ action :add do
          mode 0755
         end
     end
-    
+
     directory parent_log_dir do
       owner user
       group group
@@ -78,7 +107,7 @@ action :add do
           mode 0755
           recursive true
         end
-    end    
+    end
 
     extensions = ["druid-kafka-indexing-service", "druid-kafka-eight", "druid-histogram"]
     extensions << "druid-s3-extensions" if !s3_bucket.nil?
@@ -100,7 +129,7 @@ action :add do
       notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
       notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
       notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
-    end    
+    end
 
     Chef::Log.info("Druid cookbook (common) has been processed")
   rescue => e
@@ -111,14 +140,14 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    parent_log_dir = new_resource.parent_log_dir    
+    parent_log_dir = new_resource.parent_log_dir
     node.set["druid"]["services"]["broker"] = false
-    
+
     directory "#{parent_config_dir}/_common" do
       recursive true
       action :delete
     end
-    
+
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
     delete_if_empty("/etc/sysconfig")
@@ -128,4 +157,3 @@ action :remove do
     Chef::Log.error(e.message)
   end
 end
-

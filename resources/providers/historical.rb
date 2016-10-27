@@ -29,11 +29,6 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    
-    service "druid-historical" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action :nothing
-     end
 
      directory config_dir do
       owner "root"
@@ -52,7 +47,7 @@ action :add do
       group group
       mode 0755
       recursive true
-    end    
+    end
 
     #####################################
     # Historical resource configuration #
@@ -132,7 +127,7 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/historical"    
+    config_dir = "#{parent_config_dir}/historical"
     segment_cache_dir = new_resource.segment_cache_dir
 
     service "druid-historical" do
@@ -141,7 +136,7 @@ action :remove do
     end
 
     node.set["druid"]["services"]["historical"] = false
-    
+
     template_list = [
       "#{config_dir}/runtime.properties",
       "#{config_dir}/log4j2.xml"
@@ -152,12 +147,12 @@ action :remove do
          action :delete
        end
     end
-  
+
     directory segment_cache_dir do
       recursive true
       action :delete
     end
-  
+
     Chef::Log.info("Druid cookbook (historical) has been processed")
   rescue => e
     Chef::Log.error(e)
