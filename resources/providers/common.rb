@@ -95,7 +95,11 @@ action :add do
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_access_key => s3_access_key,
                 :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir,
                 :extensions => extensions)
-      notifies :restart, 'service[druid-broker]', :delayed
+      notifies node["redborder"]["services"]["druid-broker"] ? :restart : :nothing, 'service[druid-broker]', :delayed
+      notifies node["redborder"]["services"]["druid-coordinator"] ? :restart : :nothing, 'service[druid-coordinator]', :delayed
+      notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
+      notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
+      notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
     end    
 
     Chef::Log.info("Druid cookbook (common) has been processed")
