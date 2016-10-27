@@ -176,8 +176,7 @@ action :remove do
       config_dir,
       task_log_dir,
       log_dir,
-      indexing_dir,
-      base_dir
+      indexing_dir
     ]
 
     dir_list.each do |dir|
