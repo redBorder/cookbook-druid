@@ -22,11 +22,6 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    
-    service "druid-overlord" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action :nothing
-    end
 
     directory config_dir do
       owner "root"
@@ -39,13 +34,13 @@ action :add do
       group group
       mode 0755
     end
-    
+
     directory task_log_dir do
       owner user
       group group
       mode 0755
     end
-       
+
     template "#{config_dir}/runtime.properties" do
       source "overlord.properties.erb"
       owner "root"
@@ -92,7 +87,7 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/overlord"  
+    config_dir = "#{parent_config_dir}/overlord"
 
     service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -111,12 +106,12 @@ action :remove do
          action :delete
        end
     end
-    
+
     directory task_log_dir do
       recursive true
       action :delete
     end
-      
+
     Chef::Log.info("Druid cookbook (overlord) has been processed")
   rescue => e
     Chef::Log.error(e.message)

@@ -23,11 +23,6 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    
-    service "druid-broker" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action :nothing
-    end
 
     directory config_dir do
       owner "root"
@@ -111,7 +106,7 @@ end
 action :remove do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/broker"    
+    config_dir = "#{parent_config_dir}/broker"
 
     service "druid-broker" do
       supports :status => true, :start => true, :restart => true, :reload => true
@@ -129,7 +124,7 @@ action :remove do
        file temp do
          action :delete
        end
-    end    
+    end
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e
