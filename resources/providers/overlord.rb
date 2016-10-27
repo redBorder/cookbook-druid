@@ -76,6 +76,11 @@ action :add do
       notifies :restart, 'service[druid-overlord]', :delayed
     end
 
+    service "druid-overlord" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action [:enable,:start]
+    end
+
     node.default["druid"]["services"]["overlord"] = true
 
     Chef::Log.info("Druid cookbook (overlord) has been processed")
@@ -95,7 +100,7 @@ action :remove do
 
     service "druid-overlord" do
       supports :status => true, :start => true, :restart => true, :reload => true
-      action :stop
+      action [:disable,:stop]
     end
 
     template_list = [

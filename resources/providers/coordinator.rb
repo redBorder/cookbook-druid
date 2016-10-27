@@ -65,6 +65,11 @@ action :add do
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
+    service "druid-coordinator" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action [:enable,:start]
+    end
+
     node.default["druid"]["services"]["coordinator"] = true
 
     Chef::Log.info("Druid cookbook (coordinator) has been processed")
@@ -82,7 +87,7 @@ action :remove do
 
     service "druid-coordinator" do
       supports :status => true, :start => true, :restart => true, :reload => true
-      action :stop
+      action [:disable,:stop]
     end
 
     template_list = [

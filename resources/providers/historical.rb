@@ -115,6 +115,11 @@ action :add do
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
+    service "druid-historical" do
+      supports :status => true, :start => true, :restart => true, :reload => true
+      action [:enable,:start]
+    end
+
     node.default["druid"]["services"]["historical"] = true
 
     Chef::Log.info("Druid cookbook (historical) has been processed")
@@ -134,7 +139,7 @@ action :remove do
 
     service "druid-historical" do
       supports :status => true, :start => true, :restart => true, :reload => true
-      action :stop
+      action [:disable,:stop]
     end
 
     template_list = [
