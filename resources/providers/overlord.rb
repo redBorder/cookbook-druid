@@ -81,8 +81,6 @@ action :add do
       action [:enable,:start]
     end
 
-    node.default["druid"]["services"]["overlord"] = true
-
     Chef::Log.info("Druid cookbook (overlord) has been processed")
   rescue => e
     Chef::Log.error(e.message)
@@ -126,8 +124,6 @@ action :remove do
          action :delete
        end
     end
-
-    node.default["druid"]["services"]["overlord"] = false
 
     Chef::Log.info("Druid cookbook (overlord) has been processed")
   rescue => e

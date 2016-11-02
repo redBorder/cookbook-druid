@@ -141,8 +141,6 @@ action :add do
       action [:enable,:start]
     end
 
-    node.default["druid"]["services"]["middlemanager"] = true
-
     Chef::Log.info("Druid cookbook (middlemanager) has been processed")
   rescue => e
     Chef::Log.error(e)
@@ -190,8 +188,6 @@ action :remove do
          action :delete
        end
     end
-
-    node.default["druid"]["services"]["middlemanager"] = false
 
     Chef::Log.info("Druid middlemanager cookbook has been processed")
   rescue => e
