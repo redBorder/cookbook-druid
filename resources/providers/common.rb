@@ -151,7 +151,6 @@ action :remove do
 
     # Remove parent log directory if it doesn't have childs
     delete_if_empty(parent_log_dir)
-    delete_if_empty("/etc/sysconfig")
 
     Chef::Log.info("Druid cookbook (common) has been processed")
   rescue => e

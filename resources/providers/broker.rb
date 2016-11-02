@@ -100,8 +100,6 @@ action :add do
       action [:enable,:start]
     end
 
-    node.default["druid"]["services"]["broker"] = true
-
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e
     Chef::Log.error(e.message)
@@ -144,8 +142,6 @@ action :remove do
         recursive true
       end
     end
-
-    node.default["druid"]["services"]["broker"] = false
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e

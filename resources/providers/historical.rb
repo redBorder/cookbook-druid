@@ -120,8 +120,6 @@ action :add do
       action [:enable,:start]
     end
 
-    node.default["druid"]["services"]["historical"] = true
-
     Chef::Log.info("Druid cookbook (historical) has been processed")
   rescue => e
     Chef::Log.error(e)
@@ -166,8 +164,6 @@ action :remove do
         recursive true
       end
     end
-
-    node.default["druid"]["services"]["historical"] = false
 
     Chef::Log.info("Druid cookbook (historical) has been processed")
   rescue => e
