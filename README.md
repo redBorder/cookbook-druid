@@ -1,7 +1,7 @@
 Druid Cookbook
 ==============
 
-Cookbook to configure all druid services in redborder (broker,coordinator,historical,middlemanager,overlord and realtime)
+Cookbook to configure all druid services in redborder (broker,coordinator,historical,middlemanager and overlord)
 
 
 Contributing
