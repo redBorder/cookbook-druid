@@ -121,7 +121,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user, :memcached_hosts => memcached_hosts
+      variables(:zookeeper_hosts => zookeeper_hosts, :psql_uri => psql_uri, :psql_user => psql_user, :memcached_hosts => memcached_hosts,
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_access_key => s3_access_key,
                 :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir,
                 :extensions => extensions)
