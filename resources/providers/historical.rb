@@ -18,7 +18,6 @@ action :add do
     suffix_log_dir = new_resource.suffix_log_dir
     log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     segment_cache_dir = new_resource.segment_cache_dir
-    memcached_hosts = new_resource.memcached_hosts
     processing_threads = new_resource.processing_threads
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
@@ -86,7 +85,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:name => name, :cdomain => cdomain, :port => port, :memcached_hosts => memcached_hosts,
+      variables(:name => name, :cdomain => cdomain, :port => port,
                 :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
                 :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results,
                 :max_size_b => max_size_b, :tier => tier, :segment_cache_dir => segment_cache_dir)

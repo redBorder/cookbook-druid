@@ -22,6 +22,16 @@ druid.metadata.storage.connector.password=<%= @psql_password %>
 druid.metadata.storage.type=derby
 <% end %>
 
+# Caching
+<% if @memcached_hosts %>
+druid.cache.type=memcached
+druid.cache.hosts=<%= @memcached_hosts %>
+druid.cache.expiration=86400
+druid.cache.memcachedPrefix=druid
+<% else %>
+druid.cache.type=local
+<% end %>
+
 # Deep Storage
 <% if @s3_bucket %>
 druid.storage.type=s3
