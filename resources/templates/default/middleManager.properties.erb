@@ -26,7 +26,7 @@ druid.monitoring.monitors=["com.metamx.metrics.JvmMonitor", "io.druid.server.met
 
 # Peon
 druid.indexer.task.baseDir=<%= @base_dir %>
-druid.indexer.task.baseTaskDir=<%= "{@indexing_dir}/tasks" %>
+druid.indexer.task.baseTaskDir=<%= "#{@indexing_dir}/tasks" %>
 druid.indexer.task.hadoopWorkingPath=<%= "#{@indexing_dir}/hadoop" %>
 druid.indexer.task.defaultHadoopCoordinates=["org.apache.hadoop:hadoop-client:<%= @hadoop_version %>"]
 druid.indexer.task.restoreTasksOnRestart=true
