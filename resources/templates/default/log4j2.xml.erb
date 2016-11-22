@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration status="WARN">
+<Configuration status="info" name="druid" packages="">
     <Appenders>
+        <RollingFile name="RollingFile" fileName="/var/log/druid/DRUIDTYPE.log" filePattern="/var/log/druid/DRUIDTYPE-%i.log">
+         <PatternLayout>
+            <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
+         </PatternLayout>
+         <Policies>
+            <SizeBasedTriggeringPolicy size="10 MB" />
+         </Policies>
+         <DefaultRolloverStrategy max="5" />
+      </RollingFile>
         <File name="Druid" fileName="<%= "#{@log_dir}/#{@service_name}.log" %>">
             <PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/>
         </File>
@@ -8,6 +17,7 @@
     <Loggers>
         <Root level="info">
             <AppenderRef ref="Druid"/>
+            <AppenderRef ref="RollingFile" />
         </Root>
     </Loggers>
 </Configuration>
