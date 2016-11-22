@@ -144,6 +144,14 @@ action :remove do
     parent_log_dir = new_resource.parent_log_dir
     node.set["druid"]["services"]["broker"] = false
 
+    # removing package
+    bash 'dummy-delay-druid-uninstall' do
+      notifies :remove, 'yum_package[redborder-druid]' , :delayed
+    end
+    yum_package 'redborder-druid' do
+      action :nothing
+    end
+
     directory "#{parent_config_dir}/_common" do
       recursive true
       action :delete
