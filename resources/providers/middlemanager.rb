@@ -6,7 +6,7 @@
 action :add do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/middlemanager"
+    config_dir = "#{parent_config_dir}/middleManager"
     user = new_resource.user
     group = new_resource.group
     name = new_resource.name
