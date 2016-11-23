@@ -143,7 +143,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:heap_middlemanager_memory_kb => heap_middlemanager_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port)
+      variables(:heap_middlemanager_memory_kb => heap_middlemanager_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
