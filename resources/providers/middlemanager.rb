@@ -57,6 +57,17 @@ action :add do
         end
     end
 
+    ####################
+    # READ DATABAGS
+    ####################
+
+    #Obtaining s3 data
+    s3 = Chef::DataBagItem.load("passwords", "s3") rescue s3 = {}
+    if !s3.empty?
+      s3_bucket = s3["s3_bucket"]
+      s3_access_key = s3["s3_access_key_id"]
+      s3_secret_key = s3["s3_secret_key_id"]
+    end
 
     ########################################
     # Middlemanager resource configuration #
