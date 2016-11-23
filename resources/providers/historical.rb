@@ -111,7 +111,7 @@ action :add do
       mode 0644
       retries 2
       variables(:heap_historical_memory_kb => heap_historical_memory_kb, :offheap_historical_memory_kb => offheap_historical_memory_kb,
-                :rmi_address => rmi_address, :rmi_port => rmi_port)
+                :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 

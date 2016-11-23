@@ -61,7 +61,7 @@ action :add do
       mode 0644
       retries 2
       variables(:heap_coordinator_memory_kb => (memory_kb * 0.8).to_i, :offheap_coordinator_memory_kb => (memory_kb * 0.2).to_i,
-                :rmi_address => rmi_address, :rmi_port => rmi_port)
+                :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
       notifies :restart, 'service[druid-coordinator]', :delayed
     end
 
