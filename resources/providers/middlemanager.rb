@@ -6,7 +6,7 @@
 action :add do
   begin
     parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/middlemanager"
+    config_dir = "#{parent_config_dir}/middleManager"
     user = new_resource.user
     group = new_resource.group
     name = new_resource.name
@@ -57,6 +57,17 @@ action :add do
         end
     end
 
+    ####################
+    # READ DATABAGS
+    ####################
+
+    #Obtaining s3 data
+    s3 = Chef::DataBagItem.load("passwords", "s3") rescue s3 = {}
+    if !s3.empty?
+      s3_bucket = s3["s3_bucket"]
+      s3_access_key = s3["s3_access_key_id"]
+      s3_secret_key = s3["s3_secret_key_id"]
+    end
 
     ########################################
     # Middlemanager resource configuration #
@@ -132,7 +143,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:heap_middlemanager_memory_kb => heap_middlemanager_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port)
+      variables(:heap_middlemanager_memory_kb => heap_middlemanager_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
       notifies :restart, 'service[druid-middlemanager]', :delayed
     end
 
