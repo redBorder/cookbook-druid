@@ -94,11 +94,11 @@ action :remove do
       "#{config_dir}/log4j2.xml"
     ]
 
-    template_list.each do |temp|
-       file temp do
-         action :delete
-       end
-    end
+    #template_list.each do |temp|
+    #   file temp do
+    #     action :delete
+    #   end
+    #end
 
     dir_list = [
                  config_dir,
@@ -106,12 +106,12 @@ action :remove do
                ]
 
     # removing directories
-    dir_list.each do |dirs|
-      directory dirs do
-        action :delete
-        recursive true
-      end
-    end
+    #dir_list.each do |dirs|
+    #  directory dirs do
+    #    action :delete
+    #    recursive true
+    #  end
+    #end
 
     Chef::Log.info("Druid cookbook (coordinator) has been processed")
   rescue => e

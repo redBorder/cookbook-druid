@@ -180,11 +180,11 @@ action :remove do
       "#{config_dir}/log4j2.xml"
     ]
 
-    template_list.each do |temp|
-       file temp do
-         action :delete
-       end
-    end
+    #template_list.each do |temp|
+    #   file temp do
+    #     action :delete
+    #   end
+    #end
 
     dir_list = [
       config_dir,
@@ -193,12 +193,12 @@ action :remove do
       indexing_dir
     ]
 
-    dir_list.each do |dir|
-       directory dir do
-         recursive true
-         action :delete
-       end
-    end
+    #dir_list.each do |dir|
+    #   directory dir do
+    #     recursive true
+    #     action :delete
+    #   end
+    #end
 
     Chef::Log.info("Druid middlemanager cookbook has been processed")
   rescue => e

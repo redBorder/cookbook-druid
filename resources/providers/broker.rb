@@ -15,7 +15,7 @@ action :add do
     group = new_resource.group
     name = new_resource.name
     cdomain = new_resource.cdomain
-    port = new_resource.port    
+    port = new_resource.port
     processing_threads = new_resource.processing_threads
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
@@ -124,11 +124,11 @@ action :remove do
       "#{config_dir}/log4j2.xml"
     ]
 
-    template_list.each do |temp|
-       file temp do
-         action :delete
-       end
-    end
+    #template_list.each do |temp|
+    #   file temp do
+    #     action :delete
+    #   end
+    #end
 
     dir_list = [
                  config_dir,
@@ -136,12 +136,12 @@ action :remove do
                ]
 
     # removing directories
-    dir_list.each do |dirs|
-      directory dirs do
-        action :delete
-        recursive true
-      end
-    end
+    #dir_list.each do |dirs|
+    #  directory dirs do
+    #    action :delete
+    #    recursive true
+    #  end
+    #end
 
     Chef::Log.info("Druid cookbook (broker) has been processed")
   rescue => e

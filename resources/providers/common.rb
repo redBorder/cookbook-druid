@@ -145,20 +145,20 @@ action :remove do
     node.set["druid"]["services"]["broker"] = false
 
     # removing package
-    bash 'dummy-delay-druid-uninstall' do
-      notifies :remove, 'yum_package[redborder-druid]' , :delayed
-    end
-    yum_package 'redborder-druid' do
-      action :nothing
-    end
+    #bash 'dummy-delay-druid-uninstall' do
+    #  notifies :remove, 'yum_package[redborder-druid]' , :delayed
+    #end
+    #yum_package 'redborder-druid' do
+    #  action :nothing
+    #end
 
-    directory "#{parent_config_dir}/_common" do
-      recursive true
-      action :delete
-    end
+    #directory "#{parent_config_dir}/_common" do
+    #  recursive true
+    #  action :delete
+    #end
 
     # Remove parent log directory if it doesn't have childs
-    delete_if_empty(parent_log_dir)
+    #delete_if_empty(parent_log_dir)
 
     Chef::Log.info("Druid cookbook (common) has been processed")
   rescue => e
