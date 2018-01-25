@@ -21,7 +21,6 @@ attribute :s3_log_prefix, :kind_of => String, :default => "druid-indexer-logs"
 attribute :base_dir, :kind_of => String, :default => "/tmp/druid"
 attribute :indexing_dir, :kind_of => String, :default => "/tmp/druid/indexing"
 attribute :hadoop_version, :kind_of => String, :default => "2.7.1"
-attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :capacity_multiplier, :kind_of => Integer, :default => 1
 attribute :cpu_num, :kind_of => Integer, :default => node["cpu"]["total"]
 attribute :memory_kb, :kind_of => Integer, :default => 3145728
