@@ -23,6 +23,7 @@ action :add do
     heap_realtime_memory_kb = new_resource.heap_realtime_memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    num_threads = new_resource.num_threads
 
     directory config_dir do
       owner "root"
@@ -54,12 +55,14 @@ action :add do
       Chef::Log.info(
       "\nRealtime Memory:
         * Memory: #{memory_kb}k
-        * Heap Realtime: #{heap_realtime_memory_kb}kb"
+        * Heap Realtime: #{heap_realtime_memory_kb}kb
+        * #Threads: #{num_threads}
+      "
       )
     ########################################
     ########################################
 
-    template "#{config_dir}/runtime.properties" do
+    template "#{config_dir}/realtime.properties" do
       source "realtime.properties.erb"
       owner "root"
       group "root"
@@ -68,7 +71,7 @@ action :add do
       retries 2
       variables(:name => name, :cdomain => cdomain, :port => port,
                 :processing_memory_buffer_b => processing_memory_buffer_b, :processing_threads => processing_threads,
-                :base_dir => base_dir, :rmi_address => rmi_address)
+                :base_dir => base_dir, :rmi_address => rmi_address, :num_threads => num_threads)
       notifies :restart, 'service[druid-realtime]', :delayed
     end
 
