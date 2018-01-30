@@ -16,9 +16,9 @@ attribute :port, :kind_of => Integer, :default => 8084
 attribute :base_dir, :kind_of => String, :default => "/tmp/druid"
 attribute :cpu_num, :kind_of => Integer, :default => node["cpu"]["total"]
 attribute :memory_kb, :kind_of => Integer, :default => 3145728
-attribute :processing_memory_buffer_b, :kind_of => Integer
+attribute :processing_memory_buffer_b, :kind_of => Integer, :default => 2147483647
 attribute :processing_threads, :kind_of => Integer
 attribute :heap_realtime_memory_kb, :kind_of => Integer, :default => 262144
 attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :rmi_port, :kind_of => String, :default => "9084"
-attribute :num_threads, :kind_of => Integer, :default => 3
+attribute :num_threads, :kind_of => Integer, :default => 1
