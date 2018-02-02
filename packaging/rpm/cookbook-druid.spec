@@ -25,6 +25,16 @@ install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/druid/README.md
 %pre
 
 %post
+case "$1" in
+  1)
+    # This is an initial install.
+    :
+  ;;
+  2)
+    # This is an upgrade.
+    su - -s /bin/bash -c 'source /etc/profile && rvm gemset use default && env knife cookbook upload druid'
+  ;;
+esac
 
 %files
 %defattr(0755,root,root)
@@ -36,5 +46,7 @@ install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/druid/README.md
 %doc
 
 %changelog
+* Fri Feb 2 2018 Juan J. Prieto <jjprieto@redborder.com> - 1.2.0-1
+- Add realtime support
 * Tue Oct 18 2016 Alberto Rodríguez <arodriguez@redborder.com> - 1.0.0-1
 - first spec version
