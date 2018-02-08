@@ -100,7 +100,7 @@ action :add do
       notifies :restart, 'service[druid-realtime]', :delayed
     end
 
-    template "/tmp/druid/realtime" do
+    template "/etc/druid/realtime/rb_realtime.spec" do
       source "realtime.spec.erb"
       owner "root"
       group "root"
