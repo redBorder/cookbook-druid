@@ -103,7 +103,6 @@ module Druid
         realtime_spec = []
 
         specs["specs"].each { |spec|
-          ingestion_spec = []
 
           # dataSchema section
           data_schema = {}
@@ -157,13 +156,11 @@ module Druid
           tunning_config["rejectionPolicy"] = {}
           tunning_config["rejectionPolicy"]["type"] = "serverTime"
 
-          ingestion_spec << {
+          realtime_spec << {
             "dataSchema" => data_schema,
             "ioConfig" => io_config,
             "tunningConfig" => tunning_config
           }
-
-          realtime_spec << ingestion_spec
 
         }# End specs each loop
 
