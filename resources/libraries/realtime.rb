@@ -84,7 +84,7 @@ module Druid
           data_schema["parser"]["parseSpec"]["dimensionSpec"] = {}
           data_schema["parser"]["parseSpec"]["dimensionSpec"]["dimensions"] = spec["dimensions"]
           data_schema["parser"]["parseSpec"]["dimensionSpec"]["dimensionExclusions"] = spec["dimensionExclusions"]
-          data_schema["metricSpec"] = spec["metricSpec"]
+          data_schema["metricSpec"] = spec["metrics"]
           data_schema["granularitySpec"] = {}
           data_schema["granularitySpec"]["type"] = "uniform"
           data_schema["granularitySpec"]["segmentGranularity"] = "HOUR"
