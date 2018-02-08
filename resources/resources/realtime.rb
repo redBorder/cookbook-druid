@@ -22,3 +22,6 @@ attribute :heap_realtime_memory_kb, :kind_of => Integer, :default => 262144
 attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :rmi_port, :kind_of => String, :default => "9084"
 attribute :num_threads, :kind_of => Integer, :default => 1
+attribute :zookeeper_hosts, :kind_of => String, :default => "localhost:2181"
+attribute :max_rows_in_memory, :kind_if => Integer, :default => 60000
+attribute :partition_num, :kind_of => Integer, :default => 0
