@@ -24,6 +24,9 @@ action :add do
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
     num_threads = new_resource.num_threads
+    zk_hosts = new_resource.zookeeper_hosts
+    partition_num = new_resource.partition_num
+    max_rows_in_memory = new_resource.max_rows_in_memory
 
     directory config_dir do
       owner "root"
@@ -95,6 +98,17 @@ action :add do
       retries 2
       variables(:heap_realtime_memory_kb => heap_realtime_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
       notifies :restart, 'service[druid-realtime]', :delayed
+    end
+
+    template "/tmp/druid/realtime" do
+      source "realtime.spec.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num)
+      helpers Druid::Realtime
     end
 
     service "druid-realtime" do
