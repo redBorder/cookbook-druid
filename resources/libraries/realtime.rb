@@ -10,7 +10,7 @@ module Druid
         rb_monitor = {}
         rb_monitor["datasource"] = "rb_monitor"
         rb_monitor["dimensions"] = []
-        rb_monitor["dimensionExclusions"] = ["unit", "type", "valur"]
+        rb_monitor["dimensionExclusions"] = ["unit", "type", "value"]
         rb_monitor["metrics"] = [
           {"type" => "count", "name" => "events"},
           {"type" => "doubleSum", "fieldName" => "value", "name" => "sum_value"},
