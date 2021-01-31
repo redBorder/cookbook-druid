@@ -15,6 +15,6 @@ Contributing
 
 License and Authors
 -------------------
-Authors: Enrique Jimenez <ejimenez@redborder.com>
+Authors: Enrique Jimenez <ejimenez@redborder.com>, Miguel Negron <manegron@redborder.com"
 
 LICENSE: AFFERO GENERAL PUBLIC LICENSE, Version 3, 19 November 2007
