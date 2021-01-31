@@ -24,6 +24,9 @@ action :add do
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
     num_threads = new_resource.num_threads
+    zk_hosts = new_resource.zookeeper_hosts
+    partition_num = new_resource.partition_num
+    max_rows_in_memory = new_resource.max_rows_in_memory
 
     directory config_dir do
       owner "root"
@@ -44,25 +47,30 @@ action :add do
     ########################################
 
       # reserve realtime heap
-      memory_kb = memory_kb - heap_realtime_memory_kb
+      #memory_kb = memory_kb - heap_realtime_memory_kb
 
-      # Number of min[(cpu - 1),2] or 1
+      # Number of min[(cpu - 1),1] or 1
       processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1 if processing_threads.nil?
+      #processing_threads = cpu_num > 1 ? [cpu_num - 1, 1].max : 1 if processing_threads.nil?
 
       # 256mb per threads or [40% of total RAM / (threads + 1)]
       # processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512*1024) * (processing_threads + 1) ? (512*1024*1024) :  ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i if processing_memory_buffer_b.nil?
+      #processing_memory_buffer_b = [ 2147483647, (memory_kb.to_i*1024/processing_threads).to_i].min.to_s
+      processing_memory_buffer_b = (((memory_kb.to_i*1024)-heap_realtime_memory_kb)/(processing_threads+1)).to_i.to_s
 
       Chef::Log.info(
       "\nRealtime Memory:
         * Memory: #{memory_kb}k
         * Heap Realtime: #{heap_realtime_memory_kb}kb
-        * #Threads: #{num_threads}
+        * #Threads: #{processing_threads}
+        * #cpu_num: #{cpu_num}
+        * #processing_memory_buffer_b: #{processing_memory_buffer_b}
       "
       )
     ########################################
     ########################################
 
-    template "#{config_dir}/realtime.properties" do
+    template "#{config_dir}/runtime.properties" do
       source "realtime.properties.erb"
       owner "root"
       group "root"
@@ -71,7 +79,7 @@ action :add do
       retries 2
       variables(:name => name, :cdomain => cdomain, :port => port,
                 :processing_memory_buffer_b => processing_memory_buffer_b, :processing_threads => processing_threads,
-                :base_dir => base_dir, :rmi_address => rmi_address, :num_threads => num_threads)
+                :base_dir => base_dir, :rmi_address => rmi_address)
       notifies :restart, 'service[druid-realtime]', :delayed
     end
 
@@ -93,8 +101,19 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:heap_realtime_memory_kb => heap_realtime_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
+      variables(:heap_realtime_memory_kb => heap_realtime_memory_kb, :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir, :memory_kb => memory_kb)
       notifies :restart, 'service[druid-realtime]', :delayed
+    end
+
+    template "/etc/druid/realtime/rb_realtime.spec" do
+      source "realtime.spec.erb"
+      owner "root"
+      group "root"
+      cookbook "druid"
+      mode 0644
+      retries 2
+      variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num)
+      helpers Druid::Realtime
     end
 
     service "druid-realtime" do
