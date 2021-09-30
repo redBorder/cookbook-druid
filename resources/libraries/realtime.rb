@@ -116,9 +116,9 @@ module Druid
           data_schema["parser"]["parseSpec"]["timestampSpec"] = {}
           data_schema["parser"]["parseSpec"]["timestampSpec"]["column"] = "timestamp"
           data_schema["parser"]["parseSpec"]["timestampSpec"]["format"] = "ruby"
-          data_schema["parser"]["parseSpec"]["dimensionSpec"] = {}
-          data_schema["parser"]["parseSpec"]["dimensionSpec"]["dimensions"] = spec["dimensions"]
-          data_schema["parser"]["parseSpec"]["dimensionSpec"]["dimensionExclusions"] = spec["dimensionExclusions"]
+          data_schema["parser"]["parseSpec"]["dimensionsSpec"] = {}
+          data_schema["parser"]["parseSpec"]["dimensionsSpec"]["dimensions"] = spec["dimensions"]
+          data_schema["parser"]["parseSpec"]["dimensionsSpec"]["dimensionExclusions"] = spec["dimensionExclusions"]
           data_schema["metricsSpec"] = spec["metrics"]
           data_schema["granularitySpec"] = {}
           data_schema["granularitySpec"]["type"] = "uniform"
