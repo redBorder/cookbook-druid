@@ -28,6 +28,15 @@ action :add do
     partition_num = new_resource.partition_num
     max_rows_in_memory = new_resource.max_rows_in_memory
 
+    namespaces = []
+    Chef::Role.list.keys.each do |rol|
+      ro = Chef::Role.load rol
+      if ro and ro.override_attributes["redborder"] and ro.override_attributes["redborder"]["namespace"] and ro.override_attributes["redborder"]["namespace_uuid"] and !ro.override_attributes["redborder"]["namespace_uuid"].empty?
+        namespaces.push(ro.override_attributes["redborder"]["namespace_uuid"])
+      end
+    end
+    namespaces.uniq!
+
     directory config_dir do
       owner "root"
       group "root"
@@ -113,7 +122,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num)
+      variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num, :namespaces => namespaces)
       notifies :restart, 'service[druid-realtime]', :delayed
       helpers Druid::Realtime
     end

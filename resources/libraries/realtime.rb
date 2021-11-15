@@ -52,7 +52,7 @@ module Druid
           ]
           rb_flow["feed"] = "rb_flow_post"
           rb_flow["feed"] += "_"+namespace if !namespace.empty?
-          rb_flowarray.push(rb_flow)
+          rb_flow_array.push(rb_flow)
         }
 
         rb_event = {}
@@ -109,7 +109,7 @@ module Druid
           ]
           rb_vault["feed"] = "rb_vault_post"
           rb_vault["feed"] += "_"+namespace if !namespace.empty?
-          rb_vault_array.push(rb_flow)
+          rb_vault_array.push(rb_vault)
         }
 
         # Scanner
