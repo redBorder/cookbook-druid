@@ -1,1 +1,10 @@
-<%= Chef::JSONCompat.to_json_pretty(realtime_spec(@zookeeper, @max_rows, @partition_num))%>
+namespaces = []
+Chef::Role.list.keys.each do |rol|
+  ro = Chef::Role.load rol
+  if ro and ro.override_attributes["redborder"] and ro.override_attributes["redborder"]["namespace"] and ro.override_attributes["redborder"]["namespace_uuid"] and !ro.override_attributes["redborder"]["namespace_uuid"].empty?
+    namespaces.push(ro.override_attributes["redborder"]["namespace_uuid"])
+  end
+end
+namespaces.uniq!
+
+<%= Chef::JSONCompat.to_json_pretty(realtime_spec(@zookeeper, @max_rows, @partition_num, namespaces))%>

@@ -114,6 +114,7 @@ action :add do
       mode 0644
       retries 2
       variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num)
+      notifies :restart, 'service[druid-realtime]', :delayed
       helpers Druid::Realtime
     end
 

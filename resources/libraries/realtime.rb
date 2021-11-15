@@ -1,10 +1,12 @@
 module Druid
     module Realtime
 
-      def realtime_spec(zk_host, max_rows, partition_num)
+      def realtime_spec(zk_host, max_rows, partition_num, namespaces)
 
         require 'ruby_dig'
 
+        namespaces.push("")
+        namespaces.uniq!
         specs = {}
 
         rb_monitor = {}
@@ -32,20 +34,26 @@ module Druid
         ]
         rb_state["feed"] = "rb_state"
 
-        rb_flow = {}
-        rb_flow["dataSource"] = "rb_flow"
-        rb_flow["dimensions"] = ["application_id_name", "building", "building_uuid", "campus", "campus_uuid", "client_accounting_type", "client_auth_type", "client_fullname", "client_gender", "client_id", "client_latlong", "client_loyality", "client_mac", "client_mac_vendor", "client_rssi", "client_vip", "conversation", "coordinates_map", "darklist_category", "darklist_direction", "darklist_score_name", "darklist_score", "deployment", "deployment_uuid", "direction", "dot11_protocol", "dot11_status", "dst_map", "duration", "engine_id_name", "floor", "floor_uuid", "host", "host_l2_domain", "http_social_media", "http_user_agent", "https_common_name", "interface_name", "ip_as_name", "ip_country_code", "ip_protocol_version", "l4_proto", "lan_interface_description", "lan_interface_name", "lan_ip", "lan_ip_as_name", "lan_ip_country_code", "lan_ip_name", "lan_ip_net_name", "lan_l4_port", "lan_name", "lan_vlan", "market", "market_uuid", "namespace", "namespace_uuid", "organization", "organization_uuid", "product_name", "public_ip", "public_ip_mac", "referer", "referer_l2", "scatterplot", "selector_name", "sensor_ip", "sensor_name", "sensor_uuid", "service_provider", "service_provider_uuid", "src_map", "tcp_flags", "tos", "type", "url", "wan_interface_description", "wan_interface_name", "wan_ip", "wan_ip_as_name", "wan_ip_country_code", "wan_ip_map", "wan_ip_net_name", "wan_l4_port", "wan_name", "wan_vlan", "wireless_id", "wireless_operator", "wireless_station", "zone", "zone_uuid"]
-        rb_flow["dimensionExclusions"] = ["bytes", "pkts", "flow_end_reason", "first_switched", "wan_ip_name"]
-        rb_flow["metrics"] = [
-          {"type" => "count", "name" => "events"},
-          {"type" => "longSum", "fieldName" => "bytes", "name" => "sum_bytes"},
-          {"type" => "longSum", "fieldName" => "pkts", "name" => "sum_pkts"},
-          {"type" => "longSum", "fieldName" => "client_rssi_num", "name" => "sum_rssi"},
-          {"type" => "hyperUnique", "fieldName" => "client_mac", "name" => "clients"},
-          {"type" => "hyperUnique", "fieldName" => "wireless_station", "name" => "wireless_stations"},
-          {"type" => "longSum", "fieldName" => "darklist_score", "name" => "sum_dl_score"}
-        ]
-        rb_flow["feed"] = "rb_flow"
+        rb_flow_array = []
+        namespaces.each { |namespace|
+          rb_flow = {}
+          rb_flow["dataSource"] = "rb_flow"
+          rb_flow["dataSource"] += "_"+namespace if !namespace.empty?
+          rb_flow["dimensions"] = ["application_id_name", "building", "building_uuid", "campus", "campus_uuid", "client_accounting_type", "client_auth_type", "client_fullname", "client_gender", "client_id", "client_latlong", "client_loyality", "client_mac", "client_mac_vendor", "client_rssi", "client_vip", "conversation", "coordinates_map", "darklist_category", "darklist_direction", "darklist_score_name", "darklist_score", "deployment", "deployment_uuid", "direction", "dot11_protocol", "dot11_status", "dst_map", "duration", "engine_id_name", "floor", "floor_uuid", "host", "host_l2_domain", "http_social_media", "http_user_agent", "https_common_name", "interface_name", "ip_as_name", "ip_country_code", "ip_protocol_version", "l4_proto", "lan_interface_description", "lan_interface_name", "lan_ip", "lan_ip_as_name", "lan_ip_country_code", "lan_ip_name", "lan_ip_net_name", "lan_l4_port", "lan_name", "lan_vlan", "market", "market_uuid", "namespace", "namespace_uuid", "organization", "organization_uuid", "product_name", "public_ip", "public_ip_mac", "referer", "referer_l2", "scatterplot", "selector_name", "sensor_ip", "sensor_name", "sensor_uuid", "service_provider", "service_provider_uuid", "src_map", "tcp_flags", "tos", "type", "url", "wan_interface_description", "wan_interface_name", "wan_ip", "wan_ip_as_name", "wan_ip_country_code", "wan_ip_map", "wan_ip_net_name", "wan_l4_port", "wan_name", "wan_vlan", "wireless_id", "wireless_operator", "wireless_station", "zone", "zone_uuid"]
+          rb_flow["dimensionExclusions"] = ["bytes", "pkts", "flow_end_reason", "first_switched", "wan_ip_name"]
+          rb_flow["metrics"] = [
+            {"type" => "count", "name" => "events"},
+            {"type" => "longSum", "fieldName" => "bytes", "name" => "sum_bytes"},
+            {"type" => "longSum", "fieldName" => "pkts", "name" => "sum_pkts"},
+            {"type" => "longSum", "fieldName" => "client_rssi_num", "name" => "sum_rssi"},
+            {"type" => "hyperUnique", "fieldName" => "client_mac", "name" => "clients"},
+            {"type" => "hyperUnique", "fieldName" => "wireless_station", "name" => "wireless_stations"},
+            {"type" => "longSum", "fieldName" => "darklist_score", "name" => "sum_dl_score"}
+          ]
+          rb_flow["feed"] = "rb_flow_post"
+          rb_flow["feed"] += "_"+namespace if !namespace.empty?
+          rb_flowarray.push(rb_flow)
+        }
 
         rb_event = {}
         rb_event["dataSource"] = "rb_event"
@@ -90,14 +98,19 @@ module Druid
         ]
         rb_iot["feed"] = "rb_iot"
 
-        rb_vault = {}
-        rb_vault["dataSource"] = "rb_vault"
-        rb_vault["dimensions"] = ["pri", "pri_text", "syslogfacility", "syslogfacility_text", "syslogseverity", "syslogseverity_text", "hostname", "fromhost_ip", "app_name", "sensor_name", "proxy_uuid", "message", "status", "category", "source", "target", "sensor_uuid", "service_provider", "service_provider_uuid", "namespace", "namespace_uuid", "deployment", "deployment_uuid", "market", "market_uuid", "organization", "organization_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid", "action"]
-        rb_vault["dimensionExclusions"] = ["unit", "type", "valur"]
-        rb_vault["metrics"] = [
-          {"type" => "count", "name" => "events"}
-        ]
-        rb_vault["feed"] = "rb_vault_post"
+        rb_vault_array = []
+        namespaces.each { |namespace|
+          rb_vault = {}
+          rb_vault["dataSource"] = "rb_vault"
+          rb_vault["dimensions"] = ["pri", "pri_text", "syslogfacility", "syslogfacility_text", "syslogseverity", "syslogseverity_text", "hostname", "fromhost_ip", "app_name", "sensor_name", "proxy_uuid", "message", "status", "category", "source", "target", "sensor_uuid", "service_provider", "service_provider_uuid", "namespace", "namespace_uuid", "deployment", "deployment_uuid", "market", "market_uuid", "organization", "organization_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid", "action"]
+          rb_vault["dimensionExclusions"] = ["unit", "type", "valur"]
+          rb_vault["metrics"] = [
+            {"type" => "count", "name" => "events"}
+          ]
+          rb_vault["feed"] = "rb_vault_post"
+          rb_vault["feed"] += "_"+namespace if !namespace.empty?
+          rb_vault_array.push(rb_flow)
+        }
 
         # Scanner
         rb_scanner = {}
@@ -119,7 +132,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = [rb_monitor, rb_state, rb_flow, rb_event, rb_social, rb_hashtag, rb_iot, rb_vault, rb_scanner, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + [rb_monitor, rb_state, rb_event, rb_social, rb_hashtag, rb_iot, rb_scanner, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
