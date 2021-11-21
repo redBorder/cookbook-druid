@@ -102,6 +102,7 @@ module Druid
         namespaces.each { |namespace|
           rb_vault = {}
           rb_vault["dataSource"] = "rb_vault"
+          rb_vault["dataSource"] += "_"+namespace if !namespace.empty?
           rb_vault["dimensions"] = ["pri", "pri_text", "syslogfacility", "syslogfacility_text", "syslogseverity", "syslogseverity_text", "hostname", "fromhost_ip", "app_name", "sensor_name", "proxy_uuid", "message", "status", "category", "source", "target", "sensor_uuid", "service_provider", "service_provider_uuid", "namespace", "namespace_uuid", "deployment", "deployment_uuid", "market", "market_uuid", "organization", "organization_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid", "action"]
           rb_vault["dimensionExclusions"] = ["unit", "type", "valur"]
           rb_vault["metrics"] = [
