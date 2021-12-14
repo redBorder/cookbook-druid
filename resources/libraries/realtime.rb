@@ -66,6 +66,8 @@ module Druid
         ]
         rb_event["feed"] = "rb_event"
 
+        rb_social_array = []
+        namespaces.each { |namespace|
         rb_social = {}
         rb_social["dataSource"] = "rb_social"
         rb_social["dimensions"] = ["client_latlong", "lan_ip_country_code", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "user_screen_name", "user_name", "user_id", "type", "hashtags", "mentions", "msg", "sentiment", "msg_send_from", "user_from", "user_profile_img_https", "influence", "picture_url", "language", "category", "followers", "floor", "floor_uuid", "campus", "campus_uuid", "building", "building_uuid", "service_provider", "service_provider_uuid", "market", "market_uuid", "organization", "organization_uuid", "sensor_name"]
@@ -75,8 +77,13 @@ module Druid
           {"type" => "longSum", "name" => "sum_followers", "fieldName" => "followers"},
           {"type" => "hyperUnique", "name" => "users", "fieldName" => "user_screen_name"}
         ]
-        rb_social["feed"] = "rb_social"
+        rb_social["feed"] = "rb_social_post"
+        rb_social["feed"] += "_"+namespace if !namespace.empty?
+        rb_social_array.push(rb_social)
+        }
 
+        rb_hashtag_array = []
+        namespaces.each { |namespace|
         rb_hashtag = {}
         rb_hashtag["dataSource"] = "rb_hashtag"
         rb_hashtag["dimensions"] = ["type", "value", "sensor_name", "sensor_uuid", "floor", "floor_uuid", "building", "building_uuid", "campus", "campus_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid"]
@@ -84,7 +91,9 @@ module Druid
         rb_hashtag["metrics"] = [
           {"type" => "count", "name" => "events"}
         ]
-        rb_hashtag["feed"] = "rb_hashtag"
+        rb_hashtag["feed"] = "rb_hashtag_post"
+        rb_hashtag["feed"] += "_"+namespace if !namespace.empty?
+        rb_hashtag_array.push(rb_hashtag)
 
         rb_iot = {}
         rb_iot["dataSource"] = "rb_iot"
