@@ -94,6 +94,7 @@ module Druid
         rb_hashtag["feed"] = "rb_hashtag_post"
         rb_hashtag["feed"] += "_"+namespace if !namespace.empty?
         rb_hashtag_array.push(rb_hashtag)
+        }
 
         rb_iot = {}
         rb_iot["dataSource"] = "rb_iot"
@@ -142,8 +143,8 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + [rb_monitor, rb_state, rb_event, rb_social, rb_hashtag, rb_iot, rb_scanner, rb_bi]
-        #specs["specs"] = [rb_monitor]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_social_array + rb_hashtag_array + [rb_monitor, rb_state, rb_event, rb_iot, rb_scanner, rb_bi]
+
 
         realtime_spec = []
 
