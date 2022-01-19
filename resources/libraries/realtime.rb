@@ -114,14 +114,20 @@ module Druid
         }
 
         # Scanner
-        rb_scanner = {}
-        rb_scanner["dataSource"] = "rb_scanner"
-        rb_scanner["dimensions"] = ["pri", "pri_text", "syslogfacility", "syslogfacility_text", "syslogseverity", "syslogseverity_text", "hostname", "fromhost_ip", "app_name", "sensor_name", "proxy_uuid", "message", "status", "category", "source", "target", "sensor_uuid", "service_provider", "service_provider_uuid", "namespace", "namespace_uuid", "deployment", "deployment_uuid", "market", "market_uuid", "organization", "organization_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid", "ipaddress", "scan_id", "scan_subtype", "scan_type", "result_data", "result", "cve_info", "vendor", "product", "version", "servicename", "protocol", "cpe", "cve", "port", "metric", "severity", "score", "mac", "subnet", "path", "layer", "ipv4", "port_state"]
-        rb_scanner["dimensionExclusions"] = []
-        rb_scanner["metrics"] = [
-          {"type" => "count", "name" => "events"}
-        ]
-        rb_scanner["feed"] = "rb_scanner_post"
+        rb_scanner_array = []
+        namespaces.each { |namespace|
+          rb_scanner = {}
+          rb_scanner["dataSource"] = "rb_scanner"
+          rb_scanner["dataSource"] += "_"+namespace if !namespace.empty?
+          rb_scanner["dimensions"] = ["pri", "pri_text", "syslogfacility", "syslogfacility_text", "syslogseverity", "syslogseverity_text", "hostname", "fromhost_ip", "app_name", "sensor_name", "proxy_uuid", "message", "status", "category", "source", "target", "sensor_uuid", "service_provider", "service_provider_uuid", "namespace", "namespace_uuid", "deployment", "deployment_uuid", "market", "market_uuid", "organization", "organization_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid", "ipaddress", "scan_id", "scan_subtype", "scan_type", "result_data", "result", "cve_info", "vendor", "product", "version", "servicename", "protocol", "cpe", "cve", "port", "metric", "severity", "score", "mac", "subnet", "path", "layer", "ipv4", "port_state"]
+          rb_scanner["dimensionExclusions"] = []
+          rb_scanner["metrics"] = [
+            {"type" => "count", "name" => "events"}
+          ]
+          rb_scanner["feed"] = "rb_scanner_post"
+          rb_scanner["feed"] += "_"+namespace if !namespace.empty?
+          rb_scanner_array.push(rb_scanner)
+        }
 
         # BI
         rb_bi = {}
@@ -133,7 +139,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + [rb_monitor, rb_state, rb_event, rb_social, rb_hashtag, rb_iot, rb_scanner, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_scanner_array + [rb_monitor, rb_state, rb_event, rb_social, rb_hashtag, rb_iot, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
