@@ -70,6 +70,7 @@ module Druid
         namespaces.each { |namespace|
         rb_social = {}
         rb_social["dataSource"] = "rb_social"
+        rb_social["dataSource"] += "_"+namespace if !namespace.empty?
         rb_social["dimensions"] = ["client_latlong", "lan_ip_country_code", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "user_screen_name", "user_name", "user_id", "type", "hashtags", "mentions", "msg", "sentiment", "msg_send_from", "user_from", "user_profile_img_https", "influence", "picture_url", "language", "category", "followers", "floor", "floor_uuid", "campus", "campus_uuid", "building", "building_uuid", "service_provider", "service_provider_uuid", "market", "market_uuid", "organization", "organization_uuid", "sensor_name"]
         rb_social["dimensionExclusions"] = ["user_msgs"]
         rb_social["metrics"] = [
@@ -86,6 +87,7 @@ module Druid
         namespaces.each { |namespace|
         rb_hashtag = {}
         rb_hashtag["dataSource"] = "rb_hashtag"
+        rb_hashtag["dataSource"] += "_"+namespace if !namespace.empty?
         rb_hashtag["dimensions"] = ["type", "value", "sensor_name", "sensor_uuid", "floor", "floor_uuid", "building", "building_uuid", "campus", "campus_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid"]
         rb_hashtag["dimensionExclusions"] = []
         rb_hashtag["metrics"] = [
