@@ -151,7 +151,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + rb_social_array + rb_hashtag_array + rb_scanner_array + [rb_monitor, rb_state, rb_event, rb_iot, rb_scanner, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_social_array + rb_hashtag_array + rb_scanner_array + [rb_monitor, rb_state, rb_event, rb_iot, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
