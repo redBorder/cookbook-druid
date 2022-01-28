@@ -9,7 +9,6 @@
 
 memory_mb = (node['memory']['total'].match(/\A(?<value>\d+)(?<modifier>\w+)\z/)[:value].to_i / 1024 * 0.90).to_i
 
-
 druid_historical "Configure Druid Historical" do
   name "localhost"
   memory_kb (memory_mb * 0.2).to_i
