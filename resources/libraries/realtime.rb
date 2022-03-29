@@ -14,7 +14,6 @@ module Druid
         rb_monitor={}
         rb_monitor["dataSource"] = "rb_monitor"
         rb_monitor["dataSource"] += "_"+namespace if !namespace.empty?
-        rb_monitor["dimensions"] = []
         rb_monitor["dimensionExclusions"] = ["unit", "type", "value"]
         rb_monitor["metrics"] = [
           {"type" => "count", "name" => "events"},
