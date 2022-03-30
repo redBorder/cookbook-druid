@@ -28,6 +28,11 @@ action :add do
     partition_num = new_resource.partition_num
     max_rows_in_memory = new_resource.max_rows_in_memory
 
+    dimensions = {}
+    Dir.glob('/var/rb-extensions/*/dimensions.yml') do |item|
+      dimensions = dimensions.merge(YAML.load_file(item)) rescue dimensions
+    end
+
     namespaces = []
     Chef::Role.list.keys.each do |rol|
       ro = Chef::Role.load rol
@@ -122,7 +127,7 @@ action :add do
       cookbook "druid"
       mode 0644
       retries 2
-      variables(:zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num, :namespaces => namespaces)
+      variables(:dimensions => dimensions, :zookeeper => zk_hosts, :max_rows => max_rows_in_memory, :partition_num => partition_num, :namespaces => namespaces)
       notifies :restart, 'service[druid-realtime]', :delayed
       helpers Druid::Realtime
     end
