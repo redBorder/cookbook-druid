@@ -46,6 +46,8 @@ esac
 %doc
 
 %changelog
+* Tue Apr 18 2023 Luis J. Blanco <ljblanco@redborder.com> - 1.4.4-1
+- naming monitor topics
 * Fri Jan 07 2022 David Vanhoucke <dvanhoucke@redborder.com> - 1.3.6-1
 - change register to consul
 * Fri Feb 2 2018 Juan J. Prieto <jjprieto@redborder.com> - 1.2.0-1
