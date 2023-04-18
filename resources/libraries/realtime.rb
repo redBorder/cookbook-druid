@@ -9,9 +9,11 @@ module Druid
         namespaces.uniq!
         specs = {}
 
-        rb_monitor = {}
+        rb_monitor_array = []
+        namespaces.each { |namespace|
+        rb_monitor={}
         rb_monitor["dataSource"] = "rb_monitor"
-        rb_monitor["dimensions"] = []
+        rb_monitor["dataSource"] += "_"+namespace if !namespace.empty?
         rb_monitor["dimensionExclusions"] = ["unit", "type", "value"]
         rb_monitor["metrics"] = [
           {"type" => "count", "name" => "events"},
@@ -19,7 +21,10 @@ module Druid
           {"type" => "doubleMax", "fieldName" => "value", "name" => "max_value"},
           {"type" => "doubleMin", "fieldName" => "value", "name" => "min_value"}
         ]
-        rb_monitor["feed"] = "rb_monitor"
+        rb_monitor["feed"] = "rb_monitor_post"
+        rb_monitor["feed"] += "_"+namespace if !namespace.empty?
+        rb_monitor_array.push(rb_monitor)
+        }
 
         rb_state = {}
         rb_state["dataSource"] = "rb_state"
@@ -174,7 +179,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + rb_social_array + rb_hashtag_array + rb_scanner_array + rb_location_array + [rb_monitor, rb_state, rb_event, rb_iot, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_social_array + rb_hashtag_array + rb_scanner_array + rb_location_array + rb_monitor_array + [rb_state, rb_event, rb_iot, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
