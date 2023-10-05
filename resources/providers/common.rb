@@ -77,7 +77,7 @@ action :add do
     #######################
     # Druid installation
     #######################
-    yum_package "redborder-druid" do
+    dnf_package "redborder-druid" do
       action :upgrade
       flush_cache [:before]
     end
@@ -164,9 +164,9 @@ action :remove do
 
     # removing package
     #bash 'dummy-delay-druid-uninstall' do
-    #  notifies :remove, 'yum_package[redborder-druid]' , :delayed
+    #  notifies :remove, 'dnf_package[redborder-druid]' , :delayed
     #end
-    #yum_package 'redborder-druid' do
+    #dnf_package 'redborder-druid' do
     #  action :nothing
     #end
 
