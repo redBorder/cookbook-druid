@@ -201,7 +201,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["realtime"]["registered"] = true
+      node.default["druid"]["realtime"]["registered"] = true
       Chef::Log.info("Druid realtime service has been deregistered to consul")
     end
   rescue => e
@@ -217,7 +217,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["realtime"]["registered"] = false
+      node.default["druid"]["realtime"]["registered"] = false
       Chef::Log.info("Druid realtime service has been deregistered to consul")
     end
   rescue => e

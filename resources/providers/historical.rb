@@ -186,7 +186,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["historical"]["registered"] = true
+      node.default["druid"]["historical"]["registered"] = true
       Chef::Log.info("Druid Historical service has been registered to consul")
     end
   rescue => e
@@ -202,7 +202,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["historical"]["registered"] = false
+      node.default["druid"]["historical"]["registered"] = false
       Chef::Log.info("Druid Historical service has been deregistered to consul")
     end
   rescue => e

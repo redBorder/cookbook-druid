@@ -134,7 +134,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["coordinator"]["registered"] = true
+      node.default["druid"]["coordinator"]["registered"] = true
       Chef::Log.info("Druid Coordinator service has been registered to consul")
     end
   rescue => e
@@ -150,7 +150,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["coordinator"]["registered"] = false
+      node.default["druid"]["coordinator"]["registered"] = false
       Chef::Log.info("Druid Coordinator service has been deregistered to consul")
     end
   rescue => e

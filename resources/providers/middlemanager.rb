@@ -221,7 +221,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["middlemanager"]["registered"] = true
+      node.default["druid"]["middlemanager"]["registered"] = true
       Chef::Log.info("Druid middlemanager service has been deregistered to consul")
     end
   rescue => e
@@ -237,7 +237,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["middlemanager"]["registered"] = false
+      node.default["druid"]["middlemanager"]["registered"] = false
       Chef::Log.info("Druid middlemanager service has been deregistered to consul")
     end
   rescue => e
