@@ -85,9 +85,10 @@ action :add do
     ####################################
     # Users and directories creation
     ####################################
-
-    user user do
-      action :create
+    execute "create_user" do
+      command "/usr/sbin/useradd #{user}"
+      ignore_failure true
+      not_if "getent passwd #{user}"
     end
 
     [ parent_config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
