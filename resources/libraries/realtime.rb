@@ -3,8 +3,6 @@ module Druid
 
       def realtime_spec(dimensions, zk_host, max_rows, partition_num, namespaces)
 
-        require 'ruby_dig'
-
         namespaces.push("")
         namespaces.uniq!
         specs = {}
