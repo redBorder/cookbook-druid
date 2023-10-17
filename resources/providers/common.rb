@@ -129,11 +129,6 @@ action :add do
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_access_key => s3_access_key,
                 :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir,
                 :extensions => extensions)
-      notifies node["redborder"]["services"]["druid-broker"] ? :restart : :nothing, 'service[druid-broker]', :delayed
-      notifies node["redborder"]["services"]["druid-coordinator"] ? :restart : :nothing, 'service[druid-coordinator]', :delayed
-      notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
-      notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
-      notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
     end
 
     template "#{parent_config_dir}/_common/jets3t.properties" do
@@ -144,11 +139,6 @@ action :add do
       mode 0644
       retries 2
       variables(:s3_bucket => s3_bucket, :s3_service => s3_service, :s3_port => s3_port, :cdomain => cdomain)
-      notifies node["redborder"]["services"]["druid-broker"] ? :restart : :nothing, 'service[druid-broker]', :delayed
-      notifies node["redborder"]["services"]["druid-coordinator"] ? :restart : :nothing, 'service[druid-coordinator]', :delayed
-      notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
-      notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
-      notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
     end
 
     Chef::Log.info("Druid cookbook (common) has been processed")
