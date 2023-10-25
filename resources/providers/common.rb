@@ -151,7 +151,7 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     parent_log_dir = new_resource.parent_log_dir
-    node.default["druid"]["services"]["broker"] = false
+    node.normal["druid"]["services"]["broker"] = false
 
     # removing package
     #bash 'dummy-delay-druid-uninstall' do

@@ -164,7 +164,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.default["druid"]["broker"]["registered"] = true
+      node.normal["druid"]["broker"]["registered"] = true
       Chef::Log.info("Druid Broker service has been registered to consul")
     end
   rescue => e
@@ -180,7 +180,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.default["druid"]["broker"]["registered"] = false
+      node.normal["druid"]["broker"]["registered"] = false
       Chef::Log.info("Druid Broker service has been deregistered from consul")
     end
   rescue => e
