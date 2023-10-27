@@ -77,7 +77,7 @@ action :add do
     #######################
     # Druid installation
     #######################
-    yum_package "redborder-druid" do
+    dnf_package "redborder-druid" do
       action :upgrade
       flush_cache [:before]
     end
@@ -85,9 +85,10 @@ action :add do
     ####################################
     # Users and directories creation
     ####################################
-
-    user user do
-      action :create
+    execute "create_user" do
+      command "/usr/sbin/useradd #{user}"
+      ignore_failure true
+      not_if "getent passwd #{user}"
     end
 
     [ parent_config_dir, "/etc/sysconfig", "#{parent_config_dir}/_common" ].each do |path|
@@ -128,11 +129,6 @@ action :add do
                 :psql_password => psql_password, :s3_bucket => s3_bucket, :s3_access_key => s3_access_key,
                 :s3_secret_key => s3_secret_key, :s3_prefix => s3_prefix, :druid_local_storage_dir => druid_local_storage_dir,
                 :extensions => extensions)
-      notifies node["redborder"]["services"]["druid-broker"] ? :restart : :nothing, 'service[druid-broker]', :delayed
-      notifies node["redborder"]["services"]["druid-coordinator"] ? :restart : :nothing, 'service[druid-coordinator]', :delayed
-      notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
-      notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
-      notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
     end
 
     template "#{parent_config_dir}/_common/jets3t.properties" do
@@ -143,11 +139,6 @@ action :add do
       mode 0644
       retries 2
       variables(:s3_bucket => s3_bucket, :s3_service => s3_service, :s3_port => s3_port, :cdomain => cdomain)
-      notifies node["redborder"]["services"]["druid-broker"] ? :restart : :nothing, 'service[druid-broker]', :delayed
-      notifies node["redborder"]["services"]["druid-coordinator"] ? :restart : :nothing, 'service[druid-coordinator]', :delayed
-      notifies node["redborder"]["services"]["druid-historical"] ? :restart : :nothing, 'service[druid-historical]', :delayed
-      notifies node["redborder"]["services"]["druid-middlemanager"] ? :restart : :nothing, 'service[druid-middlemanager]', :delayed
-      notifies node["redborder"]["services"]["druid-overlord"] ? :restart : :nothing, 'service[druid-overlord]', :delayed
     end
 
     Chef::Log.info("Druid cookbook (common) has been processed")
@@ -160,13 +151,13 @@ action :remove do
   begin
     parent_config_dir = "/etc/druid"
     parent_log_dir = new_resource.parent_log_dir
-    node.set["druid"]["services"]["broker"] = false
+    node.normal["druid"]["services"]["broker"] = false
 
     # removing package
     #bash 'dummy-delay-druid-uninstall' do
-    #  notifies :remove, 'yum_package[redborder-druid]' , :delayed
+    #  notifies :remove, 'dnf_package[redborder-druid]' , :delayed
     #end
-    #yum_package 'redborder-druid' do
+    #dnf_package 'redborder-druid' do
     #  action :nothing
     #end
 

@@ -146,7 +146,7 @@ action :register do
          action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["overlord"]["registered"] = true
+      node.normal["druid"]["overlord"]["registered"] = true
       Chef::Log.info("Druid Overlord service has been registered to consul")
     end
   rescue => e
@@ -162,7 +162,7 @@ action :deregister do
         action :nothing
       end.run_action(:run)
 
-      node.set["druid"]["overlord"]["registered"] = false
+      node.normal["druid"]["overlord"]["registered"] = false
       Chef::Log.info("Druid Overlord service has been deregistered to consul")
     end
   rescue => e
