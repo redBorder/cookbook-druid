@@ -27,6 +27,7 @@ action :add do
     zk_hosts = new_resource.zookeeper_hosts
     partition_num = new_resource.partition_num
     max_rows_in_memory = new_resource.max_rows_in_memory
+    ipaddress = new_resource.ipaddress
 
     dimensions = {}
     Dir.glob('/var/rb-extensions/*/dimensions.yml') do |item|
@@ -149,6 +150,7 @@ action :remove do
     config_dir = "#{parent_config_dir}/realtime"
     parent_log_dir = new_resource.parent_log_dir
     suffix_log_dir = new_resource.suffix_log_dir
+    ipaddress = new_resource.ipaddress
     log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     base_dir = new_resource.base_dir
 
@@ -188,11 +190,13 @@ end
 
 action :register do
   begin
+    ipaddress = new_resource.ipaddress
+
     if !node["druid"]["realtime"]["registered"]
       query = {}
       query["ID"] = "druid-realtime-#{node["hostname"]}"
       query["Name"] = "druid-realtime"
-      query["Address"] = "#{node["ipaddress"]}"
+      query["Address"] = ipaddress
       query["Port"] = 8084
       json_query = Chef::JSONCompat.to_json(query)
 
@@ -211,6 +215,8 @@ end
 
 action :deregister do
   begin
+    ipaddress = new_resource.ipaddress
+
     if node["druid"]["realtime"]["registered"]
       execute 'Deregister service in consul' do
         command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-realtime-#{node["hostname"]} &>/dev/null"

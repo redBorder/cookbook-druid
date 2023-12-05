@@ -22,6 +22,7 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    ipaddress = new_resource.ipaddress
 
     directory config_dir do
       owner "root"
@@ -93,6 +94,7 @@ action :remove do
     config_dir = "#{parent_config_dir}/overlord"
     parent_log_dir = new_resource.parent_log_dir
     suffix_log_dir = new_resource.suffix_log_dir
+    ipaddress = new_resource.ipaddress
     log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
     task_log_dir = "#{log_dir}/indexing"
 
@@ -133,11 +135,13 @@ end
 
 action :register do
   begin
+    ipaddress = new_resource.ipaddress
+
     if !node["druid"]["overlord"]["registered"]
       query = {}
       query["ID"] = "druid-overlord-#{node["hostname"]}"
       query["Name"] = "druid-overlord"
-      query["Address"] = "#{node["ipaddress"]}"
+      query["Address"] = ipaddress
       query["Port"] = 8084
       json_query = Chef::JSONCompat.to_json(query)
 
@@ -156,6 +160,8 @@ end
 
 action :deregister do
   begin
+    ipaddress = new_resource.ipaddress
+
     if node["druid"]["overlord"]["registered"]
       execute 'Deregister service in consul' do
         command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-overlord-#{node["hostname"]} &>/dev/null"
