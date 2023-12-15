@@ -46,8 +46,8 @@ esac
 %doc
 
 %changelog
-* Fri Sep 22 2023 Miguel Negrón <manegron@redborder.com> - 2.0.0
-- Remove social
+* Fri Dec 15 2023 David Vanhoucke <dvanhoucke@redborder.com> - 1.4.5
+- Add suppport for ip sync
 * Tue Apr 18 2023 Luis J. Blanco <ljblanco@redborder.com> - 1.4.4-1
 - naming monitor topics
 * Fri Jan 07 2022 David Vanhoucke <dvanhoucke@redborder.com> - 1.3.6-1
