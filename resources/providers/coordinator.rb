@@ -18,6 +18,7 @@ action :add do
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
     memory_kb = new_resource.memory_kb
+    ipaddress = new_resource.ipaddress
 
     directory config_dir do
       owner "root"
@@ -82,6 +83,7 @@ action :remove do
     config_dir = "#{parent_config_dir}/coordinator"
     parent_log_dir = new_resource.parent_log_dir
     suffix_log_dir = new_resource.suffix_log_dir
+    ipaddress = new_resource.ipaddress
     log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
 
     service "druid-coordinator" do
@@ -121,11 +123,13 @@ end
 
 action :register do
   begin
+    ipaddress = new_resource.ipaddress
+
     if !node["druid"]["coordinator"]["registered"]
       query = {}
       query["ID"] = "druid-coordinator-#{node["hostname"]}"
       query["Name"] = "druid-coordinator"
-      query["Address"] = "#{node["ipaddress"]}"
+      query["Address"] = ipaddress
       query["Port"] = 8081
       json_query = Chef::JSONCompat.to_json(query)
 
@@ -144,6 +148,8 @@ end
 
 action :deregister do
   begin
+    ipaddress = new_resource.ipaddress
+
     if node["druid"]["coordinator"]["registered"]
       execute 'Deregister service in consul' do
         command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-coordinator-#{node["hostname"]} &>/dev/null"

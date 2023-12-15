@@ -21,3 +21,4 @@ attribute :cpu_num, :kind_of => Integer, :default => 4
 attribute :memory_kb, :kind_of => Integer, :default => 8388608
 attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :rmi_port, :kind_of => String, :default => "9080"
+attribute :ipaddress, :kind_of => String, :default => "127.0.0.1"

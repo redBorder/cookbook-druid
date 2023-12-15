@@ -16,3 +16,4 @@ attribute :port, :kind_of => Integer, :default => 8081
 attribute :rmi_address, :kind_of => String, :default => "127.0.0.1"
 attribute :rmi_port, :kind_of => String, :default => "9081"
 attribute :memory_kb, :kind_of => Integer, :default => 1048576
+attribute :ipaddress, :kind_of => String, :default => "127.0.0.1"
