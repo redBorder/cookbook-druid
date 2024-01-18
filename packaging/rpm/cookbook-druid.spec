@@ -46,6 +46,8 @@ esac
 %doc
 
 %changelog
+* Thu Jan 18 2024 David Vanhoucke <dvanhoucke@redborder.com> - 1.4.6
+- Add namespaces to rb_state datasource
 * Fri Dec 15 2023 David Vanhoucke <dvanhoucke@redborder.com> - 1.4.5
 - Add suppport for ip sync
 * Tue Apr 18 2023 Luis J. Blanco <ljblanco@redborder.com> - 1.4.4-1
