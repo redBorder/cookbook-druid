@@ -24,18 +24,25 @@ module Druid
         rb_monitor_array.push(rb_monitor)
         }
 
-        rb_state = {}
-        rb_state["dataSource"] = "rb_state"
-        rb_state["dimensions"] = ["wireless_station", "type", "wireless_channel", "wireless_tx_power", "wireless_admin_state", "wireless_op_state", "wireless_mode", "wireless_slot", "sensor_name", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "organizaton", "organization_uuid", "market", "market_uuid", "floor", "floor_uuid", "zone", "zone_uuid", "building", "building_uuid", "campus", "campus_uuid", "service_provider", "service_provider_uuid", "wireless_station_ip", "status", "wireless_station_name"]
-        rb_state["dimensionExclusions"] = []
-        rb_state["metrics"] = [
-          {"type" => "count", "name" => "events"},
-          {"type" => "doubleSum", "fieldName" => "value", "name" => "sum_value"},
-          {"type" => "hyperUnique", "fieldName" => "wireless_station", "name" => "wireless_stations"},
-          {"type" => "hyperUnique", "fieldName" => "wireless_channel", "name" => "wireless_channels"},
-          {"type" => "longSum", "fieldName" => "wireless_tx_power", "name" => "sum_wireless_tx_power"}
-        ]
-        rb_state["feed"] = "rb_state"
+        rb_state_array = []
+        namespaces.each { |namespace|
+          rb_state = {}
+          rb_state["dataSource"] = "rb_state"
+          rb_state["dataSource"] += "_"+namespace if !namespace.empty?
+          rb_state["dimensions"] = ["wireless_station", "type", "wireless_channel", "wireless_tx_power", "wireless_admin_state", "wireless_op_state", "wireless_mode", "wireless_slot", "sensor_name", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "organizaton", "organization_uuid", "market", "market_uuid", "floor", "floor_uuid", "zone", "zone_uuid", "building", "building_uuid", "campus", "campus_uuid", "service_provider", "service_provider_uuid", "wireless_station_ip", "status", "wireless_station_name", "client_count"]
+          rb_state["dimensionExclusions"] = []
+          rb_state["metrics"] = [
+            {"type" => "count", "name" => "events"},
+            {"type" => "doubleSum", "fieldName" => "value", "name" => "sum_value"},
+            {"type" => "hyperUnique", "fieldName" => "wireless_station", "name" => "wireless_stations"},
+            {"type" => "hyperUnique", "fieldName" => "wireless_channel", "name" => "wireless_channels"},
+            {"type" => "longSum", "fieldName" => "wireless_tx_power", "name" => "sum_wireless_tx_power"}
+          ]
+          rb_state["feed"] = "rb_state_post"
+          rb_state["feed"] += "_"+namespace if !namespace.empty?
+          rb_state_array.push(rb_state)
+        }
+
 
         rb_flow_array = []
         namespaces.each { |namespace|
@@ -145,7 +152,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_monitor_array + [rb_state, rb_event, rb_iot, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_monitor_array + rb_state_array + [rb_event, rb_iot, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
