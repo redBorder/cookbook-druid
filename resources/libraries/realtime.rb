@@ -125,7 +125,7 @@ module Druid
           rb_location = {}
           rb_location["dataSource"] = "rb_location"
           rb_location["dataSource"] += "_"+namespace if !namespace.empty?
-          rb_location["dimensions"] = ["client_mac", "sensor_name", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "type", "floor", "floor_uuid", "zone", "zone_uuid", "campus", "campus_uuid", "building", "building_uuid", "wireless_station", "floor_old", "floor_new", "zone_old", "zone_new", "wireless_station_old", "wireless_station_new", "building_old", "building_new", "campus_old", "campus_new", "service_provider", "service_provider_uuid", "new", "old", "transition", "organization_uuid", "market_uuid", "client_latlong", "dot11_status", "client_profile"]
+          rb_location["dimensions"] = ["client_mac", "sensor_name", "sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "type", "floor", "floor_uuid", "zone", "zone_uuid", "campus", "campus_uuid", "building", "building_uuid", "wireless_station", "floor_old", "floor_new", "zone_old", "zone_new", "wireless_station_old", "wireless_station_new", "building_old", "building_new", "campus_old", "campus_new", "service_provider", "service_provider_uuid", "new", "old", "transition", "organization_uuid", "market_uuid", "client_latlong", "dot11_status", "client_profile", "client_mac_vendor"]
           rb_location["dimensionExclusions"] = []
           rb_location["metrics"] = [
             {"type" => "count"  , "name" => "events"},
@@ -142,6 +142,23 @@ module Druid
           rb_location_array.push(rb_location)
         }
 
+        # Wireless
+        rb_wireless_array = []
+        namespaces.each { |namespace|
+          rb_wireless = {}
+          rb_wireless["dataSource"] = "rb_wireless"
+          rb_wireless["dataSource"] += "_"+namespace if !namespace.empty?
+          rb_wireless["dimensions"] = ["zone_uuid", "client_profile", "floor_uuid", "service_provider", "building_uuid", "client_rssi_num", "sensor_uuid", "namespace_uuid", "floor", "campus", "sensor_name", "client_mac", "client_latlong", "type", "organization", "wireless_station", "zone", "building", "client_rssi", "namespace", "dot11_status", "service_provider_uuid", "campus_uuid", "organization_uuid", "client_mac_vendor"]
+          rb_wireless["dimensionExclusions"] = []
+          rb_wireless["metrics"] = [
+            {"type" => "count"  , "name" => "events"},
+            {"type" => "hyperUnique", "name" => "clients", "fieldName" => "client_mac"}
+          ]
+          rb_wireless["feed"] = "rb_wireless_post"
+          rb_wireless["feed"] += "_"+namespace if !namespace.empty?
+          rb_wireless_array.push(rb_wireless)
+        }
+
         # BI
         rb_bi = {}
         rb_bi["dataSource"] = "rb_bi"
@@ -152,7 +169,7 @@ module Druid
         ]
         rb_bi["feed"] = "rb_bi_post"
 
-        specs["specs"] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_monitor_array + rb_state_array + [rb_event, rb_iot, rb_bi]
+        specs["specs"] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_wireless_array + rb_monitor_array + rb_state_array + [rb_event, rb_iot, rb_bi]
         #specs["specs"] = [rb_monitor]
 
         realtime_spec = []
