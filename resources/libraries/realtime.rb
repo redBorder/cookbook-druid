@@ -154,7 +154,7 @@ module Druid
             {"type" => "count"  , "name" => "events"},
             {"type" => "hyperUnique", "name" => "clients", "fieldName" => "client_mac"}
           ]
-          rb_wireless["feed"] = "rb_wireless_post"
+          rb_wireless["feed"] = "rb_wireless"
           rb_wireless["feed"] += "_"+namespace if !namespace.empty?
           rb_wireless_array.push(rb_wireless)
         }
