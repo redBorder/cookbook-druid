@@ -22,7 +22,6 @@ action :add do
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
     disk_size_kb = new_resource.disk_size_kb
-    tier = new_resource.tier
     tier_memory_mode = new_resource.tier_memory_mode
     cpu_num = new_resource.cpu_num
     memory_kb = new_resource.memory_kb
@@ -89,7 +88,7 @@ action :add do
       variables(:name => name, :cdomain => cdomain, :port => port,
                 :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
                 :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results,
-                :max_size_b => max_size_b, :tier => tier, :segment_cache_dir => segment_cache_dir)
+                :max_size_b => max_size_b, :segment_cache_dir => segment_cache_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
