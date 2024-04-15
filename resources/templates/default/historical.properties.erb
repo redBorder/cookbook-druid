@@ -3,7 +3,12 @@ druid.service=historical
 druid.host=<%= @name %>.node.<%= @cdomain %>
 druid.port=<%= @port %>
 druid.server.http.numThreads=10
-druid.server.tier=<%= @tier %>
+<% if !node["redborder"]["druid"].nil? and !node["redborder"]["druid"]["historical"].nil? and !node["redborder"]["druid"]["historical"]["tier"].nil? and node["redborder"]["druid"]["historical"]["tier"].class == String and node["redborder"]["druid"]["historical"]["tier"]!="default" %>
+druid.server.tier=<%= node["redborder"]["druid"]["historical"]["tier"] %>
+<% else %>
+druid.server.tier=_default_tier
+<% end %>
+
 
 druid.server.maxSize=<%= @max_size_b  %>
 druid.segmentCache.locations=[{"path": "<%= @segment_cache_dir %>", "maxSize": <%= @max_size_b %>}]
