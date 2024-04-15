@@ -1,6 +1,11 @@
 druid CHANGELOG
 ===============
 
+1.4.8
+-----
+[vimesa]
+- Fix default tier
+
 0.0.5
 -----
 [cjmateos]
