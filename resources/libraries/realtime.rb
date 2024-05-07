@@ -19,8 +19,8 @@ module Druid
           {"type" => "doubleMax", "fieldName" => "value", "name" => "max_value"},
           {"type" => "doubleMin", "fieldName" => "value", "name" => "min_value"}
         ]
-        rb_monitor["feed"] = "rb_monitor_post"
-        rb_monitor["feed"] += "_"+namespace if !namespace.empty?
+        rb_monitor["feed"] = "rb_monitor"
+        rb_monitor["feed"] += "_post_"+namespace if !namespace.empty?
         rb_monitor_array.push(rb_monitor)
         }
 
