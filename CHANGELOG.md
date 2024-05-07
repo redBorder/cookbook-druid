@@ -1,5 +1,10 @@
-druid CHANGELOG
+cookbook-druid CHANGELOG
 ===============
+
+## 1.4.9
+
+  - Miguel Negron
+    - [25337fa] Fix rb_monitor feed datasource when there are not namespaces
 
 1.4.8
 -----
