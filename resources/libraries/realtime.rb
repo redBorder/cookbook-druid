@@ -20,7 +20,8 @@ module Druid
           {"type" => "doubleMin", "fieldName" => "value", "name" => "min_value"}
         ]
         rb_monitor["feed"] = "rb_monitor"
-        rb_monitor["feed"] += "_post_"+namespace if !namespace.empty?
+        rb_monitor["feed"] += "_post" if namespaces.count > 1
+        rb_monitor["feed"] += "_"+namespace if !namespace.empty?
         rb_monitor_array.push(rb_monitor)
         }
 
