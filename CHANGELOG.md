@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.4.10
+
+  - Miguel Alvarez
+    - [1193a1b] Fix monitor feed
+
 ## 1.4.9
 
   - Miguel Negron
