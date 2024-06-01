@@ -10,7 +10,7 @@ module Druid
         processing = ((memory_kb - heap) / (threads + 1)).to_i
       end
 
-      return heap, (processing * 1024)
+      [heap, (processing * 1024)]
     end
 
     # Search the max value to heap and processing based on restrictions. (Recursive)
@@ -23,7 +23,7 @@ module Druid
       if heap < max_heap_kb
         search_multiple_max(memory_kb, threads, max_heap_kb, max_processing_kb - min_processing_kb, min_processing_kb)
       else
-        return max_heap_kb, max_processing_kb
+        [max_heap_kb, max_processing_kb]
       end
     end
   end
