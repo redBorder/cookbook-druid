@@ -1,13 +1,12 @@
-# Cookbook Name:: kafka
-#
+# Cookbook:: kafka
 # Provider:: historical
-#
+
 include Druid::Historical
 include Druid::Helper
 
 action :add do
   begin
-    parent_config_dir = "/etc/druid"
+    parent_config_dir = '/etc/druid'
     config_dir = "#{parent_config_dir}/historical"
     user = new_resource.user
     group = new_resource.group
@@ -27,24 +26,23 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    ipaddress = new_resource.ipaddress
 
-     directory config_dir do
-      owner "root"
-      group "root"
-      mode 0755
+    directory config_dir do
+      owner 'root'
+      group 'root'
+      mode '0755'
     end
 
     directory log_dir do
       owner user
       group group
-      mode 0755
+      mode '0755'
     end
 
     directory segment_cache_dir do
       owner user
       group group
-      mode 0755
+      mode '0755'
       recursive true
     end
 
@@ -56,16 +54,11 @@ action :add do
     processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
-    free_memory_kb = heap_historical_memory_kb - offheap_historical_memory_kb - (1024*1024) # This is the overheap.
+    free_memory_kb = heap_historical_memory_kb - offheap_historical_memory_kb - (1024 * 1024) # This is the overheap.
     segments_memory_b = (free_memory_kb > 0 ? free_memory_kb : 0).to_i * 1024
 
     max_size_b = 0
-
-    if tier_memory_mode
-      max_size_b = segments_memory_b
-    else
-      max_size_b = disk_size_kb * 1024
-    end
+    max_size_b = tier_memory_mode ? segments_memory_b : (disk_size_kb * 1024)
 
     Chef::Log.info(
       "\nHistorical Memory:
@@ -79,48 +72,49 @@ action :add do
     #####################################
 
     template "#{config_dir}/runtime.properties" do
-      source "historical.properties.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+      source 'historical.properties.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:name => name, :cdomain => cdomain, :port => port,
-                :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
-                :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results,
-                :max_size_b => max_size_b, :segment_cache_dir => segment_cache_dir)
+      variables(name: name, cdomain: cdomain, port: port,
+                processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results,
+                max_size_b: max_size_b, segment_cache_dir: segment_cache_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
     template "#{config_dir}/log4j2.xml" do
-      source "log4j2.xml.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+      source 'log4j2.xml.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:log_dir => log_dir, :service_name => suffix_log_dir)
+      variables(log_dir: log_dir, service_name: suffix_log_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
-    template "/etc/sysconfig/druid_historical" do
-      source "historical_sysconfig.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+    template '/etc/sysconfig/druid_historical' do
+      source 'historical_sysconfig.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:heap_historical_memory_kb => heap_historical_memory_kb, :offheap_historical_memory_kb => offheap_historical_memory_kb,
-                :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
+      variables(heap_historical_memory_kb: heap_historical_memory_kb,
+                offheap_historical_memory_kb: offheap_historical_memory_kb,
+                rmi_address: rmi_address, rmi_port: rmi_port, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 
-    service "druid-historical" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action [:enable,:start]
+    service 'druid-historical' do
+      supports status: true, start: true, restart: true, reload: true
+      action [:enable, :start]
     end
 
-    Chef::Log.info("Druid cookbook (historical) has been processed")
+    Chef::Log.info('Druid cookbook (historical) has been processed')
   rescue => e
     Chef::Log.error(e)
   end
@@ -128,45 +122,41 @@ end
 
 action :remove do
   begin
-    parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/historical"
-    parent_log_dir = new_resource.parent_log_dir
-    suffix_log_dir = new_resource.suffix_log_dir
-    ipaddress = new_resource.ipaddress
-    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
-    segment_cache_dir = new_resource.segment_cache_dir
+    # parent_config_dir = '/etc/druid'
+    # config_dir = "#{parent_config_dir}/historical"
+    # parent_log_dir = new_resource.parent_log_dir
+    # suffix_log_dir = new_resource.suffix_log_dir
+    # ipaddress = new_resource.ipaddress
+    # log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
+    # segment_cache_dir = new_resource.segment_cache_dir
 
-    service "druid-historical" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action [:disable,:stop]
+    service 'druid-historical' do
+      supports status: true, start: true, restart: true, reload: true
+      action [:disable, :stop]
     end
 
-    template_list = [
-      "#{config_dir}/runtime.properties",
-      "#{config_dir}/log4j2.xml"
-    ]
+    # template_list = [
+    #   "#{config_dir}/runtime.properties",
+    #   "#{config_dir}/log4j2.xml"
+    # ]
 
-    #template_list.each do |temp|
+    # template_list.each do |temp|
     #   file temp do
     #     action :delete
     #   end
-    #end
+    # end
 
-    dir_list = [
-                 config_dir,
-                 log_dir,
-                 segment_cache_dir
-               ]
+    # dir_list = [config_dir, log_dir, segment_cache_dir]
 
     # removing directories
-    #dir_list.each do |dirs|
-    #  directory dirs do
-    #    action :delete
-    #    recursive true
-    #  end
-    #end
+    # dir_list.each do |dirs|
+    #   directory dirs do
+    #     action :delete
+    #     recursive true
+    #   end
+    # end
 
-    Chef::Log.info("Druid cookbook (historical) has been processed")
+    Chef::Log.info('Druid cookbook (historical) has been processed')
   rescue => e
     Chef::Log.error(e)
   end
@@ -176,21 +166,21 @@ action :register do
   begin
     ipaddress = new_resource.ipaddress
 
-    if !node["druid"]["historical"]["registered"]
+    unless node['druid']['historical']['registered']
       query = {}
-      query["ID"] = "druid-historical-#{node["hostname"]}"
-      query["Name"] = "druid-historical"
-      query["Address"] = ipaddress
-      query["Port"] = 8083
+      query['ID'] = "druid-historical-#{node['hostname']}"
+      query['Name'] = 'druid-historical'
+      query['Address'] = ipaddress
+      query['Port'] = 8083
       json_query = Chef::JSONCompat.to_json(query)
 
       execute 'Register service in consul' do
-         command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
-         action :nothing
+        command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+        action :nothing
       end.run_action(:run)
 
-      node.normal["druid"]["historical"]["registered"] = true
-      Chef::Log.info("Druid Historical service has been registered to consul")
+      node.normal['druid']['historical']['registered'] = true
+      Chef::Log.info('Druid Historical service has been registered to consul')
     end
   rescue => e
     Chef::Log.error(e.message)
@@ -199,16 +189,14 @@ end
 
 action :deregister do
   begin
-    ipaddress = new_resource.ipaddress
-
-    if node["druid"]["historical"]["registered"]
+    if node['druid']['historical']['registered']
       execute 'Deregister service in consul' do
-        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-historical-#{node["hostname"]} &>/dev/null"
+        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-historical-#{node['hostname']} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.normal["druid"]["historical"]["registered"] = false
-      Chef::Log.info("Druid Historical service has been deregistered to consul")
+      node.normal['druid']['historical']['registered'] = false
+      Chef::Log.info('Druid Historical service has been deregistered to consul')
     end
   rescue => e
     Chef::Log.error(e.message)

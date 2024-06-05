@@ -1,12 +1,10 @@
-# Cookbook Name:: kafka
-#
+# Cookbook:: kafka
 # Provider:: broker
-#
 include Druid::Broker
 
 action :add do
   begin
-    parent_config_dir = "/etc/druid"
+    parent_config_dir = '/etc/druid'
     config_dir = "#{parent_config_dir}/broker"
     parent_log_dir = new_resource.parent_log_dir
     suffix_log_dir = new_resource.suffix_log_dir
@@ -23,18 +21,17 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
-    ipaddress = new_resource.ipaddress
 
     directory config_dir do
-      owner "root"
-      group "root"
-      mode 0755
+      owner 'root'
+      group 'root'
+      mode '0755'
     end
 
     directory log_dir do
       owner user
       group group
-      mode 0755
+      mode '0755'
     end
 
     #################################
@@ -61,47 +58,47 @@ action :add do
     #################################
 
     template "#{config_dir}/runtime.properties" do
-      source "broker.properties.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+      source 'broker.properties.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:name => name, :cdomain => cdomain, :port => port,
-                :processing_threads => processing_threads, :processing_memory_buffer_b => processing_memory_buffer_b,
-                :groupby_max_intermediate_rows => groupby_max_intermediate_rows, :groupby_max_results => groupby_max_results)
+      variables(name: name, cdomain: cdomain, port: port,
+                processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results)
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
     template "#{config_dir}/log4j2.xml" do
-      source "log4j2.xml.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+      source 'log4j2.xml.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:log_dir => log_dir, :service_name => suffix_log_dir)
+      variables(log_dir: log_dir, service_name: suffix_log_dir)
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
-    template "/etc/sysconfig/druid_broker" do
-      source "broker_sysconfig.erb"
-      owner "root"
-      group "root"
-      cookbook "druid"
-      mode 0644
+    template '/etc/sysconfig/druid_broker' do
+      source 'broker_sysconfig.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
       retries 2
-      variables(:heap_broker_memory_kb => heap_broker_memory_kb, :offheap_broker_memory_kb => offheap_broker_memory_kb,
-                :rmi_address => rmi_address, :rmi_port => rmi_port, :parent_config_dir => parent_config_dir)
+      variables(heap_broker_memory_kb: heap_broker_memory_kb, offheap_broker_memory_kb: offheap_broker_memory_kb,
+                rmi_address: rmi_address, rmi_port: rmi_port, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-broker]', :delayed
     end
 
-    service "druid-broker" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action [:enable,:start]
+    service 'druid-broker' do
+      supports status: true, start: true, restart: true, reload: true
+      action [:enable, :start]
     end
 
-    Chef::Log.info("Druid cookbook (broker) has been processed")
+    Chef::Log.info('Druid cookbook (broker) has been processed')
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -109,43 +106,40 @@ end
 
 action :remove do
   begin
-    parent_config_dir = "/etc/druid"
-    config_dir = "#{parent_config_dir}/broker"
-    parent_log_dir = new_resource.parent_log_dir
-    suffix_log_dir = new_resource.suffix_log_dir
-    ipaddress = new_resource.ipaddress
-    log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
+    # parent_config_dir = '/etc/druid'
+    # config_dir = "#{parent_config_dir}/broker"
+    # parent_log_dir = new_resource.parent_log_dir
+    # suffix_log_dir = new_resource.suffix_log_dir
+    # ipaddress = new_resource.ipaddress
+    # log_dir = "#{parent_log_dir}/#{suffix_log_dir}"
 
-    service "druid-broker" do
-      supports :status => true, :start => true, :restart => true, :reload => true
-      action [:disable,:stop]
+    service 'druid-broker' do
+      supports status: true, start: true, restart: true, reload: true
+      action [:disable, :stop]
     end
 
-    template_list = [
-      "#{config_dir}/runtime.properties",
-      "#{config_dir}/log4j2.xml"
-    ]
+    # template_list = [
+    #  "#{config_dir}/runtime.properties",
+    #  "#{config_dir}/log4j2.xml"
+    # ]
 
-    #template_list.each do |temp|
+    # template_list.each do |temp|
     #   file temp do
     #     action :delete
     #   end
-    #end
+    # end
 
-    dir_list = [
-                 config_dir,
-                 log_dir
-               ]
+    # dir_list = [config_dir, log_dir]
 
     # removing directories
-    #dir_list.each do |dirs|
-    #  directory dirs do
-    #    action :delete
-    #    recursive true
-    #  end
-    #end
+    # dir_list.each do |dirs|
+    #   directory dirs do
+    #     action :delete
+    #     recursive true
+    #   end
+    # end
 
-    Chef::Log.info("Druid cookbook (broker) has been processed")
+    Chef::Log.info('Druid cookbook (broker) has been processed')
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -155,21 +149,21 @@ action :register do
   begin
     ipaddress = new_resource.ipaddress
 
-    if !node["druid"]["broker"]["registered"]
+    unless node['druid']['broker']['registered']
       query = {}
-      query["ID"] = "druid-broker-#{node["hostname"]}"
-      query["Name"] = "druid-broker"
-      query["Address"] = ipaddress
-      query["Port"] = 8080
+      query['ID'] = "druid-broker-#{node['hostname']}"
+      query['Name'] = 'druid-broker'
+      query['Address'] = ipaddress
+      query['Port'] = 8080
       json_query = Chef::JSONCompat.to_json(query)
 
       execute 'Register service in consul' do
-         command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
-         action :nothing
+        command "curl -X PUT http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+        action :nothing
       end.run_action(:run)
 
-      node.normal["druid"]["broker"]["registered"] = true
-      Chef::Log.info("Druid Broker service has been registered to consul")
+      node.normal['druid']['broker']['registered'] = true
+      Chef::Log.info('Druid Broker service has been registered to consul')
     end
   rescue => e
     Chef::Log.error(e.message)
@@ -178,16 +172,14 @@ end
 
 action :deregister do
   begin
-    ipaddress = new_resource.ipaddress
-
-    if node["druid"]["broker"]["registered"]
+    if node['druid']['broker']['registered']
       execute 'Deregister service in consul' do
-        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-broker-#{node["hostname"]} &>/dev/null"
+        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-broker-#{node['hostname']} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.normal["druid"]["broker"]["registered"] = false
-      Chef::Log.info("Druid Broker service has been deregistered from consul")
+      node.normal['druid']['broker']['registered'] = false
+      Chef::Log.info('Druid Broker service has been deregistered from consul')
     end
   rescue => e
     Chef::Log.error(e.message)

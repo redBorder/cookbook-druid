@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.4.11
+
+  - Miguel Negrón
+    - [8f1a379] Improvement/fix lint (#34)
+
 ## 1.4.10
 
   - Miguel Alvarez
