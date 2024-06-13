@@ -10,14 +10,20 @@
          </Policies>
          <DefaultRolloverStrategy max="5" />
       </RollingFile>
-        <File name="Druid" fileName="<%= "#{@log_dir}/#{@service_name}.log" %>">
-            <PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/>
-        </File>
+      <RollingFile name="RollingDruid" fileName="<%= "#{@log_dir}/#{@service_name}.log" %>" filePattern="<%= "#{@log_dir}/#{@service_name}-%i.log" %>">
+          <PatternLayout>
+              <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
+          </PatternLayout>
+          <Policies>
+              <SizeBasedTriggeringPolicy size="10 MB" />
+          </Policies>
+          <DefaultRolloverStrategy max="5" />
+      </RollingFile>
     </Appenders>
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Druid"/>
             <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="RollingDruid"/>
         </Root>
     </Loggers>
 </Configuration>

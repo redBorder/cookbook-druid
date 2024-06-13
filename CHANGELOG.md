@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.4.12
+
+  - Rafael Gomez
+    - [4f75dd3] Configure druid service log rotation
+
 ## 1.4.11
 
   - Miguel Negrón
