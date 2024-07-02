@@ -63,16 +63,22 @@ module Druid
         rb_flow_array.push(rb_flow)
       end
 
-      rb_event = {}
-      rb_event['dataSource'] = 'rb_event'
-      rb_event['dimensions'] = %w(src dst src_port dst_port src_as_name src_country_code dst_map src_map service_provider sha256 file_uri file_size file_hostname action ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor ttl vlan classification domain_name group_name sig_generator rev priority msg sig_id dst_country_code dst_as_name namespace deployment market organization campus building floor floor_uuid conversation iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name tos service_provider_uuid namespace_uuid market_uuid organization_uuid campus_uuid building_uuid deployment_uuid darklist_category darklist_direction darklist_score_name darklist_score)
-      rb_event['dimensionExclusions'] = ['payload']
-      rb_event['metrics'] = [
-        { type: 'count', name: 'events' },
-        { type: 'hyperUnique', fieldName: 'msg', name: 'signatures' },
-        { type: 'longSum', fieldName: 'darklist_score', name: 'sum_dl_score' },
-      ]
-      rb_event['feed'] = 'rb_event'
+      rb_event_array = []
+      namespaces.each do |namespace|
+        rb_event = {}
+        rb_event['dataSource'] = 'rb_event'
+        rb_event['dataSource'] += '_' + namespace unless namespace.empty?
+        rb_event['dimensions'] = %w(src dst src_port dst_port src_as_name src_country_code dst_map src_map service_provider sha256 file_uri file_size file_hostname action ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor ttl vlan classification domain_name group_name sig_generator rev priority msg sig_id dst_country_code dst_as_name namespace deployment market organization campus building floor floor_uuid conversation iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name tos service_provider_uuid namespace_uuid market_uuid organization_uuid campus_uuid building_uuid deployment_uuid darklist_category darklist_direction darklist_score_name darklist_score)
+        rb_event['dimensionExclusions'] = ['payload']
+        rb_event['metrics'] = [
+          { type: 'count', name: 'events' },
+          { type: 'hyperUnique', fieldName: 'msg', name: 'signatures' },
+          { type: 'longSum', fieldName: 'darklist_score', name: 'sum_dl_score' },
+        ]
+        rb_event['feed'] = 'rb_event_post'
+        rb_event['feed'] += '_' + namespace unless namespace.empty?
+        rb_event_array.push(rb_event)
+      end
 
       rb_iot = {}
       rb_iot['dataSource'] = 'rb_iot'
@@ -167,7 +173,7 @@ module Druid
       ]
       rb_bi['feed'] = 'rb_bi_post'
 
-      specs['specs'] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_wireless_array + rb_monitor_array + rb_state_array + [rb_event, rb_iot, rb_bi]
+      specs['specs'] = rb_flow_array + rb_vault_array + rb_scanner_array + rb_location_array + rb_wireless_array + rb_monitor_array + rb_state_array + rb_event_array + [rb_iot, rb_bi]
       # specs['specs'] = [rb_monitor]
       realtime_spec = []
 

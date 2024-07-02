@@ -1,6 +1,12 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.5.0
+
+  - Rafael Gomez
+    - [53becab] BugFix/#17820 Adding dataSource namespace loop to rb_event_array
+    - [bf5c8ba] Feature/#17820 Add Intrusion Pipeline
+
 ## 1.4.12
 
   - Rafael Gomez
