@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.6.0
+
+  - Miguel Negrón
+    - [04917df] Merge pull request #41 from redBorder/feature/incident_response
+
 ## 1.5.0
 
   - Rafael Gomez
