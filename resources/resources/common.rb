@@ -6,6 +6,7 @@ default_action :add
 
 attribute :user, kind_of: String, default: 'druid'
 attribute :group, kind_of: String, default: 'druid'
+attribute :name, kind_of: String, default: 'localhost'
 attribute :parent_log_dir, kind_of: String, default: '/var/log/druid'
 attribute :zookeeper_hosts, kind_of: String, default: 'localhost:2181'
 attribute :memcached_hosts, kind_of: Array, default: ['memcached.service:11211']
