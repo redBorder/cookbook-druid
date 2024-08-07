@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.6.1
+
+  - José Navarro en redBorder
+    - [97eaec6] add memcached hosts to druid common properties
+
 ## 1.6.0
 
   - Miguel Negrón
