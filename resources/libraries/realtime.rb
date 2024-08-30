@@ -76,7 +76,18 @@ module Druid
         rb_event = {}
         rb_event['dataSource'] = 'rb_event'
         rb_event['dataSource'] += '_' + namespace unless namespace.empty?
-        rb_event['dimensions'] = %w(src dst src_port dst_port src_as_name src_country_code dst_map src_map service_provider sha256 file_uri file_size file_hostname action ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor ttl vlan classification domain_name group_name sig_generator rev priority msg sig_id dst_country_code dst_as_name namespace deployment market organization campus building floor floor_uuid conversation iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name tos service_provider_uuid namespace_uuid market_uuid organization_uuid campus_uuid building_uuid deployment_uuid darklist_category darklist_direction darklist_score_name darklist_score incident_uuid)
+        rb_event['dimensions'] = %w(
+          src dst src_port dst_port src_as_name src_country_code dst_map src_map
+          service_provider sha256 file_uri file_size file_hostname action
+          ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor
+          ttl vlan classification domain_name group_name sig_generator rev
+          priority msg sig_id dst_country_code dst_as_name namespace deployment
+          market organization campus building floor floor_uuid conversation
+          iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name
+          tos service_provider_uuid namespace_uuid market_uuid organization_uuid
+          campus_uuid building_uuid deployment_uuid darklist_category
+          darklist_direction darklist_score_name darklist_score incident_uuid
+        )
         rb_event['dimensionExclusions'] = ['payload']
         rb_event['metrics'] = [
           { type: 'count', name: 'events' },
@@ -90,7 +101,12 @@ module Druid
 
       rb_iot = {}
       rb_iot['dataSource'] = 'rb_iot'
-      rb_iot['dimensions'] = %w(sensor_uuid monitor value proxy_uuid deployment deployment_uuid namespace namespace_uuid market market_uuid organization organization_uuid client_latlong coordinates_map campus campus_uuid building building_uuid floor floor_uuid)
+      rb_iot['dimensions'] = %w(
+      sensor_uuid monitor value proxy_uuid deployment deployment_uuid namespace
+      namespace_uuid market market_uuid organization organization_uuid client
+      latlong coordinates_map campus campus_uuid building building_uuid floor
+      floor_uuid
+      )
       rb_iot['dimensionExclusions'] = []
       rb_iot['metrics'] = [
         { type: 'count', name: 'events' },
@@ -174,7 +190,14 @@ module Druid
       # BI
       rb_bi = {}
       rb_bi['dataSource'] = 'rb_bi'
-      rb_bi['dimensions'] = %w(organization_id organization_name question_id question questionnaire_name questionnaire_id feedback_id answer_id answer client_id client_latlong client_name client_country client_age client_email client_gender sensor_uuid sensor_name service_provider service_provider_uuid namespace namespace_uuid deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building building_uuid floor floor_uuid)
+      rb_bi['dimensions'] = %w(
+      organization_id organization_name question_id question questionnaire_name
+      questionnaire_id feedback_id answer_id answer client_id client_latlong
+      client_name client_country client_age client_email client_gender sensor_uuid
+      sensor_name service_provider service_provider_uuid namespace namespace_uuid
+      deployment deployment_uuid market market_uuid organization organization_uuid
+      campus campus_uuid building building_uuid floor floor_uuid
+      )
       rb_bi['dimensionExclusions'] = []
       rb_bi['metrics'] = [
         { type: 'count', name: 'events' },
