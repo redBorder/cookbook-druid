@@ -1,6 +1,20 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.7.0
+
+  - Miguel Negron
+    - [5e06d69] Add incident_uuid to rb_vault
+    - [e8da803] Release 1.6.0
+    - [5d228bf] Add incident_uuid to rb_event datastoure
+  - nilsver
+    - [ff034df] Update CHANGELOG.md
+    - [2df63bc] Release 1.6.1
+  - José Navarro en redBorder
+    - [97eaec6] Bug/#17959 add memcached hosts to druid common properties (#40)
+  - Miguel Negrón
+    - [04917df] Merge pull request #41 from redBorder/feature/incident_response
+
 ## 1.6.1
 
   - José Navarro en redBorder
