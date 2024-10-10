@@ -23,6 +23,9 @@ chmod -R 0755 %{buildroot}/var/chef/cookbooks/druid
 install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/druid/README.md
 
 %pre
+if [ -d /var/chef/cookbooks/druid ]; then
+    rm -rf /var/chef/cookbooks/druid
+fi
 
 %post
 case "$1" in
@@ -36,6 +39,12 @@ case "$1" in
   ;;
 esac
 
+%postun
+# Deletes directory when uninstall the package
+if [ "$1" = 0 ] && [ -d /var/chef/cookbooks/druid ]; then
+  rm -rf /var/chef/cookbooks/druid
+fi
+
 %files
 %defattr(0755,root,root)
 /var/chef/cookbooks/druid
@@ -46,15 +55,23 @@ esac
 %doc
 
 %changelog
-* Thu Jan 18 2024 David Vanhoucke <dvanhoucke@redborder.com> - 1.4.6
+* Thu Oct 10 2024 Miguel Negrón <manegron@redborder.com>
+- Add pre and postun
+
+* Thu Jan 18 2024 David Vanhoucke <dvanhoucke@redborder.com>
 - Add namespaces to rb_state datasource
-* Fri Dec 15 2023 David Vanhoucke <dvanhoucke@redborder.com> - 1.4.5
+
+* Fri Dec 15 2023 David Vanhoucke <dvanhoucke@redborder.com>
 - Add suppport for ip sync
-* Tue Apr 18 2023 Luis J. Blanco <ljblanco@redborder.com> - 1.4.4-1
+
+* Tue Apr 18 2023 Luis J. Blanco <ljblanco@redborder.com>
 - naming monitor topics
-* Fri Jan 07 2022 David Vanhoucke <dvanhoucke@redborder.com> - 1.3.6-1
+
+* Fri Jan 07 2022 David Vanhoucke <dvanhoucke@redborder.com>
 - change register to consul
-* Fri Feb 2 2018 Juan J. Prieto <jjprieto@redborder.com> - 1.2.0-1
+
+* Fri Feb 2 2018 Juan J. Prieto <jjprieto@redborder.com>
 - Add realtime support
-* Tue Oct 18 2016 Alberto Rodríguez <arodriguez@redborder.com> - 1.0.0-1
+
+* Tue Oct 18 2016 Alberto Rodríguez <arodriguez@redborder.com>
 - first spec version
