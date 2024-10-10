@@ -1,9 +1,14 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.7.1
+
+  - Miguel Negrón
+    - [9603296] Add pre and postun to clean the cookbook
+
 ## 1.7.0
 
-  - Miguel Negron
+  - Miguel Negrón
     - [5e06d69] Add incident_uuid to rb_vault
     - [e8da803] Release 1.6.0
     - [5d228bf] Add incident_uuid to rb_event datastoure
@@ -48,7 +53,7 @@ cookbook-druid CHANGELOG
 
 ## 1.4.9
 
-  - Miguel Negron
+  - Miguel Negrón
     - [25337fa] Fix rb_monitor feed datasource when there are not namespaces
 
 1.4.8
