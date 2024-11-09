@@ -20,8 +20,6 @@ action :add do
     processing_threads = new_resource.processing_threads
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
-    disk_size_kb = new_resource.disk_size_kb
-    tier_memory_mode = new_resource.tier_memory_mode
     cpu_num = new_resource.cpu_num
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
