@@ -26,6 +26,7 @@ action :add do
     memory_kb = new_resource.memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    maxsize = new_resource.maxsize
 
     directory config_dir do
       owner 'root'
@@ -54,11 +55,8 @@ action :add do
     processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
-    free_memory_kb = heap_historical_memory_kb - offheap_historical_memory_kb - (1024 * 1024) # This is the overheap.
-    segments_memory_b = (free_memory_kb > 0 ? free_memory_kb : 0).to_i * 1024
-
-    max_size_b = 0
-    max_size_b = tier_memory_mode ? segments_memory_b : (disk_size_kb * 1024)
+    # free_memory_kb = heap_historical_memory_kb - offheap_historical_memory_kb - (1024 * 1024) # This is the overheap.
+    # segments_memory_b = (free_memory_kb > 0 ? free_memory_kb : 0).to_i * 1024
 
     Chef::Log.info(
       "\nHistorical Memory:
@@ -81,7 +79,7 @@ action :add do
       variables(name: name, cdomain: cdomain, port: port,
                 processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
                 groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results,
-                max_size_b: max_size_b, segment_cache_dir: segment_cache_dir)
+                maxsize: maxsize, segment_cache_dir: segment_cache_dir)
       notifies :restart, 'service[druid-historical]', :delayed
     end
 

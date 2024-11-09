@@ -22,3 +22,4 @@ attribute :disk_size_kb, kind_of: Integer, default: 10485760
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
 attribute :rmi_port, kind_of: String, default: '9091'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
+attribute :maxsize, kind_of: Integer, default: 10737418240
