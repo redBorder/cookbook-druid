@@ -53,8 +53,6 @@ action :add do
     processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
-    # free_memory_kb = heap_historical_memory_kb - offheap_historical_memory_kb - (1024 * 1024) # This is the overheap.
-    # segments_memory_b = (free_memory_kb > 0 ? free_memory_kb : 0).to_i * 1024
 
     Chef::Log.info(
       "\nHistorical Memory:
