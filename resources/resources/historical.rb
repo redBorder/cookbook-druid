@@ -15,10 +15,9 @@ attribute :segment_cache_dir, kind_of: String, default: '/var/druid/historical/i
 attribute :processing_threads, kind_of: Integer
 attribute :groupby_max_intermediate_rows, kind_of: Integer, default: 50000
 attribute :groupby_max_results, kind_of: Integer, default: 500000
-attribute :tier_memory_mode, kind_of: [TrueClass, FalseClass], default: false
 attribute :cpu_num, kind_of: Integer, default: 4
 attribute :memory_kb, kind_of: Integer, default: 8388608
-attribute :disk_size_kb, kind_of: Integer, default: 10485760
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
 attribute :rmi_port, kind_of: String, default: '9091'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
+attribute :maxsize, kind_of: Integer, default: 10737418240
