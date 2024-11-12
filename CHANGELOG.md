@@ -1,6 +1,12 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.7.2
+
+  - Rafael Gomez
+    - [a3f5f2e] Changing variable type to int
+    - [cd46979] Using maxsize variable from hd_services
+
 ## 1.7.1
 
   - Miguel Negrón

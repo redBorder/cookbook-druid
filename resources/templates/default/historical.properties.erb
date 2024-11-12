@@ -10,8 +10,8 @@ druid.server.tier=_default_tier
 <% end %>
 
 
-druid.server.maxSize=<%= @max_size_b  %>
-druid.segmentCache.locations=[{"path": "<%= @segment_cache_dir %>", "maxSize": <%= @max_size_b %>}]
+druid.server.maxSize=<%= @maxsize  %>
+druid.segmentCache.locations=[{"path": "<%= @segment_cache_dir %>", "maxSize": <%= @maxsize %>}]
 
 druid.historical.cache.useCache=true
 druid.historical.cache.populateCache=true
