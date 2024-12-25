@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.8.0
+  - manegron
+    - Add alarms to vault datasource
+
+
 ## 1.7.3
 
   - manegron
