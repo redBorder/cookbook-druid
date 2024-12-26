@@ -1,6 +1,16 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 1.8.0
+  - manegron
+    - Add alarms to vault datasource
+
+
+## 1.7.3
+
+  - manegron
+    - [d24c7d4] Add sensor_uuid to rb_event datasource
+
 ## 1.7.2
 
   - Rafael Gomez

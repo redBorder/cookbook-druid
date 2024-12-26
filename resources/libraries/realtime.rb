@@ -68,7 +68,7 @@ module Druid
         rb_event = {}
         rb_event['dataSource'] = 'rb_event'
         rb_event['dataSource'] += '_' + namespace unless namespace.empty?
-        rb_event['dimensions'] = %w(src src_is_malicious dst dst_is_malicious src_port dst_port src_as_name src_country_code dst_map src_map service_provider sha256 sha256_is_malicious file_uri file_uri_is_malicious file_size file_hostname file_hostname_is_malicious action ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor ttl vlan classification domain_name group_name sig_generator rev priority msg sig_id dst_country_code dst_as_name namespace deployment market organization campus building floor floor_uuid conversation iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name tos service_provider_uuid namespace_uuid market_uuid organization_uuid campus_uuid building_uuid deployment_uuid darklist_category darklist_direction darklist_score_name darklist_score incident_uuid)
+        rb_event['dimensions'] = %w(src src_is_malicious dst dst_is_malicious sensor_uuid src_port dst_port src_as_name src_country_code dst_map src_map service_provider sha256 sha256_is_malicious file_uri file_uri_is_malicious file_size file_hostname file_hostname_is_malicious action ethlength_range icmptype ethsrc ethsrc_vendor ethdst ethdst_vendor ttl vlan classification domain_name group_name sig_generator rev priority msg sig_id dst_country_code dst_as_name namespace deployment market organization campus building floor floor_uuid conversation iplen_range l4_proto sensor_name scatterplot src_net_name dst_net_name tos service_provider_uuid namespace_uuid market_uuid organization_uuid campus_uuid building_uuid deployment_uuid darklist_category darklist_direction darklist_score_name darklist_score incident_uuid)
         rb_event['dimensionExclusions'] = ['payload']
         rb_event['metrics'] = [
           { type: 'count', name: 'events' },
@@ -97,7 +97,7 @@ module Druid
         rb_vault = {}
         rb_vault['dataSource'] = 'rb_vault'
         rb_vault['dataSource'] += '_' + namespace unless namespace.empty?
-        rb_vault['dimensions'] = %w(pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip app_name sensor_name proxy_uuid message status category source target sensor_uuid service_provider service_provider_uuid namespace namespace_uuid deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building building_uuid floor floor_uuid action incident_uuid) + dimensions.keys
+        rb_vault['dimensions'] = %w(pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip app_name sensor_name proxy_uuid message status category source target sensor_uuid service_provider service_provider_uuid namespace namespace_uuid deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building building_uuid floor floor_uuid action incident_uuid alarm_id alarm_name alarm_product_type alarm_condition alarm_user alarm_severity) + dimensions.keys
         rb_vault['dimensionExclusions'] = %w(unit type valur)
         rb_vault['metrics'] = [
           { type: 'count', name: 'events' },
