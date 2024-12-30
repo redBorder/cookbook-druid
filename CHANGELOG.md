@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.0.0
+
+  - Miguel Álvarez
+    - [4c1d820] Add new fields in rb_event and rb_flow (#49)
+
 ## 1.8.0
   - manegron
     - Add alarms to vault datasource
