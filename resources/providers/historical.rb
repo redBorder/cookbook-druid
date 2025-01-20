@@ -50,7 +50,7 @@ action :add do
     #####################################
 
     # Compute the number of processing threads based on CPUs
-    processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
+    processing_threads = cpu_num > 1 ? [ [cpu_num, 8].min.to_i, 1 ].max.to_i : 1 if processing_threads.nil?
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
 
