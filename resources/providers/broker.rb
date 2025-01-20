@@ -41,23 +41,23 @@ action :add do
     heap_broker_memory_kb = 0
 
     # Compute the number of processing threads based on CPUs
-    processing_threads = cpu_num > 1 ? [ [cpu_num,8].min.to_i-1, 1 ].max : 1 if processing_threads.nil?
+    processing_threads = cpu_num > 1 ? [ [cpu_num, 8].min.to_i - 1, 1 ].max : 1 if processing_threads.nil?
 
     # Compute http server num threads
-    http_num_threads = ([ cpu_num-1, 1 ].max * 5)
+    http_num_threads = ([ cpu_num - 1, 1 ].max * 5)
 
     # Compute the heap memory, the processing buffer memory and the offheap memory
     heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_broker_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
 
-    # Compute HTTP connection
+    # Compute HTTP connection num threads
     http_num_threads = [http_num_threads, 5].max
     http_num_connections = if http_num_connections.nil?
-      http_num_threads > 1 ? [http_num_threads - 5, 1].max : 1
-    else
-      http_num_connections
-    end
-    
+                             http_num_threads > 1 ? [http_num_threads - 5, 1].max : 1
+                           else
+                             http_num_connections
+                           end
+
     Chef::Log.info(
       "\nBroker Memory:
         * Memory: #{memory_kb}k
