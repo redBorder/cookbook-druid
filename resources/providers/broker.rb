@@ -51,8 +51,13 @@ action :add do
     offheap_broker_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
 
     # Compute HTTP connection
-    http_num_connections = http_num_threads > 1 ? http_num_threads - 5 : 1 if http_num_connections.nil?
-
+    http_num_threads = [http_num_threads, 5].max
+    http_num_connections = if http_num_connections.nil?
+      http_num_threads > 1 ? [http_num_threads - 5, 1].max : 1
+    else
+      http_num_connections
+    end
+    
     Chef::Log.info(
       "\nBroker Memory:
         * Memory: #{memory_kb}k
