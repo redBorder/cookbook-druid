@@ -67,7 +67,7 @@ action :add do
     # memory_kb = memory_kb - heap_realtime_memory_kb
 
     # Number of min[(cpu - 1),1] or 1
-    processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1 if processing_threads.nil?
+    processing_threads = cpu_num > 1 ? [[cpu_num - 1, 8].min.to_i - 1, 1].max : 1 if processing_threads.nil?
     # processing_threads = cpu_num > 1 ? [cpu_num - 1, 1].max : 1 if processing_threads.nil?
 
     # 256mb per threads or [40% of total RAM / (threads + 1)]
