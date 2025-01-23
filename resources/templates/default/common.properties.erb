@@ -23,9 +23,9 @@ druid.metadata.storage.type=derby
 <% end %>
 
 # Caching
-<% if @memcached_hosts %>
+<% if !@memcached_hosts.empty? %>
 druid.cache.type=memcached
-druid.cache.hosts=<%= @memcached_hosts.join(",") %>
+druid.cache.hosts=<%= @memcached_hosts %>
 druid.cache.expiration=86400
 druid.cache.memcachedPrefix=druid
 <% else %>
