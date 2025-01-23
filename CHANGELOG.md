@@ -1,6 +1,13 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.0.1
+
+  - Miguel Alvarez
+    - [2787e66] Fix num threads http and limit threads http and cpu
+    - [93959a3] Limit threads http and cpu
+
+
 ## 2.0.0
 
   - Miguel Álvarez
