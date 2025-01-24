@@ -41,10 +41,13 @@ action :add do
     heap_broker_memory_kb = 0
 
     # Compute the number of processing threads based on CPUs
-    processing_threads = 50
+    processing_threads = cpu_num > 1 ? [ [cpu_num, 8].min.to_i - 1, 1 ].max : 1 if processing_threads.nil?
 
     # Compute http server num threads
     http_num_threads = 20
+
+    # Compute the number of http connections
+    http_num_connections = 50
 
     # Compute the heap memory, the processing buffer memory and the offheap memory
     heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
