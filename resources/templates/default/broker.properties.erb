@@ -4,8 +4,8 @@ druid.host=<%= @name %>.node.<%= @cdomain %>
 druid.port=<%= @port %>
 
 # HTTP 
-druid.server.http.numThreads=10
-druid.broker.http.numConnections=5
+druid.server.http.numThreads=<%= @http_num_threads %>
+druid.broker.http.numConnections=<%= @http_num_connections%>
 
 druid.broker.cache.useCache=true
 druid.broker.cache.populateCache=true

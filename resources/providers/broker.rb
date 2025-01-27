@@ -15,6 +15,7 @@ action :add do
     cdomain = new_resource.cdomain
     port = new_resource.port
     processing_threads = new_resource.processing_threads
+    http_num_connections = new_resource.http_num_connections
     groupby_max_intermediate_rows = new_resource.groupby_max_intermediate_rows
     groupby_max_results = new_resource.groupby_max_results
     cpu_num = new_resource.cpu_num
@@ -40,7 +41,13 @@ action :add do
     heap_broker_memory_kb = 0
 
     # Compute the number of processing threads based on CPUs
-    processing_threads = cpu_num > 1 ? cpu_num - 1 : 1 if processing_threads.nil?
+    processing_threads = cpu_num > 1 ? [ [cpu_num, 8].min.to_i - 1, 1 ].max : 1 if processing_threads.nil?
+
+    # Compute http server num threads
+    http_num_threads = 50
+
+    # Compute the number of http connections
+    http_num_connections = 20
 
     # Compute the heap memory, the processing buffer memory and the offheap memory
     heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
@@ -65,7 +72,7 @@ action :add do
       mode '0644'
       retries 2
       variables(name: name, cdomain: cdomain, port: port,
-                processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                processing_threads: processing_threads, http_num_connections: http_num_connections, http_num_threads: http_num_threads, processing_memory_buffer_b: processing_memory_buffer_b,
                 groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results)
       notifies :restart, 'service[druid-broker]', :delayed
     end

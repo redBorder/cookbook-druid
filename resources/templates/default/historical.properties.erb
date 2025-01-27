@@ -2,7 +2,7 @@
 druid.service=historical
 druid.host=<%= @name %>.node.<%= @cdomain %>
 druid.port=<%= @port %>
-druid.server.http.numThreads=10
+druid.server.http.numThreads=<%=([ node["cpu"]["total"].to_i-1, 1 ].max * 5)%>
 <% if !node["redborder"]["druid"].nil? and !node["redborder"]["druid"]["historical"].nil? and !node["redborder"]["druid"]["historical"]["tier"].nil? and node["redborder"]["druid"]["historical"]["tier"].class == String and node["redborder"]["druid"]["historical"]["tier"]!="default" %>
 druid.server.tier=<%= node["redborder"]["druid"]["historical"]["tier"] %>
 <% else %>
