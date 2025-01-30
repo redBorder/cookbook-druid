@@ -73,7 +73,7 @@ action :add do
       mode '0644'
       retries 2
       variables(name: name, cdomain: cdomain, port: port,
-                processing_threads: processing_threads, http_num_connections: http_num_connections, http_num_threads: http_num_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, http_num_connections: http_num_connections, http_num_threads: http_num_threads, processing_memory_buffer_b: processing_memory_buffer_b,
                 groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results)
       notifies :restart, 'service[druid-broker]', :delayed
     end

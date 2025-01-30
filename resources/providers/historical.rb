@@ -74,7 +74,7 @@ action :add do
       mode '0644'
       retries 2
       variables(name: name, cdomain: cdomain, port: port,
-                processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, processing_memory_buffer_b: processing_memory_buffer_b,
                 groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results,
                 maxsize: maxsize, segment_cache_dir: segment_cache_dir)
       notifies :restart, 'service[druid-historical]', :delayed
