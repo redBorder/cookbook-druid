@@ -50,8 +50,9 @@ action :add do
     http_num_connections = 20
 
     # Compute the heap memory, the processing buffer memory and the offheap memory
+    num_merge_buffers = [ processing_threads/4, 2 ].max.to_i
     heap_broker_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
-    offheap_broker_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
+    offheap_broker_memory_kb = (processing_memory_buffer_b * (num_merge_buffers + processing_threads + 1) / 1024).to_i
 
     Chef::Log.info(
       "\nBroker Memory:
