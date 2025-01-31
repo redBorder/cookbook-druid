@@ -51,8 +51,9 @@ action :add do
 
     # Compute the number of processing threads based on CPUs
     processing_threads = cpu_num > 1 ? [ [cpu_num, 8].min.to_i, 1 ].max.to_i : 1 if processing_threads.nil?
+    num_merge_buffers = [ processing_threads / 4, 2 ].max.to_i
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
-    offheap_historical_memory_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
+    offheap_historical_memory_kb = (processing_memory_buffer_b * (num_merge_buffers + processing_threads + 1) / 1024).to_i
 
     Chef::Log.info(
       "\nHistorical Memory:
@@ -73,7 +74,7 @@ action :add do
       mode '0644'
       retries 2
       variables(name: name, cdomain: cdomain, port: port,
-                processing_threads: processing_threads, processing_memory_buffer_b: processing_memory_buffer_b,
+                processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, processing_memory_buffer_b: processing_memory_buffer_b,
                 groupby_max_intermediate_rows: groupby_max_intermediate_rows, groupby_max_results: groupby_max_results,
                 maxsize: maxsize, segment_cache_dir: segment_cache_dir)
       notifies :restart, 'service[druid-historical]', :delayed

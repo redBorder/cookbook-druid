@@ -5,8 +5,10 @@ druid.port=<%= @port %>
 druid.server.http.numThreads=<%=([ node["cpu"]["total"].to_i-1, 1 ].max * 5)%>
 <% if !node["redborder"]["druid"].nil? and !node["redborder"]["druid"]["historical"].nil? and !node["redborder"]["druid"]["historical"]["tier"].nil? and node["redborder"]["druid"]["historical"]["tier"].class == String and node["redborder"]["druid"]["historical"]["tier"]!="default" %>
 druid.server.tier=<%= node["redborder"]["druid"]["historical"]["tier"] %>
+druid.server.priority=1
 <% else %>
 druid.server.tier=_default_tier
+druid.server.priority=0
 <% end %>
 
 
@@ -22,6 +24,7 @@ druid.monitoring.monitors=["io.druid.client.cache.CacheMonitor", "com.metamx.met
 
 # Processing
 druid.processing.numThreads=<%= @processing_threads %>
+druid.processing.numMergeBuffers=<%= @num_merge_buffers %>
 druid.processing.buffer.sizeBytes=<%= @processing_memory_buffer_b %>
 druid.query.groupBy.maxIntermediateRows=<%= @groupby_max_intermediate_rows %>
 druid.query.groupBy.maxResults=<%= @groupby_max_results %>
