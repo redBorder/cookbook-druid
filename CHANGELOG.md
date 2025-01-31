@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.0.2
+
+  - Miguel Alvarez
+    - [e8a5d02] add merge buffers and server priority
+
 ## 2.0.1
 
   - Miguel Alvarez
