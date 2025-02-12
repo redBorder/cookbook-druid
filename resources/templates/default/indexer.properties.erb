@@ -18,7 +18,8 @@
 #
 
 druid.service=druid/indexer
-druid.plaintextPort=8089
+druid.host=<%= @name %>.node.<%= @cdomain %>
+druid.plaintextPort=<% @port %>
 
 # Number of tasks (druid.worker.capacity) is automatically
 # determined based on available processor.
