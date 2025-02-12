@@ -1,6 +1,10 @@
 # Cookbook:: druid
 # Provider:: Realtime
 
+#########################
+#### DEPRECATED #########
+#########################
+
 action :add do
   begin
     parent_config_dir = '/etc/druid'

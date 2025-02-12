@@ -1,6 +1,10 @@
 # Cookbook:: druid
 # Resource:: Realtime
 
+#########################
+#### DEPRECATED #########
+#########################
+
 actions :add, :remove, :register, :deregister
 default_action :add
 

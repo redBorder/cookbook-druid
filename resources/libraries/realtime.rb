@@ -1,3 +1,7 @@
+#########################
+#### DEPRECATED #########
+#########################
+
 module Druid
   module Realtime
     def realtime_spec(dimensions, zk_host, max_rows, partition_num, namespaces)
