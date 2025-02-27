@@ -13,7 +13,8 @@ action :add do
     name = new_resource.name
     cdomain = new_resource.cdomain
     port = new_resource.port
-
+    aws_region = new_resource.aws_region
+    
     directory config_dir do
       owner 'root'
       group 'root'
