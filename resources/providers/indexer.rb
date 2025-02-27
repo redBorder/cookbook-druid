@@ -1,6 +1,5 @@
 # Cookbook:: kafka
 # Provider:: indexer
-include Druid::Indexer
 
 action :add do
   begin
@@ -49,6 +48,16 @@ action :add do
       mode '0644'
       retries 2
       variables(log_dir: log_dir, service_name: suffix_log_dir)
+      notifies :restart, 'service[druid-indexer]', :delayed
+    end
+
+    template '/etc/sysconfig/druid_indexer' do
+      source 'indexer_sysconfig.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
+      retries 2
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 

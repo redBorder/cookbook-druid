@@ -51,6 +51,16 @@ action :add do
       notifies :restart, 'service[druid-router]', :delayed
     end
 
+    template '/etc/sysconfig/druid_router' do
+      source 'router_sysconfig.erb'
+      owner 'root'
+      group 'root'
+      cookbook 'druid'
+      mode '0644'
+      retries 2
+      notifies :restart, 'service[druid-router]', :delayed
+    end
+
     service 'druid-router' do
       supports status: true, start: true, restart: true, reload: true
       action [:enable, :start]
