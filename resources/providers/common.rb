@@ -119,7 +119,7 @@ action :add do
       end
     end
 
-    extensions = %w(druid-kafka-indexing-service druid-kafka-eight druid-histogram)
+    extensions = %w(druid-kafka-indexing-service)
     extensions << 'druid-s3-extensions' if s3_bucket
     extensions << 'postgresql-metadata-storage' if psql_uri
 
