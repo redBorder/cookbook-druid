@@ -22,7 +22,7 @@ druid.indexer.logs.s3Prefix=<%= @s3_log_prefix %>
 druid.indexer.logs.type=file
 druid.indexer.logs.directory=<%= @task_log_dir %>
 <% end %>
-druid.monitoring.monitors=["com.metamx.metrics.JvmMonitor", "io.druid.server.metrics.EventReceiverFirehoseMonitor", "com.metamx.metrics.SysMonitor"]
+#druid.monitoring.monitors=["com.metamx.metrics.JvmMonitor", "io.druid.server.metrics.EventReceiverFirehoseMonitor", "com.metamx.metrics.SysMonitor"]
 
 # Peon
 druid.indexer.task.baseDir=<%= @base_dir %>
