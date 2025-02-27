@@ -51,6 +51,19 @@ action :add do
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
+        # Obtaining s3 data
+    begin
+      s3 = data_bag_item('passwords', 's3')
+    rescue
+      s3 = {}
+    end
+
+    unless s3.empty?
+      s3_bucket = s3['s3_bucket']
+      s3_access_key = s3['s3_access_key_id']
+      s3_secret_key = s3['s3_secret_key_id']
+    end
+
     template '/etc/sysconfig/druid_indexer' do
       source 'indexer_sysconfig.erb'
       owner 'root'
@@ -58,6 +71,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
+      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key)
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
