@@ -1,4 +1,4 @@
-# Cookbook:: kafka
+# Cookbook:: druid
 # Provider:: broker
 
 include Druid::Helper
@@ -22,6 +22,7 @@ action :add do
     s3_port = new_resource.s3_port
     cdomain = new_resource.cdomain
     druid_local_storage_dir = new_resource.druid_local_storage_dir
+    s3_region = new_resource.s3_region
 
     # DRUID SERVICES
     service 'druid-broker' do
@@ -132,8 +133,8 @@ action :add do
       retries 2
       variables(zookeeper_hosts: zookeeper_hosts,
                 psql_uri: psql_uri, psql_user: psql_user, memcached_hosts: memcached_hosts,
-                psql_password: psql_password, s3_bucket: s3_bucket, s3_access_key: s3_access_key,
-                s3_secret_key: s3_secret_key, s3_prefix: s3_prefix, druid_local_storage_dir: druid_local_storage_dir,
+                psql_password: psql_password, s3_bucket: s3_bucket, s3_access_key: s3_access_key, s3_service: s3_service, s3_port: s3_port,
+                s3_secret_key: s3_secret_key, s3_prefix: s3_prefix, druid_local_storage_dir: druid_local_storage_dir, s3_region: s3_region,
                 extensions: extensions)
     end
 

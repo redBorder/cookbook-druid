@@ -35,6 +35,10 @@ druid.cache.type=local
 # Deep Storage
 <% if @s3_bucket %>
 druid.storage.type=s3
+druid.s3.protocol=http
+druid.s3.enablePathStyleAccess=true
+druid.s3.endpoint.signingRegion=<%= @s3_region %>
+druid.s3.endpoint.url=http://<%= @s3_host %>:<%= @s3_port %>/
 druid.s3.accessKey=<%= @s3_access_key %>
 druid.s3.secretKey=<%= @s3_secret_key %>
 druid.storage.bucket=<%= @s3_bucket %>
