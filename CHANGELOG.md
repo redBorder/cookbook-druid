@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.0.3
+
+  - nilsver
+    - [278bf7d] remove unused cdomain
+
 ## 2.0.2
 
   - Miguel Alvarez
