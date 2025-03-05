@@ -97,7 +97,7 @@ module Druid
         rb_vault = {}
         rb_vault['dataSource'] = 'rb_vault'
         rb_vault['dataSource'] += '_' + namespace unless namespace.empty?
-        rb_vault['dimensions'] = %w(pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip app_name sensor_name proxy_uuid message status category source target sensor_uuid service_provider service_provider_uuid namespace namespace_uuid deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building building_uuid floor floor_uuid action incident_uuid alarm_id alarm_name alarm_product_type alarm_condition alarm_user alarm_severity) + dimensions.keys
+        rb_vault['dimensions'] = %w(pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip app_name sensor_name proxy_uuid message status category source target sensor_uuid service_provider service_provider_uuid namespace namespace_uuid deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building building_uuid floor floor_uuid action incident_uuid alarm_id alarm_name alarm_product_type alarm_condition alarm_severity) + dimensions.keys
         rb_vault['dimensionExclusions'] = %w(unit type valur)
         rb_vault['metrics'] = [
           { type: 'count', name: 'events' },
