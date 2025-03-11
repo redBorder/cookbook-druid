@@ -23,6 +23,7 @@ druid.plaintextPort=<%= @port %>
 
 # Number of tasks (druid.worker.capacity) is automatically
 # determined based on available processor.
+druid.worker.capacity=<%= @worker_capacity %>
 
 # Task launch parameters
 druid.worker.baseTaskDirs=[\"var/druid/task\"]
@@ -30,7 +31,10 @@ druid.worker.baseTaskDirs=[\"var/druid/task\"]
 # Processing threads and buffers on Indexer
 # Determined automatically based on available memory. For details on how to manually set parameters:
 # https://druid.apache.org/docs/latest/operations/basic-cluster-tuning.html#guidelines-for-processing-threads-and-buffers
-druid.worker.capacity=<%= node['redborder']['druid-indexer-tasks'] %>
-
+# Processing
+druid.indexer.fork.property.druid.server.http.numThreads=10
+druid.indexer.fork.property.druid.processing.buffer.sizeBytes=<%= @processing_memory_buffer_b %>
+druid.indexer.fork.property.druid.processing.numThreads=<%= @processing_threads %>
+druid.indexer.fork.property.druid.processing.numMergeBuffers=<%= @num_merge_buffers %>
 # Hadoop indexing
 druid.indexer.task.hadoopWorkingPath=var/druid/hadoop-tmp
