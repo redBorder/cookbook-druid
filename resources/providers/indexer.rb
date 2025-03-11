@@ -23,7 +23,6 @@ action :add do
     heap_memory_peon_kb = new_resource.heap_memory_peon_kb
     processing_threads = new_resource.processing_threads
     processing_memory_buffer_b = new_resource.processing_memory_buffer_b
-    max_direct_memory_peon_kb = new_resource.max_direct_memory_peon_kb
     worker_capacity = new_resource.worker_capacity
 
     ########################################
@@ -51,11 +50,6 @@ action :add do
     # 256mb per threads or [40% of total RAM / (threads + 1)]
     if processing_memory_buffer_b.nil?
       processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512 * 1024) * (processing_threads + 1) ? (512 * 1024 * 1024) : ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i
-    end
-
-    # (Threads + 1) * processing_memory to calculate peon MaxDirectMemory (off-heap)
-    if max_direct_memory_peon_kb.nil?
-      max_direct_memory_peon_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
     end
 
     # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
@@ -108,7 +102,6 @@ action :add do
     end
 
     unless s3.empty?
-      s3_bucket = s3['s3_bucket']
       s3_access_key = s3['s3_access_key_id']
       s3_secret_key = s3['s3_secret_key_id']
     end
