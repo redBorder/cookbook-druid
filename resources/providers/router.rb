@@ -13,6 +13,10 @@ action :add do
     name = new_resource.name
     cdomain = new_resource.cdomain
     port = new_resource.port
+    offheap_router_memory_kb = new_resource.offheap_router_memory_kb
+    heap_router_memory_kb = new_resource.heap_router_memory_kb
+    rmi_address = new_resource.rmi_address
+    rmi_port = new_resource.rmi_port
 
     directory config_dir do
       owner 'root'
@@ -25,9 +29,6 @@ action :add do
       group group
       mode '0755'
     end
-
-    #################################
-    #################################
 
     template "#{config_dir}/runtime.properties" do
       source 'router.properties.erb'
@@ -58,6 +59,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
+      variables(offheap_router_memory_kb: offheap_router_memory_kb, heap_router_memory_kb: heap_router_memory_kb, rmi_address: rmi_address, rmi_port: rmi_port, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-router]', :delayed
     end
 

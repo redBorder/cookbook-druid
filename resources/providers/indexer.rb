@@ -1,4 +1,4 @@
-# Cookbook:: kafka
+# Cookbook:: druid
 # Provider:: indexer
 
 action :add do
@@ -14,7 +14,59 @@ action :add do
     cdomain = new_resource.cdomain
     port = new_resource.port
     aws_region = new_resource.aws_region
-    
+    num_merge_buffers = new_resource.num_merge_buffers
+    memory_kb = new_resource.memory_kb
+    heap_indexer_memory_kb = new_resource.heap_indexer_memory_kb
+    rmi_address = new_resource.rmi_address
+    rmi_port = new_resource.rmi_port
+    cpu_num = new_resource.cpu_num
+    heap_memory_peon_kb = new_resource.heap_memory_peon_kb
+    processing_threads = new_resource.processing_threads
+    processing_memory_buffer_b = new_resource.processing_memory_buffer_b
+    max_direct_memory_peon_kb = new_resource.max_direct_memory_peon_kb
+    worker_capacity = new_resource.worker_capacity
+
+    ########################################
+    # Indexer resource configuration #
+    ########################################
+
+    # reserve indexer heap
+    memory_kb -= heap_indexer_memory_kb
+
+    # 1gb per peon heap or 60% of total RAM
+    if heap_memory_peon_kb.nil?
+      heap_memory_peon_kb = memory_kb > (2 * 1024 * 1024).to_i ? (1 * 1024 * 1024).to_i : (memory_kb * 0.60).to_i
+    end
+
+    # Number of min[(cpu - 1),2] or 1
+    if processing_threads.nil?
+      processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1
+    end
+
+    # Calculate num_merge_buffers
+    if num_merge_buffers.nil?
+      num_merge_buffers = [ processing_threads / 4, 2 ].max.to_i
+    end
+
+    # 256mb per threads or [40% of total RAM / (threads + 1)]
+    if processing_memory_buffer_b.nil?
+      processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512 * 1024) * (processing_threads + 1) ? (512 * 1024 * 1024) : ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i
+    end
+
+    # (Threads + 1) * processing_memory to calculate peon MaxDirectMemory (off-heap)
+    if max_direct_memory_peon_kb.nil?
+      max_direct_memory_peon_kb = (processing_memory_buffer_b * (processing_threads + 1) / 1024).to_i
+    end
+
+    # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
+    if worker_capacity.nil?
+      total_cores = node['redborder']['managers_per_services']['druid-indexer'].sum do |manager_name|
+        node['redborder']['cluster_info'][manager_name]['cpu_cores']
+      end
+      weighted_capacity = (node['redborder']['druid-indexer-tasks'].to_f * node['cpu']['total'] / total_cores).round
+      worker_capacity = weighted_capacity.clamp(1, node['redborder']['druid-indexer-tasks'])
+    end
+
     directory config_dir do
       owner 'root'
       group 'root'
@@ -27,9 +79,6 @@ action :add do
       mode '0755'
     end
 
-    #################################
-    #################################
-
     template "#{config_dir}/runtime.properties" do
       source 'indexer.properties.erb'
       owner 'root'
@@ -37,7 +86,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(name: name, cdomain: cdomain, port: port)
+      variables(worker_capacity: worker_capacity, processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, processing_memory_buffer_b: processing_memory_buffer_b, name: name, cdomain: cdomain, port: port)
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
@@ -52,7 +101,6 @@ action :add do
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
-        # Obtaining s3 data
     begin
       s3 = data_bag_item('passwords', 's3')
     rescue
@@ -72,7 +120,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key)
+      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key, rmi_address: rmi_address, rmi_port: rmi_port, heap_indexer_memory_kb: heap_indexer_memory_kb, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 

@@ -16,3 +16,7 @@ attribute :s3_prefix, kind_of: String, default: 'druid-router-logs'
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
 attribute :rmi_port, kind_of: String, default: '9084'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
+attribute :memory_kb, kind_of: Integer, default: 512000
+attribute :cpu_num, kind_of: Integer
+attribute :heap_router_memory_kb, kind_of: Integer, default: 512000
+attribute :offheap_router_memory_kb, kind_of: Integer, default: 512000
