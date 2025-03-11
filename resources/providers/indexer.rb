@@ -159,7 +159,7 @@ action :register do
         action :nothing
       end.run_action(:run)
 
-      node.normal['druid']['router']['registered'] = true
+      node.normal['druid']['indexer']['registered'] = true
       Chef::Log.info('Druid router service has been registered to consul')
     end
   rescue => e
@@ -171,12 +171,12 @@ action :deregister do
   begin
     if node['druid']['router']['registered']
       execute 'Deregister service in consul' do
-        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-router-#{node['hostname']} &>/dev/null"
+        command "curl -X PUT http://localhost:8500/v1/agent/service/deregister/druid-indexer-#{node['hostname']} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.normal['druid']['router']['registered'] = false
-      Chef::Log.info('Druid router service has been deregistered from consul')
+      node.normal['druid']['indexer']['registered'] = false
+      Chef::Log.info('Druid indexer service has been deregistered from consul')
     end
   rescue => e
     Chef::Log.error(e.message)
