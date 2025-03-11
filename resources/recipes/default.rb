@@ -35,8 +35,12 @@ druid_middlemanager 'Configure Druid middlemanager' do
   action :add
 end
 
-druid_realtime 'Configure Druid realtime' do
+druid_indexer 'Configure Druid indexer' do
   name 'localhost'
-  memory_kb (memory_mb * 0.4).to_i
+  action :add
+end
+
+druid_router 'Configure Druid router' do
+  name 'localhost'
   action :add
 end

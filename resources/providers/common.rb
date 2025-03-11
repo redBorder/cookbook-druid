@@ -1,4 +1,4 @@
-# Cookbook:: kafka
+# Cookbook:: druid
 # Provider:: broker
 
 include Druid::Helper
@@ -21,6 +21,7 @@ action :add do
     s3_service = new_resource.s3_service
     s3_port = new_resource.s3_port
     druid_local_storage_dir = new_resource.druid_local_storage_dir
+    s3_region = new_resource.s3_region
 
     # DRUID SERVICES
     service 'druid-broker' do
@@ -118,7 +119,7 @@ action :add do
       end
     end
 
-    extensions = %w(druid-kafka-indexing-service druid-kafka-eight druid-histogram)
+    extensions = %w(druid-kafka-indexing-service)
     extensions << 'druid-s3-extensions' if s3_bucket
     extensions << 'postgresql-metadata-storage' if psql_uri
 
@@ -131,8 +132,8 @@ action :add do
       retries 2
       variables(zookeeper_hosts: zookeeper_hosts,
                 psql_uri: psql_uri, psql_user: psql_user, memcached_hosts: memcached_hosts,
-                psql_password: psql_password, s3_bucket: s3_bucket, s3_access_key: s3_access_key,
-                s3_secret_key: s3_secret_key, s3_prefix: s3_prefix, druid_local_storage_dir: druid_local_storage_dir,
+                psql_password: psql_password, s3_bucket: s3_bucket, s3_access_key: s3_access_key, s3_service: s3_service, s3_port: s3_port,
+                s3_secret_key: s3_secret_key, s3_prefix: s3_prefix, druid_local_storage_dir: druid_local_storage_dir, s3_region: s3_region,
                 extensions: extensions)
     end
 
