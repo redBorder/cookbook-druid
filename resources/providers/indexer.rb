@@ -63,7 +63,7 @@ action :add do
       total_cores = node['redborder']['managers_per_services']['druid-indexer'].sum do |manager_name|
         node['redborder']['cluster_info'][manager_name]['cpu_cores']
       end
-      weighted_capacity = (node['redborder']['druid-indexer-tasks'].to_f * node['cpu']['total'] / total_cores).round
+      weighted_capacity = (node['redborder']['druid-indexer-tasks'].to_f * node['cpu']['total'] / total_cores).ceil
       worker_capacity = weighted_capacity.clamp(1, node['redborder']['druid-indexer-tasks'])
     end
 
