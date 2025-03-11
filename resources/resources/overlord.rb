@@ -14,6 +14,6 @@ attribute :port, kind_of: Integer, default: 8090
 attribute :s3_bucket, kind_of: String
 attribute :s3_prefix, kind_of: String, default: 'druid-indexer-logs'
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
-attribute :rmi_port, kind_of: String, default: '9084'
+attribute :rmi_port, kind_of: String, default: '9085'
 attribute :memory_kb, kind_of: Integer, default: 1048576
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'

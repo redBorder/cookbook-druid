@@ -13,7 +13,7 @@ attribute :port, kind_of: Integer, default: 8089
 attribute :parent_log_dir, kind_of: String, default: '/var/log/druid'
 attribute :suffix_log_dir, kind_of: String, default: 'indexer'
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
-attribute :rmi_port, kind_of: String, default: '9091'
+attribute :rmi_port, kind_of: String, default: '9099'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
 attribute :memory_kb, kind_of: Integer
 attribute :cpu_num, kind_of: Integer
