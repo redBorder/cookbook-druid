@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.1.0
+
+  - Pablo Torres
+    - [2a47a5f] Feature #20410: Removed alarm_user
+
 ## 2.0.3
 
   - nilsver
