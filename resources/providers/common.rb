@@ -20,7 +20,6 @@ action :add do
     s3_prefix = new_resource.s3_prefix
     s3_service = new_resource.s3_service
     s3_port = new_resource.s3_port
-    cdomain = new_resource.cdomain
     druid_local_storage_dir = new_resource.druid_local_storage_dir
     s3_region = new_resource.s3_region
 
