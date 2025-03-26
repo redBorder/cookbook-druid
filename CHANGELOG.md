@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.2.1
+
+  - Miguel Negrón
+    - [905fab0] Remove unsed variable
+
 ## 2.2.0
 
   - Juan Soto

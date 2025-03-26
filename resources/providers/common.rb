@@ -143,7 +143,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(s3_bucket: s3_bucket, s3_service: s3_service, s3_port: s3_port, cdomain: cdomain)
+      variables(s3_bucket: s3_bucket, s3_service: s3_service, s3_port: s3_port)
     end
 
     Chef::Log.info('Druid cookbook (common) has been processed')
