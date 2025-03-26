@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.2.0
+
+  - Juan Soto
+    - [fe50a76] Add new values from alarms to realtime
+
 ## 2.1.0
 
   - Pablo Torres
