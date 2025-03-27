@@ -61,6 +61,8 @@ action :add do
       worker_capacity = weighted_capacity.clamp(1, node['redborder']['druid-indexer-tasks'])
     end
 
+    direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
+
     directory config_dir do
       owner 'root'
       group 'root'
@@ -113,7 +115,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key, rmi_address: rmi_address, rmi_port: rmi_port, heap_indexer_memory_kb: heap_indexer_memory_kb, parent_config_dir: parent_config_dir)
+      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key, rmi_address: rmi_address, rmi_port: rmi_port, heap_indexer_memory_kb: heap_indexer_memory_kb, direct_indexer_memory_kb: direct_indexer_memory_kb, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
