@@ -73,8 +73,13 @@ action :add do
     # 256mb per threads or [40% of total RAM / (threads + 1)]
     # processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512*1024) * (processing_threads + 1) ? (512*1024*1024) :  ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i if processing_memory_buffer_b.nil?
     heap_realtime_memory_kb = ((512 * 1024) * processing_threads + 1).to_i
+
     # processing_memory_buffer_b = [ 2147483647, (memory_kb.to_i*1024/processing_threads).to_i].min.to_s
-    processing_memory_buffer_b = ((((memory_kb.to_i - (memory_kb.to_i * 0.05)) * 1024) - heap_realtime_memory_kb) / (processing_threads + 1)).to_i.to_s
+    # processing_memory_buffer_b = ((((memory_kb.to_i - (memory_kb.to_i * 0.05)) * 1024) - heap_realtime_memory_kb) / (processing_threads + 1)).to_i.to_s
+
+    # WARNING: Java cannot handle integers bigger than max_int defined this is why we need to limit the result
+    max_int = 2147483647
+    processing_memory_buffer_b = [max_int, ((((memory_kb.to_i - (memory_kb.to_i * 0.05)) * 1024) - heap_realtime_memory_kb) / (processing_threads + 1)).to_i].min.to_s
 
     Chef::Log.info(
       "\nRealtime Memory:
