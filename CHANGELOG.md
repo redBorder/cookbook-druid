@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 2.2.2
+
+  - Miguel Negrón
+    - [ad14b77] Ajust processing_memory_buffer_b to be max 2147483647 (max java integer)
+
 ## 2.2.1
 
   - Miguel Negrón
