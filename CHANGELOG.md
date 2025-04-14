@@ -1,6 +1,18 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.0.0
+
+  - Miguel Álvarez
+    - [bf0eda6] Delete resources/providers/realtime.rb
+    - [9528012] Delete resources/libraries/realtime.rb
+  - David Vanhoucke
+    - [1c391af] calculation druid-indexer direct memory
+  - Miguel Alvarez
+    - [346c4b0] Fix template of indexer
+    - [7573455] Fix java.rmi.server.ExportException: Port already in use:
+    - [ece02fb] Add worker capacity based on tasks
+
 ## 2.2.2
 
   - Miguel Negrón
