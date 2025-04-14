@@ -25,6 +25,7 @@ action :add do
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
     maxsize = new_resource.maxsize
+    aws_region = new_resource.aws_region
 
     directory config_dir do
       owner 'root'
@@ -98,7 +99,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(heap_historical_memory_kb: heap_historical_memory_kb,
+      variables(aws_region: aws_region, heap_historical_memory_kb: heap_historical_memory_kb,
                 offheap_historical_memory_kb: offheap_historical_memory_kb,
                 rmi_address: rmi_address, rmi_port: rmi_port, parent_config_dir: parent_config_dir)
       notifies :restart, 'service[druid-historical]', :delayed

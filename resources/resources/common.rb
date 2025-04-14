@@ -15,6 +15,7 @@ attribute :psql_password, kind_of: String
 attribute :s3_bucket, kind_of: String
 attribute :s3_access_key, kind_of: String
 attribute :s3_secret_key, kind_of: String
+attribute :s3_region, kind_of: String, default: 'us-east-1'
 attribute :s3_prefix, kind_of: String, default: 'rbdata'
 attribute :s3_service, kind_of: String, default: 's3.service'
 attribute :s3_port, kind_of: Integer, default: 9000
