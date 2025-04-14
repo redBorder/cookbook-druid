@@ -29,5 +29,5 @@ attribute :heap_memory_peon_kb, kind_of: Integer
 attribute :max_direct_memory_peon_kb, kind_of: Integer
 attribute :heap_middlemanager_memory_kb, kind_of: Integer, default: 262144
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
-attribute :rmi_port, kind_of: String, default: '9085'
+attribute :rmi_port, kind_of: String, default: '9086'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'

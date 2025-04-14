@@ -17,18 +17,13 @@
 # under the License.
 #
 
-
-druid.service=druid/coordinator
+druid.service=druid/router
 druid.host=<%= @name %>.node.<%= @cdomain %>
-druid.port=<%= @port %>
+druid.plaintextPort=<% @port %>
 
-druid.coordinator.startDelay=PT10S
-druid.coordinator.period=PT5S
-druid.manager.segments.pollDuration=PT5S
+# Service discovery
+druid.router.defaultBrokerServiceName=druid/broker
+druid.router.coordinatorServiceName=druid/coordinator
 
-druid.coordinator.asOverlord.enabled=false
-druid.coordinator.asOverlord.overlordService=druid/overlord
-
-druid.indexer.queue.startDelay=PT5S
-
-druid.indexer.storage.type=metadata
+# Management proxy to coordinator / overlord: required for unified web console.
+druid.router.managementProxy.enabled=true
