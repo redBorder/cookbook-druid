@@ -31,8 +31,8 @@ action :add do
 
     # Number of min[(cpu - 1),2] or 1
     if processing_threads.nil?
-      #processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1
-      processing_threads = cpu_num > 1 ? [[cpu_num, 8].min.to_i - 1, 1].max : 1 
+      # processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1
+      processing_threads = cpu_num > 1 ? [[cpu_num, 8].min.to_i - 1, 1].max : 1
 
       heap_indexer_memory_kb = ((512 * 1024) * processing_threads + 1).to_i
     end
@@ -44,7 +44,6 @@ action :add do
     if heap_memory_peon_kb.nil?
       heap_memory_peon_kb = memory_kb > (2 * 1024 * 1024).to_i ? (1 * 1024 * 1024).to_i : (memory_kb * 0.60).to_i
     end
-
 
     # Calculate num_merge_buffers
     if num_merge_buffers.nil?
