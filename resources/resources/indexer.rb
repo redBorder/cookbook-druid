@@ -22,7 +22,7 @@ attribute :buffer_size_bytes, kind_of: Integer
 attribute :max_direct_memory_peon_kb, kind_of: Integer
 attribute :processing_memory_buffer_b, kind_of: Integer
 attribute :num_merge_buffers, kind_of: Integer
-attribute :heap_indexer_memory_kb, kind_of: Integer, default: 262144
+attribute :heap_indexer_memory_kb, kind_of: Integer, default: 29057024
 attribute :num_threads, kind_of: Integer
 attribute :processing_threads, kind_of: Integer
 attribute :worker_capacity, kind_of: Integer
