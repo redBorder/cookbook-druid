@@ -38,7 +38,7 @@ action :add do
     end
 
     # reserve indexer heap
-    memory_kb -= heap_indexer_memory_kb
+    # memory_kb -= heap_indexer_memory_kb
 
     # 1gb per peon heap or 60% of total RAM
     if heap_memory_peon_kb.nil?
