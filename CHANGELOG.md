@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.0.1
+
+  - Miguel Negrón
+    - [a0ac586] New memory distribution for indexer
+
 ## 3.0.0
 
   - Miguel Álvarez

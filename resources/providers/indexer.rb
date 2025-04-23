@@ -29,17 +29,20 @@ action :add do
     # Indexer resource configuration #
     ########################################
 
+    # Number of min[(cpu - 1),2] or 1
+    if processing_threads.nil?
+      # processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1
+      processing_threads = cpu_num > 1 ? [[cpu_num, 8].min.to_i - 1, 1].max : 1
+
+      heap_indexer_memory_kb = ((512 * 1024) * processing_threads + 1).to_i
+    end
+
     # reserve indexer heap
     memory_kb -= heap_indexer_memory_kb
 
     # 1gb per peon heap or 60% of total RAM
     if heap_memory_peon_kb.nil?
       heap_memory_peon_kb = memory_kb > (2 * 1024 * 1024).to_i ? (1 * 1024 * 1024).to_i : (memory_kb * 0.60).to_i
-    end
-
-    # Number of min[(cpu - 1),2] or 1
-    if processing_threads.nil?
-      processing_threads = cpu_num > 1 ? [cpu_num - 1, 2].min : 1
     end
 
     # Calculate num_merge_buffers
@@ -60,8 +63,9 @@ action :add do
       weighted_capacity = (node['redborder']['druid-indexer-tasks'].to_f * node['cpu']['total'] / total_cores).ceil
       worker_capacity = weighted_capacity.clamp(1, node['redborder']['druid-indexer-tasks'])
     end
+    # direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
 
-    direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
+    direct_indexer_memory_kb = memory_kb
 
     directory config_dir do
       owner 'root'
