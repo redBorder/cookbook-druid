@@ -1,6 +1,14 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.0.2
+
+  - Miguel Negrón
+    - [d00333b] Update calculation memory
+    - [fe5f4f9] Fix linter
+    - [e6681d8] Bump version
+    - [a0ac586] New memory distribution for indexer
+
 ## 3.0.1
 
   - Miguel Negrón
