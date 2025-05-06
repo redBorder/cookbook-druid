@@ -56,9 +56,9 @@ action :add do
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (num_merge_buffers + processing_threads + 1) / 1024).to_i
 
+    # Asign to the heap the memory we are not using
     heap_historical_memory_kb_correction = memory_kb - offheap_historical_memory_kb
     if heap_historical_memory_kb < heap_historical_memory_kb_correction
-      puts "Ajust heap of #{heap_historical_memory_kb / 1024} MB to #{heap_historical_memory_kb_correction / 1024} MB to take total possible memory (cgroup limit)"
       heap_historical_memory_kb = heap_historical_memory_kb_correction
     end
 
