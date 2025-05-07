@@ -1,6 +1,17 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.0.3
+
+  - Miguel Negrón
+    - [81fc341] BugFix #21087 Add extra memory to heap (#72)
+    - [2e4a9c6] Resolv confilicts
+    - [f0e540f] Bump version
+    - [d00333b] Update calculation memory
+    - [fe5f4f9] Fix linter
+    - [e6681d8] Bump version
+    - [a0ac586] New memory distribution for indexer
+
 ## 3.0.2
 
   - Miguel Negrón
