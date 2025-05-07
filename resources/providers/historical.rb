@@ -56,6 +56,12 @@ action :add do
     heap_historical_memory_kb, processing_memory_buffer_b = compute_memory(memory_kb, processing_threads)
     offheap_historical_memory_kb = (processing_memory_buffer_b * (num_merge_buffers + processing_threads + 1) / 1024).to_i
 
+    # Ensure the heap memory value is at least as large as the calculated on-heap memory
+    onheap_memory_kb = memory_kb - offheap_historical_memory_kb
+    if heap_historical_memory_kb < onheap_memory_kb
+      heap_historical_memory_kb = onheap_memory_kb
+    end
+
     Chef::Log.info(
       "\nHistorical Memory:
         * Memory: #{memory_kb}k
