@@ -1,6 +1,21 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.0
+
+  - Rafa Gómez
+    - [5cfa495] Bugfix/#21662 Druid router port is missing in router.properties.erb (#75)
+  - Miguel Negrón
+    - [6b93b0c] Fix merge conflicts
+    - [c92430a] Bump version
+    - [81fc341] BugFix #21087 Add extra memory to heap (#72)
+    - [2e4a9c6] Resolv confilicts
+    - [f0e540f] Bump version
+    - [d00333b] Update calculation memory
+    - [fe5f4f9] Fix linter
+    - [e6681d8] Bump version
+    - [a0ac586] New memory distribution for indexer
+
 ## 3.0.3
 
   - Miguel Negrón
