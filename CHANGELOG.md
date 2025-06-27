@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.1
+
+  - nilsver
+    - [082972a] remove flush cache
+
 ## 3.1.0
 
   - Rafa Gómez
