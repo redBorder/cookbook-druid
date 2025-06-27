@@ -84,7 +84,6 @@ action :add do
     #######################
     dnf_package 'redborder-druid' do
       action :upgrade
-      flush_cache [:before]
     end
 
     ####################################
