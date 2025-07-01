@@ -2,7 +2,7 @@ module Druid
   module Indexer
     def calculate_worker_capacity
       managers = node['redborder']['managers_per_services']['druid-indexer']
-      total_tasks = node['redborder']['druid-indexer-tasks']
+      total_tasks = node['redborder']['druid-indexer-tasks'] || 8
 
       # Mapping cores per indexer manager and sum total cores
       cores_per_node = managers.map { |name| [name, node['redborder']['cluster_info'][name]['cpu_cores']] }.to_h
