@@ -1,6 +1,12 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.2
+
+  - Rafael Gomez
+    - [929db34] Adding total_tasks default value to 8
+    - [3a2367d] Implement worker capacity calculation in indexer provider
+
 ## 3.1.1
 
   - nilsver
