@@ -1,6 +1,8 @@
 # Cookbook:: druid
 # Provider:: indexer
 
+include Druid::Indexer
+
 action :add do
   begin
     parent_config_dir = '/etc/druid'
@@ -56,13 +58,8 @@ action :add do
     end
 
     # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
-    if worker_capacity.nil?
-      total_cores = node['redborder']['managers_per_services']['druid-indexer'].sum do |manager_name|
-        node['redborder']['cluster_info'][manager_name]['cpu_cores']
-      end
-      weighted_capacity = (node['redborder']['druid-indexer-tasks'].to_f * node['cpu']['total'] / total_cores).ceil
-      worker_capacity = weighted_capacity.clamp(1, node['redborder']['druid-indexer-tasks'])
-    end
+    worker_capacity = calculate_worker_capacity if worker_capacity.nil?
+
     # direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
 
     direct_indexer_memory_kb = memory_kb
