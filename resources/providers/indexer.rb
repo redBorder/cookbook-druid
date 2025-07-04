@@ -26,6 +26,7 @@ action :add do
     processing_threads = new_resource.processing_threads
     processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     worker_capacity = new_resource.worker_capacity
+    tasks = new_resource.tasks
 
     ########################################
     # Indexer resource configuration #
@@ -58,7 +59,7 @@ action :add do
     end
 
     # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
-    worker_capacity = calculate_worker_capacity if worker_capacity.nil?
+    worker_capacity = calculate_worker_capacity(tasks) if worker_capacity.nil?
 
     # direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
 
