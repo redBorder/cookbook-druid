@@ -26,3 +26,4 @@ attribute :heap_indexer_memory_kb, kind_of: Integer, default: 29057024
 attribute :num_threads, kind_of: Integer
 attribute :processing_threads, kind_of: Integer
 attribute :worker_capacity, kind_of: Integer
+attribute :tasks, kind_of: Array, default: []

@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.3
+
+  - Rafael Gomez
+    - [64be42c] Add tasks attribute and update worker capacity calculation method
+
 ## 3.1.2
 
   - Rafael Gomez
