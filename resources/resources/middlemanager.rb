@@ -12,8 +12,6 @@ attribute :parent_log_dir, kind_of: String, default: '/var/log/druid'
 attribute :suffix_log_dir, kind_of: String, default: 'middlemanager'
 attribute :suffix_task_log_dir, kind_of: String, default: 'tasks'
 attribute :port, kind_of: Integer, default: 8091
-attribute :s3_access_key, kind_of: String
-attribute :s3_secret_key, kind_of: String
 attribute :s3_log_bucket, kind_of: String
 attribute :s3_log_prefix, kind_of: String, default: 'druid-indexer-logs'
 attribute :base_dir, kind_of: String, default: '/tmp/druid'
@@ -31,3 +29,4 @@ attribute :heap_middlemanager_memory_kb, kind_of: Integer, default: 262144
 attribute :rmi_address, kind_of: String, default: '127.0.0.1'
 attribute :rmi_port, kind_of: String, default: '9086'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
+attribute :s3_secrets, kind_of: Hash, default: {}
