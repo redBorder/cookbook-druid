@@ -15,10 +15,6 @@ action :add do
     name = new_resource.name
     cdomain = new_resource.cdomain
     port = new_resource.port
-    s3_bucket = new_resource.s3_bucket
-    s3_access_key = new_resource.s3_access_key
-    s3_secret_key = new_resource.s3_secret_key
-    s3_prefix = new_resource.s3_prefix
     aws_region = new_resource.aws_region
     num_merge_buffers = new_resource.num_merge_buffers
     memory_kb = new_resource.memory_kb
@@ -95,10 +91,6 @@ action :add do
                   name: name, 
                   cdomain: cdomain, 
                   port: port, 
-                  s3_bucket: s3_bucket, 
-                  s3_prefix: s3_prefix, 
-                  s3_access_key: s3_access_key, 
-                  s3_secret_key: s3_secret_key,
                   aws_region: aws_region)      
       notifies :restart, 'service[druid-indexer]', :delayed
     end
