@@ -27,6 +27,7 @@ action :add do
     processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     worker_capacity = new_resource.worker_capacity
     tasks = new_resource.tasks
+    s3_secrets = new_resource.s3_secrets
 
     ########################################
     # Indexer resource configuration #
@@ -106,15 +107,9 @@ action :add do
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
-    begin
-      s3 = data_bag_item('passwords', 's3')
-    rescue
-      s3 = {}
-    end
-
-    unless s3.empty?
-      s3_access_key = s3['s3_access_key_id']
-      s3_secret_key = s3['s3_secret_key_id']
+    unless s3_secrets.empty?
+      s3_access_key = s3_secrets['s3_access_key_id']
+      s3_secret_key = s3_secrets['s3_secret_key_id']
     end
 
     template '/etc/sysconfig/druid_indexer' do

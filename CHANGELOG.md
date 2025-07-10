@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.4
+
+  - Rafa Gómez
+    - [4464ee8] Improvement/#19203 Refactor S3 Variables Passing in Cookbooks (#83)
+
 ## 3.1.3
 
   - Rafael Gomez
