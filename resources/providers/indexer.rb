@@ -85,7 +85,7 @@ action :add do
       cookbook 'druid'
       mode '0644'
       retries 2
-      variables(worker_capacity: worker_capacity, processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, processing_memory_buffer_b: processing_memory_buffer_b, name: name, cdomain: cdomain, port: port, aws_region: aws_region)
+      variables(worker_capacity: worker_capacity, processing_threads: processing_threads, num_merge_buffers: num_merge_buffers, processing_memory_buffer_b: processing_memory_buffer_b, name: name, cdomain: cdomain, port: port)
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
