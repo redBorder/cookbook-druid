@@ -13,6 +13,7 @@ druid.broker.cache.unCacheable=["select"]
 
 # Logging
 #druid.monitoring.monitors=["io.druid.client.cache.CacheMonitor", "com.metamx.metrics.JvmMonitor", "com.metamx.metrics.SysMonitor"]
+druid.monitoring.monitors=["org.apache.druid.client.cache.CacheMonitor", "org.apache.druid.java.util.metrics.SysMonitor", "org.apache.druid.java.util.metrics.JvmMonitor", "org.apache.druid.java.util.metrics.JvmCpuMonitor", "org.apache.druid.java.util.metrics.CpuAcctDeltaMonitor", "org.apache.druid.java.util.metrics.JvmThreadsMonitor", "org.apache.druid.server.metrics.QueryCountStatsMonitor", "org.apache.druid.server.metrics.HistoricalMetricsMonitor"]
 
 # Processing
 druid.processing.numThreads=<%= @processing_threads %>
