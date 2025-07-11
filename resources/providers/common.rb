@@ -14,14 +14,12 @@ action :add do
     psql_user = new_resource.psql_user
     psql_password = new_resource.psql_password
     memcached_hosts = new_resource.memcached_hosts
-    s3_bucket = new_resource.s3_bucket
-    s3_access_key = new_resource.s3_access_key
-    s3_secret_key = new_resource.s3_secret_key
     s3_prefix = new_resource.s3_prefix
     s3_service = new_resource.s3_service
     s3_port = new_resource.s3_port
     druid_local_storage_dir = new_resource.druid_local_storage_dir
     s3_region = new_resource.s3_region
+    s3_secrets = new_resource.s3_secrets
 
     # DRUID SERVICES
     service 'druid-broker' do
@@ -54,16 +52,10 @@ action :add do
     ####################
 
     # Obtaining s3 data
-    begin
-      s3 = data_bag_item('passwords', 's3')
-    rescue
-      s3 = {}
-    end
-
-    unless s3.empty?
-      s3_bucket = s3['s3_bucket']
-      s3_access_key = s3['s3_access_key_id']
-      s3_secret_key = s3['s3_secret_key_id']
+    unless s3_secrets.empty?
+      s3_bucket = s3_secrets['s3_bucket']
+      s3_access_key = s3_secrets['s3_access_key_id']
+      s3_secret_key = s3_secrets['s3_secret_key_id']
     end
 
     # Obtaining druid database configuration from databag

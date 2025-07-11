@@ -24,8 +24,6 @@ action :add do
     base_dir = new_resource.base_dir
     indexing_dir = new_resource.indexing_dir
     hadoop_version = new_resource.hadoop_version
-    s3_access_key = new_resource.s3_access_key
-    s3_secret_key = new_resource.s3_secret_key
     heap_memory_peon_kb = new_resource.heap_memory_peon_kb
     max_direct_memory_peon_kb = new_resource.max_direct_memory_peon_kb
     rmi_address = new_resource.rmi_address
@@ -34,6 +32,7 @@ action :add do
     heap_middlemanager_memory_kb = new_resource.heap_middlemanager_memory_kb
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
+    s3_secrets = new_resource.s3_secrets
 
     directory config_dir do
       owner 'root'
@@ -55,21 +54,11 @@ action :add do
       end
     end
 
-    ####################
-    # READ DATABAGS
-    ####################
-
     # Obtaining s3 data
-    begin
-      s3 = data_bag_item('passwords', 's3')
-    rescue
-      s3 = {}
-    end
-
-    unless s3.empty?
-      # s3_bucket = s3['s3_bucket']
-      s3_access_key = s3['s3_access_key_id']
-      s3_secret_key = s3['s3_secret_key_id']
+    unless s3_secrets.empty?
+      # s3_bucket = s3_secrets['s3_bucket']
+      s3_access_key = s3_secrets['s3_access_key_id']
+      s3_secret_key = s3_secrets['s3_secret_key_id']
     end
 
     ########################################
