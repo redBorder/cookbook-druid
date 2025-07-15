@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.5
+
+  - Pablo Torres
+    - [e7a41c8] Feature #21767: add druid metrics
+
 ## 3.1.4
 
   - Rafa Gómez
