@@ -1,6 +1,19 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.5
+
+  - Daniel Castro
+    - [61e1020] Merge pull request #85 from redBorder/feature/#21767_druid_metrics_in_monitor
+  - Pablo Torres
+    - [84a4ba5] Merge branch 'master' into feature/#21767_druid_metrics_in_monitor
+    - [f20077d] Merge branch 'master' into feature/#21767_druid_metrics_in_monitor
+    - [e7a41c8] Feature #21767: add druid metrics
+  - nilsver
+    - [1c9bb03] Release 3.1.4
+  - Rafa Gómez
+    - [4464ee8] Improvement/#19203 Refactor S3 Variables Passing in Cookbooks (#83)
+
 ## 3.1.4
 
   - Rafa Gómez
