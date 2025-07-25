@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.1.6
+
+  - jnavarrorb
+    - [f658a78] Remove executable permissions on non-executable files
+
 ## 3.1.5
 
   - Pablo Torres
