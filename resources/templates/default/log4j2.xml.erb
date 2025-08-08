@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration status="info" name="druid" packages="">
-    <Appenders>
-        <RollingFile name="RollingFile" fileName="/var/log/druid/DRUIDTYPE.log" filePattern="/var/log/druid/DRUIDTYPE-%i.log">
-         <PatternLayout>
-            <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
-         </PatternLayout>
-         <Policies>
-            <SizeBasedTriggeringPolicy size="10 MB" />
-         </Policies>
-         <DefaultRolloverStrategy max="5" />
-      </RollingFile>
-      <RollingFile name="RollingDruid" fileName="<%= "#{@log_dir}/#{@service_name}.log" %>" filePattern="<%= "#{@log_dir}/#{@service_name}-%i.log" %>">
-          <PatternLayout>
-              <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
-          </PatternLayout>
-          <Policies>
-              <SizeBasedTriggeringPolicy size="10 MB" />
-          </Policies>
-          <DefaultRolloverStrategy max="5" />
-      </RollingFile>
-    </Appenders>
-    <Loggers>
-        <Root level="info">
-            <AppenderRef ref="RollingFile" />
-            <AppenderRef ref="RollingDruid"/>
-        </Root>
-    </Loggers>
+  <Appenders>
+    <RollingFile name="RollingFile"
+                 fileName="/var/log/druid/DRUIDTYPE.log"
+                 filePattern="/var/log/druid/DRUIDTYPE-%d{yyyy-MM-dd}.log.gz">
+      <PatternLayout>
+        <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="/var/log/druid" maxDepth="1">
+          <IfFileName glob="DRUIDTYPE-*.log.gz" />
+          <IfLastModified age="7d" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+    <RollingFile name="RollingDruid"
+                 fileName="<%= "#{@log_dir}/#{@service_name}.log" %>"
+                 filePattern="<%= "#{@log_dir}/#{@service_name}-%d{yyyy-MM-dd}.log.gz" %>">
+      <PatternLayout>
+        <pattern>%d{ISO8601} %p [%t] %c - %m%n</pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="<%= "#{@log_dir}" %>" maxDepth="1">
+          <IfFileName glob="<%= "#{@service_name}-*.log.gz" %>" />
+          <IfLastModified age="7d" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="RollingFile" />
+      <AppenderRef ref="RollingDruid" />
+    </Root>
+  </Loggers>
 </Configuration>

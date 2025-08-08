@@ -1,6 +1,12 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.2.0
+
+  - Jose Jiménez
+    - [54ae844] Switch log rotation to weekly time-based with gzip
+    - [cbdaf6b] Add variables to manage task logs
+
 ## 3.1.6
 
   - jnavarrorb
