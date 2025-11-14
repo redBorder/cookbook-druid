@@ -52,7 +52,7 @@ action :add do
     ####################
 
     # Obtaining s3 data
-    unless s3_secrets.empty?
+    unless s3_secrets.to_hash.empty?
       s3_bucket = s3_secrets['s3_bucket']
       s3_access_key = s3_secrets['s3_access_key_id']
       s3_secret_key = s3_secrets['s3_secret_key_id']
@@ -65,7 +65,7 @@ action :add do
       db_druid = {}
     end
 
-    unless db_druid.empty?
+    unless db_druid.to_hash.empty?
       psql_uri = "#{db_druid['hostname']}:#{db_druid['port']}"
       psql_user = db_druid['username']
       psql_password = db_druid['pass']

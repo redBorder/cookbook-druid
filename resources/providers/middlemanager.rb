@@ -55,7 +55,7 @@ action :add do
     end
 
     # Obtaining s3 data
-    unless s3_secrets.empty?
+    unless s3_secrets.to_hash.empty?
       # s3_bucket = s3_secrets['s3_bucket']
       s3_access_key = s3_secrets['s3_access_key_id']
       s3_secret_key = s3_secrets['s3_secret_key_id']
