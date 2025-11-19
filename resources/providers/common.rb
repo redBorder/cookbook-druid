@@ -52,7 +52,7 @@ action :add do
     ####################
 
     # Obtaining s3 data
-    unless s3_secrets.to_hash.empty?
+    unless s3_secrets.empty?
       s3_bucket = s3_secrets['s3_bucket']
       s3_access_key = s3_secrets['s3_access_key_id']
       s3_secret_key = s3_secrets['s3_secret_key_id']
