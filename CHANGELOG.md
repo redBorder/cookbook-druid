@@ -1,6 +1,13 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.2.1
+
+  - nilsver
+    - [c0eb356] update2
+    - [26c5f92] update
+    - [c287f62] convert to hash to work with encrypted databag
+
 ## 3.2.0
 
   - Jose Jiménez
