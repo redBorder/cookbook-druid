@@ -65,7 +65,7 @@ action :add do
       db_druid = {}
     end
 
-    unless db_druid.empty?
+    unless db_druid.to_hash.empty?
       psql_uri = "#{db_druid['hostname']}:#{db_druid['port']}"
       psql_user = db_druid['username']
       psql_password = db_druid['pass']
