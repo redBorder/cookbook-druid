@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.3.0
+
+  - David Vanhoucke
+    - [7cc7e79] activate automatic cleanup of compacted segments
+
 ## 3.2.1
 
   - nilsver
