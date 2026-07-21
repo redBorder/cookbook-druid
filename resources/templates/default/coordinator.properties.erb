@@ -32,3 +32,9 @@ druid.coordinator.asOverlord.overlordService=druid/overlord
 druid.indexer.queue.startDelay=PT5S
 
 druid.indexer.storage.type=metadata
+
+druid.coordinator.kill.on=true
+druid.coordinator.kill.period=P1D
+druid.coordinator.kill.durationToRetain=P4D
+druid.coordinator.kill.bufferPeriod=P7D
+druid.coordinator.kill.maxSegments=1000
