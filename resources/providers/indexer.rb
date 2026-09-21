@@ -22,7 +22,6 @@ action :add do
     rmi_address = new_resource.rmi_address
     rmi_port = new_resource.rmi_port
     cpu_num = new_resource.cpu_num
-    heap_memory_peon_kb = new_resource.heap_memory_peon_kb
     processing_threads = new_resource.processing_threads
     processing_memory_buffer_b = new_resource.processing_memory_buffer_b
     worker_capacity = new_resource.worker_capacity
@@ -41,28 +40,29 @@ action :add do
       heap_indexer_memory_kb = ((512 * 1024) * processing_threads + 1).to_i
     end
 
-    # reserve indexer heap
-    # memory_kb -= heap_indexer_memory_kb
-
-    # 1gb per peon heap or 60% of total RAM
-    if heap_memory_peon_kb.nil?
-      heap_memory_peon_kb = memory_kb > (2 * 1024 * 1024).to_i ? (1 * 1024 * 1024).to_i : (memory_kb * 0.60).to_i
-    end
+    # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
+    worker_capacity = calculate_worker_capacity(tasks) if worker_capacity.nil?
 
     # Calculate num_merge_buffers
     if num_merge_buffers.nil?
       num_merge_buffers = [ processing_threads / 4, 2 ].max.to_i
     end
 
-    # 256mb per threads or [40% of total RAM / (threads + 1)]
+    # druid-indexer runs every task as a thread inside this single JVM
+    # (see ThreadingTaskRunner) instead of forking a process per task, so
+    # there is no separate peon heap/javaOpts to size here: both
+    # druid.indexer.runner.javaOpts and druid.indexer.fork.property.* are
+    # only ever read by ForkingTaskRunner, which the Indexer never uses.
+    # What this JVM actually reads is druid.processing.* directly, sized
+    # from whatever is left of its memory budget once its own heap
+    # (heap_indexer_memory_kb, applied via indexer_sysconfig.erb) is
+    # reserved. Per Druid's own guidance, the direct memory a JVM needs is
+    # roughly buffer.sizeBytes * (numMergeBuffers + numThreads + 1).
     if processing_memory_buffer_b.nil?
-      processing_memory_buffer_b = (memory_kb - heap_memory_peon_kb) > (512 * 1024) * (processing_threads + 1) ? (512 * 1024 * 1024) : ((memory_kb - heap_memory_peon_kb) / (processing_threads + 1)).to_i
+      processing_pool_kb = [memory_kb - heap_indexer_memory_kb, 0].max
+      buffer_slots = processing_threads + num_merge_buffers + 1
+      processing_memory_buffer_b = processing_pool_kb > (512 * 1024) * buffer_slots ? (512 * 1024 * 1024) : [(processing_pool_kb * 1024 / buffer_slots).to_i, 64 * 1024 * 1024].max
     end
-
-    # Worker capacity distributed based on weighted CPU cores across druid-indexer managers
-    worker_capacity = calculate_worker_capacity(tasks) if worker_capacity.nil?
-
-    # direct_indexer_memory_kb = (processing_threads + num_merge_buffers + 1) * processing_memory_buffer_b * worker_capacity
 
     direct_indexer_memory_kb = memory_kb
 
