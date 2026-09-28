@@ -1,6 +1,11 @@
 cookbook-druid CHANGELOG
 ===============
 
+## 3.3.1
+
+  - Miguel Negron
+    - [5ef0643] Ajust druid indexer configuration (#96)
+
 ## 3.3.0
 
   - David Vanhoucke
