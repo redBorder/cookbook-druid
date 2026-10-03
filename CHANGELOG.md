@@ -5,11 +5,6 @@ cookbook-druid CHANGELOG
 
   - manegron
     - [50ac8ae] Upload cookbook only if opscode-erchef is active
-    - [5ef0643] Ajust druid indexer configuration (#96)
-  - David Vanhoucke
-    - [620f27b] bump version
-  - Miguel Negrón
-    - [5ef0643] Ajust druid indexer configuration (#96)
 
 ## 3.3.1
 
