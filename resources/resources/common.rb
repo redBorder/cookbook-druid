@@ -12,6 +12,8 @@ attribute :memcached_hosts, kind_of: Array, default: ['memcached.service:11211']
 attribute :psql_uri, kind_of: String
 attribute :psql_user, kind_of: String
 attribute :psql_password, kind_of: String
+# true: the database password comes from OpenBao (common.runtime.properties rendered by the agent into /run)
+attribute :openbao, kind_of: [TrueClass, FalseClass], default: false
 attribute :s3_region, kind_of: String, default: 'us-east-1'
 attribute :s3_prefix, kind_of: String, default: 'rbdata'
 attribute :s3_service, kind_of: String, default: 's3.service'
