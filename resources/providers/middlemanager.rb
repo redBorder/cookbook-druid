@@ -3,6 +3,7 @@
 
 action :add do
   begin
+    openbao = new_resource.openbao
     parent_config_dir = '/etc/druid'
     config_dir = "#{parent_config_dir}/middleManager"
     user = new_resource.user
@@ -110,22 +111,47 @@ action :add do
     ########################################
     ########################################
 
-    template "#{config_dir}/runtime.properties" do
-      source 'middleManager.properties.erb'
-      owner 'root'
-      group 'root'
-      cookbook 'druid'
-      mode '0644'
-      retries 2
-      variables(name: name, cdomain: cdomain, port: port, task_log_dir: task_log_dir,
-                worker_capacity: worker_capacity, capacity_multiplier: capacity_multiplier,
-                processing_memory_buffer_b: processing_memory_buffer_b, processing_threads: processing_threads,
-                s3_log_bucket: s3_log_bucket, s3_log_prefix: s3_log_prefix, base_dir: base_dir,
-                indexing_dir: indexing_dir, hadoop_version: hadoop_version, s3_access_key: s3_access_key,
-                s3_secret_key: s3_secret_key, heap_memory_peon_kb: heap_memory_peon_kb,
-                max_direct_memory_peon_kb: max_direct_memory_peon_kb,
-                rmi_address: rmi_address)
-      notifies :restart, 'service[druid-middlemanager]', :delayed
+    if openbao
+      openbao_secret_file 'druid-middlemanager-runtime' do
+        source 'middleManager.properties.erb'
+        cookbook 'druid'
+        variables(name: name, cdomain: cdomain, port: port, task_log_dir: task_log_dir,
+                  worker_capacity: worker_capacity, capacity_multiplier: capacity_multiplier,
+                  processing_memory_buffer_b: processing_memory_buffer_b, processing_threads: processing_threads,
+                  s3_log_bucket: s3_log_bucket, s3_log_prefix: s3_log_prefix, base_dir: base_dir,
+                  indexing_dir: indexing_dir, hadoop_version: hadoop_version, s3_access_key: s3_access_key,
+                  s3_secret_key: s3_secret_key, heap_memory_peon_kb: heap_memory_peon_kb,
+                  max_direct_memory_peon_kb: max_direct_memory_peon_kb,
+                  rmi_address: rmi_address)
+        destination '/run/rb-secrets/druid/middlemanager.runtime.properties'
+        owner 'root'
+        group group
+        mode '0640'
+        unit 'druid-middlemanager'
+      end
+
+      link "#{config_dir}/runtime.properties" do
+        to '/run/rb-secrets/druid/middlemanager.runtime.properties'
+        notifies :restart, 'service[druid-middlemanager]', :delayed
+      end
+    else
+      template "#{config_dir}/runtime.properties" do
+        source 'middleManager.properties.erb'
+        owner 'root'
+        group 'root'
+        cookbook 'druid'
+        mode '0644'
+        retries 2
+        variables(name: name, cdomain: cdomain, port: port, task_log_dir: task_log_dir,
+                  worker_capacity: worker_capacity, capacity_multiplier: capacity_multiplier,
+                  processing_memory_buffer_b: processing_memory_buffer_b, processing_threads: processing_threads,
+                  s3_log_bucket: s3_log_bucket, s3_log_prefix: s3_log_prefix, base_dir: base_dir,
+                  indexing_dir: indexing_dir, hadoop_version: hadoop_version, s3_access_key: s3_access_key,
+                  s3_secret_key: s3_secret_key, heap_memory_peon_kb: heap_memory_peon_kb,
+                  max_direct_memory_peon_kb: max_direct_memory_peon_kb,
+                  rmi_address: rmi_address)
+        notifies :restart, 'service[druid-middlemanager]', :delayed
+      end
     end
 
     template "#{config_dir}/log4j2.xml" do
