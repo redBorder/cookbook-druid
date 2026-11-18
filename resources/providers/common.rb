@@ -69,7 +69,6 @@ action :add do
     unless db_druid.to_hash.empty?
       psql_uri = "#{db_druid['hostname']}:#{db_druid['port']}"
       psql_user = db_druid['username']
-      # OpenBao: placeholder, the agent fills in the password in /run
       psql_password = openbao ? OpenBao.ref('db_druid', 'pass') : db_druid['pass']
     end
 

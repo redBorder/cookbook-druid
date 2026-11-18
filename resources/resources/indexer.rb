@@ -28,5 +28,4 @@ attribute :processing_threads, kind_of: Integer
 attribute :worker_capacity, kind_of: Integer
 attribute :tasks, kind_of: Array, default: []
 attribute :s3_secrets, kind_of: Hash, default: {}
-# true: S3 keys are OpenBao placeholders; the config is rendered by the agent into /run
 attribute :openbao, kind_of: [TrueClass, FalseClass], default: false
