@@ -30,4 +30,3 @@ attribute :rmi_address, kind_of: String, default: '127.0.0.1'
 attribute :rmi_port, kind_of: String, default: '9086'
 attribute :ipaddress, kind_of: String, default: '127.0.0.1'
 attribute :s3_secrets, kind_of: Hash, default: {}
-attribute :openbao, kind_of: [TrueClass, FalseClass], default: false

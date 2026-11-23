@@ -28,4 +28,3 @@ attribute :processing_threads, kind_of: Integer
 attribute :worker_capacity, kind_of: Integer
 attribute :tasks, kind_of: Array, default: []
 attribute :s3_secrets, kind_of: Hash, default: {}
-attribute :openbao, kind_of: [TrueClass, FalseClass], default: false
