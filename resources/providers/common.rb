@@ -68,7 +68,7 @@ action :add do
     unless db_druid.to_hash.empty?
       psql_uri = "#{db_druid['hostname']}:#{db_druid['port']}"
       psql_user = db_druid['username']
-      psql_password = db_druid['pass']
+      psql_password = OpenBao.ref('db_druid', 'pass')
     end
 
     #######################
@@ -114,18 +114,23 @@ action :add do
     extensions << 'druid-s3-extensions' if s3_bucket
     extensions << 'postgresql-metadata-storage' if psql_uri
 
-    template "#{parent_config_dir}/_common/common.runtime.properties" do
+    openbao_secret_file 'druid-common-properties' do
       source 'common.properties.erb'
-      owner 'root'
-      group 'root'
       cookbook 'druid'
-      mode '0644'
-      retries 2
       variables(zookeeper_hosts: zookeeper_hosts,
                 psql_uri: psql_uri, psql_user: psql_user, memcached_hosts: memcached_hosts,
                 psql_password: psql_password, s3_bucket: s3_bucket, s3_access_key: s3_access_key, s3_service: s3_service, s3_port: s3_port,
                 s3_secret_key: s3_secret_key, s3_prefix: s3_prefix, druid_local_storage_dir: druid_local_storage_dir, s3_region: s3_region,
                 extensions: extensions)
+      destination '/run/rb-secrets/druid/common.runtime.properties'
+      owner 'root'
+      group group
+      mode '0640'
+      unit %w(druid-coordinator druid-overlord druid-broker druid-historical druid-middlemanager druid-indexer druid-router)
+    end
+
+    link "#{parent_config_dir}/_common/common.runtime.properties" do
+      to '/run/rb-secrets/druid/common.runtime.properties'
     end
 
     template "#{parent_config_dir}/_common/jets3t.properties" do

@@ -4,3 +4,5 @@ maintainer_email 'git@redborder.com'
 license          'AGPL-3.0'
 description      'Installs/Configures druid'
 version          '3.3.2'
+
+depends 'openbao'

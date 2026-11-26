@@ -105,14 +105,19 @@ action :add do
       s3_secret_key = s3_secrets['s3_secret_key_id']
     end
 
-    template '/etc/sysconfig/druid_indexer' do
+    openbao_secret_file 'druid-indexer-sysconfig' do
       source 'indexer_sysconfig.erb'
+      cookbook 'druid'
+      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key, rmi_address: rmi_address, rmi_port: rmi_port, heap_indexer_memory_kb: heap_indexer_memory_kb, direct_indexer_memory_kb: direct_indexer_memory_kb, parent_config_dir: parent_config_dir)
+      destination '/run/rb-secrets/druid-indexer/sysconfig'
       owner 'root'
       group 'root'
-      cookbook 'druid'
-      mode '0644'
-      retries 2
-      variables(aws_region: aws_region, s3_access_key: s3_access_key, s3_secret_key: s3_secret_key, rmi_address: rmi_address, rmi_port: rmi_port, heap_indexer_memory_kb: heap_indexer_memory_kb, direct_indexer_memory_kb: direct_indexer_memory_kb, parent_config_dir: parent_config_dir)
+      mode '0600'
+      unit 'druid-indexer'
+    end
+
+    link '/etc/sysconfig/druid_indexer' do
+      to '/run/rb-secrets/druid-indexer/sysconfig'
       notifies :restart, 'service[druid-indexer]', :delayed
     end
 
